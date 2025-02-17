@@ -78,9 +78,37 @@ yarn install
 ```
 
 ### Cesium
-
+if public/cesium is not present, with the directories Assets,ThirdParty,Widgets,and Workers, run
 ```bash
 npm run build
+```
+and copy the contents of build/cesium intoto public/cesium
+
+### Backend Dependencies
+
+1. Install required system packages:
+```bash
+sudo apt update
+sudo apt install -y build-essential cmake libboost-all-dev
+```
+
+2. Install Crow:
+```bash
+# Clone the Crow repository
+git clone https://github.com/CrowCpp/Crow.git
+cd Crow
+
+# Create and enter build directory
+mkdir build
+cd build
+
+# Build and install Crow
+cmake .. -DCROW_BUILD_EXAMPLES=OFF -DCROW_BUILD_TESTS=OFF
+sudo cmake --build . --target install
+```
+3. Install nlohmann-json:
+```bash
+sudo apt install -y nlohmann-json3-dev
 ```
 
 ### Backend (Server)

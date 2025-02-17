@@ -39,6 +39,14 @@ class HomeErrorBoundary extends React.Component {
 function HomePage() {
     const viewerContainer = useRef(null);
     const [viewer, setViewer] = useState(null);
+    const [isLocked, setIsLocked] = useState(false);
+    const [boxStyle, setBoxStyle] = useState({
+        width: 200,
+        height: 200,
+        top: 100,
+        left: 100,
+    });
+    const boxRef = useRef(null);
 
     useEffect(() => {
         const savedToken = localStorage.getItem('cesiumIonKey') || defaultToken;
@@ -82,13 +90,69 @@ function HomePage() {
         }
     }, []); // Empty dependency array
 
+    const handleMouseDown = (e) => {
+        if (isLocked) return;
+
+        const startX = e.clientX;
+        const startY = e.clientY;
+        const startTop = boxStyle.top;
+        const startLeft = boxStyle.left;
+
+        const handleMouseMove = (e) => {
+            const newLeft = startLeft + (e.clientX - startX);
+            const newTop = startTop + (e.clientY - startY);
+            setBoxStyle((prevStyle) => ({
+                ...prevStyle,
+                top: newTop,
+                left: newLeft,
+            }));
+        };
+
+        const handleMouseUp = () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+    };
+
+    const handleResize = (e) => {
+        if (isLocked) return;
+
+        const startX = e.clientX;
+        const startY = e.clientY;
+        const startWidth = boxStyle.width;
+        const startHeight = boxStyle.height;
+
+        const handleMouseMove = (e) => {
+            const newWidth = startWidth + (e.clientX - startX);
+            const newHeight = startHeight + (e.clientY - startY);
+            setBoxStyle((prevStyle) => ({
+                ...prevStyle,
+                width: newWidth,
+                height: newHeight,
+            }));
+        };
+
+        const handleMouseUp = () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+    };
+
     return (
         <HomeErrorBoundary>
             <div id="wrapper" style={{ 
                 width: '100%', 
-                height: '100vh',
+                height: '100%',
                 position: 'relative',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                left: '20px',
+                paddingtop: '-10px',
             }}>
                 {/* <div id="toolbar">
                     <table className="infoPanel">
@@ -107,6 +171,36 @@ function HomePage() {
                     bottom: 0,
                     overflow: 'hidden'
                 }}></div>
+                <button onClick={() => setIsLocked(!isLocked)}>
+                    {isLocked ? 'Unlock' : 'Lock'}
+                </button>
+                <div
+                    ref={boxRef}
+                    style={{
+                        position: 'absolute',
+                        width: boxStyle.width,
+                        height: boxStyle.height,
+                        top: boxStyle.top,
+                        left: boxStyle.left,
+                        backgroundColor: 'lightblue',
+                        cursor: isLocked ? 'default' : 'move',
+                        zIndex: 9999,
+                    }}
+                    onMouseDown={handleMouseDown}
+                >
+                    <div
+                        style={{
+                            position: 'absolute',
+                            width: 10,
+                            height: 10,
+                            bottom: 0,
+                            right: 0,
+                            backgroundColor: 'darkblue',
+                            cursor: isLocked ? 'default' : 'nwse-resize',
+                        }}
+                        onMouseDown={handleResize}
+                    />
+                </div>
             </div>
         </HomeErrorBoundary>
     );

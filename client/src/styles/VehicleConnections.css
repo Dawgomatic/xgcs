@@ -1,0 +1,26 @@
+.vehicle-connections {
+  position: relative;
+  min-height: 100vh; /* Ensures the container takes full height */
+}
+
+.button-container {
+  position: absolute;
+  bottom: 20px; /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px; /* Space between buttons */
+}
+
+.button-container button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button-container button:hover {
+  background-color: #0056b3;
+} 

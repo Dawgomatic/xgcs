@@ -4,9 +4,14 @@ import '../styles/TopBar.css';
 
 function TopBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLive, setIsLive] = useState(true); // State for Live/Replay toggle
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleMode = () => {
+    setIsLive(!isLive);
   };
 
   return (
@@ -18,7 +23,12 @@ function TopBar() {
       </div>
       
       <div className={`menu-items ${isMenuOpen ? 'open' : ''}`}>
+        <button onClick={toggleMode} className="toggle-button">
+          {isLive ? 'Live' : 'Replay'}
+        </button>
         <Link to="/" onClick={toggleMenu}>Home</Link>
+        <Link to="/vehicle-connections" onClick={toggleMenu}>Vehicle Connections</Link>
+        <Link to="/mission-planning" onClick={toggleMenu}>Mission Planning</Link>
         <Link to="/settings" onClick={toggleMenu}>Settings</Link>
       </div>
     </div>

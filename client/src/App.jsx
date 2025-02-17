@@ -4,6 +4,7 @@ import './styles/App.css';
 import TopBar from './components/TopBar';
 import Settings from './pages/Settings';
 import HomePage from './pages/HomePage';
+import VehicleConnections from './pages/VehicleConnections';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Routes>
             <Route path="/settings" element={<Settings />} />
             <Route path="/" element={<HomePage />} />
+            <Route path="/vehicle-connections" element={<VehicleConnections />} />
           </Routes>
         </div>
       </div>
