@@ -3,7 +3,8 @@ client/node_modules
 /node_modules
 /.pnp
 .pnp.js
-
+/ardupilot
+/c_library_v2
 # Testing
 /coverage
 
