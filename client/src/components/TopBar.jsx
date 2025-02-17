@@ -30,6 +30,7 @@ function TopBar() {
         <Link to="/vehicle-connections" onClick={toggleMenu}>Vehicle Connections</Link>
         <Link to="/mission-planning" onClick={toggleMenu}>Mission Planning</Link>
         <Link to="/settings" onClick={toggleMenu}>Settings</Link>
+        <Link to="/template" onClick={toggleMenu}>Template Page</Link>
       </div>
     </div>
   );

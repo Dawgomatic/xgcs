@@ -1,0 +1,26 @@
+.template-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.template-header {
+  background-color: #f8f9fa;
+  padding: 20px;
+  text-align: center;
+}
+
+.template-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.template-footer {
+  background-color: #f8f9fa;
+  padding: 10px;
+  text-align: center;
+}
+
+.template-page h1 {
+  margin-bottom: 20px;
+} 

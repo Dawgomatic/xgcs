@@ -9,6 +9,8 @@ import {
     createDefaultImageryProviderViewModels
 } from 'cesium';
 import "cesium/Build/Cesium/Widgets/widgets.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLock, faUnlock } from '@fortawesome/free-solid-svg-icons';
 
 const defaultToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2MmM0MDgzZC00OGVkLTRjZTItOWI2MS1jMGVhYTM2MmMzODYiLCJpZCI6MjczNywiaWF0IjoxNjYyMTI4MjkxfQ.fPqhawtYLhwyZirKCi8fEjPEIn1CjYqETvA0bYYhWRA';
 
@@ -47,6 +49,7 @@ function HomePage() {
         left: 100,
     });
     const boxRef = useRef(null);
+    const [isBoxLocked, setIsBoxLocked] = useState(false);
 
     useEffect(() => {
         const savedToken = localStorage.getItem('cesiumIonKey') || defaultToken;
@@ -144,6 +147,11 @@ function HomePage() {
         document.addEventListener('mouseup', handleMouseUp);
     };
 
+    const toggleBoxLock = () => {
+        setIsBoxLocked(!isBoxLocked);
+        setIsLocked(!isLocked);
+    };
+
     return (
         <HomeErrorBoundary>
             <div id="wrapper" style={{ 
@@ -188,6 +196,16 @@ function HomePage() {
                     }}
                     onMouseDown={handleMouseDown}
                 >
+                    <FontAwesomeIcon
+                        icon={isBoxLocked ? faLock : faUnlock}
+                        style={{
+                            position: 'absolute',
+                            top: 5,
+                            left: 5,
+                            cursor: 'pointer',
+                        }}
+                        onClick={toggleBoxLock}
+                    />
                     <div
                         style={{
                             position: 'absolute',

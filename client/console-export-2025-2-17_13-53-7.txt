@@ -1,0 +1,83 @@
+Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools bundle.js:37726:21
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition. bundle.js:41016:13
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath. bundle.js:41016:13
+Error creating terrain provider: TypeError: this._cesiumWidget is undefined
+    get Viewer.js:1187
+    set Viewer.js:1255
+    initTerrain HomePage.jsx:76
+bundle.js:614:19
+Error saving items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1089:100
+Error saving items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1089:100
+Error fetching items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1085:134
+Error fetching items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1085:134
+Error saving items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1089:100
+Error saving items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1089:100
+Error creating terrain provider: TypeError: this._cesiumWidget is undefined
+    get Viewer.js:1187
+    set Viewer.js:1255
+    initTerrain HomePage.jsx:76
+bundle.js:614:19
+Error saving items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1089:100
+Error saving items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1089:100
+Error fetching items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1085:134
+Error fetching items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1085:134
+Error creating terrain provider: TypeError: this._cesiumWidget is undefined
+    get Viewer.js:1187
+    set Viewer.js:1255
+    initTerrain HomePage.jsx:76
+bundle.js:614:19
+Error saving items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1089:100
+Error fetching items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1085:134
+Error saving items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1089:100
+Error fetching items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1085:134
+Error saving items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1089:100
+Error saving items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1089:100
+Error creating terrain provider: TypeError: this._cesiumWidget is undefined
+    get Viewer.js:1187
+    set Viewer.js:1255
+    initTerrain HomePage.jsx:76
+bundle.js:614:19
+Error fetching items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1085:134
+Error saving items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1089:100
+Error saving items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1089:100
+Error fetching items: 
+Object { stack: "AxiosError@http://localhost:3000/static/js/bundle.js:61200:18\nsettle@http://localhost:3000/static/js/bundle.js:61862:12\nonloadend@http://localhost:3000/static/js/bundle.js:60509:66\n", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 404 }
+bundle.js:1085:134
