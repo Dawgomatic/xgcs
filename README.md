@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Node.js (v16 or higher)
+- Node.js (v20 or higher)
 - Yarn package manager
 - CMake (v3.10 or higher)
 - C++ compiler with C++17 support
@@ -10,6 +10,60 @@
 - nlohmann-json library
 
 ## Installation
+
+### Node.js & npm
+
+# First, update your package list
+```bash
+sudo apt update
+```
+
+# Install required packages
+```bash
+sudo apt install -y curl
+```
+
+# Remove any existing Node.js installation
+```bash
+sudo apt remove nodejs npm
+sudo apt autoremove
+```
+
+# Add NodeSource repository for Node.js 20 LTS
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+```
+
+# Install Node.js and npm
+```bash 
+sudo apt install -y nodejs
+```
+# Verify the installation (should show v20.x.x)
+```bash
+node --version
+npm --version
+```
+
+### Yarn
+
+# if yarn is already installed
+```bash
+sudo apt remove yarn
+sudo apt purge yarn
+sudo rm -rf /usr/local/bin/yarn
+sudo rm -rf /usr/local/bin/yarnpkg
+sudo rm -rf ~/.yarn
+sudo rm -rf ~/.config/yarn
+sudo rm -f /usr/bin/yarn
+sudo npm uninstall -g corepack
+```
+# else
+
+```bash
+sudo npm install -g corepack
+sudo corepack enable
+corepack prepare yarn@1.22.19 --activate
+```
 
 ### Frontend (Client)
 
@@ -21,6 +75,12 @@ cd client
 2. Install dependencies using Yarn:
 ```bash
 yarn install
+```
+
+### Cesium
+
+```bash
+npm run build
 ```
 
 ### Backend (Server)
