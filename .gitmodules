@@ -1,6 +1,20 @@
 [submodule "ardupilot"]
 	path = ardupilot
 	url = https://github.com/ArduPilot/ardupilot.git
+	branch = master
+
 [submodule "mavlink"]
 	path = c_library_v2
 	url = https://github.com/mavlink/c_library_v2.git
+	branch = master
+
+[submodule "server/MAVSDK"]
+	path = server/MAVSDK
+	url = https://github.com/mavlink/MAVSDK
+	branch = master
+
+[submodule "server/Crow"]
+	path = server/Crow
+	url = https://github.com/CrowCpp/Crow
+	branch = master
+

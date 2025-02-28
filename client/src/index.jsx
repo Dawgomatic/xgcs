@@ -4,6 +4,11 @@ import './styles/index.css';
 import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// Set initial theme
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.body.className = savedTheme;
+
 root.render(
   <React.StrictMode>
     <App />

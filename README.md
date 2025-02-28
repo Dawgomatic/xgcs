@@ -8,8 +8,13 @@
 - C++ compiler with C++17 support
 - Crow HTTP library
 - nlohmann-json library
-
+- python 3.10.12
 ## Installation
+
+after cloning the repo, run
+```bash
+git submodule update --init --recursive
+```
 
 ### Node.js & npm
 
@@ -111,6 +116,29 @@ sudo cmake --build . --target install
 sudo apt install -y nlohmann-json3-dev
 ```
 
+### MAVSDK
+```bash
+# Navigate to MAVSDK directory
+cd ~/xgcs/server/MAVSDK
+
+# Create and enter build directory
+mkdir -p build && cd build
+
+# Configure MAVSDK build
+cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON
+
+# Build MAVSDK
+cmake --build . -j$(nproc)
+
+# Navigate to MAVSDK build directory
+cd ~/xgcs/server/MAVSDK/build
+
+# Install MAVSDK to the local install directory
+cmake --install . --prefix install
+
+# Check if the MAVSDK installation files exist
+ls ~/xgcs/server/MAVSDK/build/install/lib/cmake/
+```
 ### Backend (Server)
 
 1. Create a build directory and navigate into it:
@@ -168,3 +196,10 @@ The backend API will be available at `http://localhost:3001`
     ├── include/         # Header files
     └── CMakeLists.txt   # CMake build configuration
 ```
+### Run ardupilot sim
+Pull from ardupilot master(what is masters current version?)
+```bash
+cd ardupilot/Tools/autotest
+python3 sim_vehicle.py -v ArduPlane --console --map
+```
+

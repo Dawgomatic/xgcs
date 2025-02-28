@@ -42,14 +42,27 @@ function HomePage() {
     const viewerContainer = useRef(null);
     const [viewer, setViewer] = useState(null);
     const [isLocked, setIsLocked] = useState(false);
-    const [boxStyle, setBoxStyle] = useState({
+
+    // Initialize state with values from localStorage if available
+    const initialBoxStyle = JSON.parse(localStorage.getItem('boxStyle')) || {
         width: 200,
         height: 200,
         top: 100,
         left: 100,
-    });
+    };
+    const [boxStyle, setBoxStyle] = useState(initialBoxStyle);
+
+    const initialIsBoxLocked = JSON.parse(localStorage.getItem('isBoxLocked')) || false;
+    const [isBoxLocked, setIsBoxLocked] = useState(initialIsBoxLocked);
+
     const boxRef = useRef(null);
-    const [isBoxLocked, setIsBoxLocked] = useState(false);
+
+    useEffect(() => {
+        console.log('Saving boxStyle to localStorage:', boxStyle);
+        localStorage.setItem('boxStyle', JSON.stringify(boxStyle));
+        console.log('Saving isBoxLocked to localStorage:', isBoxLocked);
+        localStorage.setItem('isBoxLocked', JSON.stringify(isBoxLocked));
+    }, [boxStyle, isBoxLocked]);
 
     useEffect(() => {
         const savedToken = localStorage.getItem('cesiumIonKey') || defaultToken;
