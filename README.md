@@ -118,6 +118,15 @@ sudo apt install -y nlohmann-json3-dev
 
 ### MAVSDK
 ```bash
+
+# build from source
+git clone https://github.com/mavlink/MAVSDK.git
+cd MAVSDK
+mkdir build && cd build
+cmake ..
+make
+sudo make install
+
 # Navigate to MAVSDK directory
 cd ~/xgcs/server/MAVSDK
 

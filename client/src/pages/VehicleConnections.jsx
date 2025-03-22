@@ -95,19 +95,16 @@ function VehicleConnections() {
   };
 
   const startTelemetry = () => {
-    const ws = new WebSocket('ws://localhost:8081/ws');
+    const ws = new WebSocket('ws://localhost:8081');
     
     ws.onopen = () => {
       console.log('WebSocket connected');
-      ws.send('start_telemetry');
     };
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.type === 'position') {
-        setPosition(data.data);
-        // Update Cesium viewer position here
-      }
+      setPosition(data.position);
+      // Update other state variables with telemetry data
     };
 
     setWebsocket(ws);
@@ -127,15 +124,15 @@ function VehicleConnections() {
       console.log('Connecting to:', selectedConnection);
       
       // Use the selected connection's IP and port
-      const connectionUrl = `tcp://${selectedConnection.ip}:${selectedConnection.port}`;
+      const connectionUrl = `tcp://${selectedConnection.connectionDetails.ip}:${selectedConnection.connectionDetails.port}`;
       console.log('Connection URL:', connectionUrl);
       
       const response = await axios.post('http://localhost:8081/connect', {
         url: connectionUrl,
-        // Pass additional connection details
-        type: selectedConnection.type,
-        ip: selectedConnection.ip,
-        port: selectedConnection.port
+        // Change this line - use connectionType instead of type
+        type: selectedConnection.connectionType.toLowerCase(),
+        ip: selectedConnection.connectionDetails.ip,
+        port: parseInt(selectedConnection.connectionDetails.port, 10)
       }, {
         headers: {
           'Content-Type': 'application/json'
