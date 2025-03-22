@@ -155,6 +155,41 @@ function VehicleConnections() {
     }
   };
 
+  const handleDisconnect = async () => {
+    try {
+      setIsConnecting(true);
+      setTemporaryStatus('Disconnecting from vehicle...');
+      
+      const response = await axios.post('http://localhost:8081/disconnect', {}, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('Server response:', response.data);
+
+      if (response.data.success) {
+        setTemporaryStatus('Disconnected successfully!');
+        
+        // Close the websocket if it exists
+        if (websocket) {
+          websocket.close();
+          setWebsocket(null);
+        }
+        
+        // Clear position data
+        setPosition(null);
+      } else {
+        setTemporaryStatus(`Disconnection failed: ${response.data.message}`, true);
+      }
+    } catch (error) {
+      console.error('Disconnection error:', error);
+      setTemporaryStatus(`Disconnection error: ${error.message}`, true);
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
   return (
     <div className="vehicle-connections">
       <h1>Vehicle Connections</h1>
@@ -179,7 +214,12 @@ function VehicleConnections() {
             >
               {isConnecting ? 'Connecting...' : 'Connect'}
             </button>
-            <button>Disconnect</button>
+            <button 
+              onClick={handleDisconnect}
+              disabled={isConnecting || !websocket}
+            >
+              Disconnect
+            </button>
           </div>
         </div>
       </div>

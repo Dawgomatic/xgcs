@@ -59,6 +59,23 @@ void handle_request(tcp::socket& socket) {
                 res.body() = response.dump();
             }
         }
+        // Handle disconnect request
+        else if (req.target() == "/disconnect" && req.method() == http::verb::post) {
+            try {
+                vehicle.disconnect();
+                
+                json response;
+                response["success"] = true;
+                response["message"] = "Disconnected successfully";
+                res.body() = response.dump();
+            } catch (const std::exception& e) {
+                res.result(http::status::internal_server_error);
+                json response;
+                response["success"] = false;
+                response["message"] = std::string("Error: ") + e.what();
+                res.body() = response.dump();
+            }
+        }
 
         res.prepare_payload();
         http::write(socket, res);
