@@ -95,19 +95,22 @@ function VehicleConnections() {
   };
 
   const startTelemetry = () => {
-    const ws = new WebSocket('ws://localhost:8081');
+    // Use polling instead of WebSockets
+    const intervalId = setInterval(async () => {
+      try {
+        const response = await fetch('http://localhost:3001/telemetry');
+        const data = await response.json();
+        
+        if (data.position) {
+          setPosition(data.position);
+        }
+      } catch (error) {
+        // console.error('Telemetry error:', error);
+      }
+    }, 100); // Poll every 100ms
     
-    ws.onopen = () => {
-      console.log('WebSocket connected');
-    };
-
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      setPosition(data.position);
-      // Update other state variables with telemetry data
-    };
-
-    setWebsocket(ws);
+    // Store the interval ID to clear it later
+    setWebsocket(intervalId); // Reuse the websocket state to store the interval ID
   };
 
   const handleConnect = async () => {
@@ -121,34 +124,30 @@ function VehicleConnections() {
     setTemporaryStatus('Connecting to vehicle...');
 
     try {
-      console.log('Connecting to:', selectedConnection);
-      
-      // Use the selected connection's IP and port
-      const connectionUrl = `tcp://${selectedConnection.connectionDetails.ip}:${selectedConnection.connectionDetails.port}`;
-      console.log('Connection URL:', connectionUrl);
-      
-      const response = await axios.post('http://localhost:8081/connect', {
-        url: connectionUrl,
-        // Change this line - use connectionType instead of type
-        type: selectedConnection.connectionType.toLowerCase(),
-        ip: selectedConnection.connectionDetails.ip,
-        port: parseInt(selectedConnection.connectionDetails.port, 10)
-      }, {
+      // Use the proxy server at port 3001
+      const response = await fetch('http://localhost:3001/connect', {
+        method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          ip: selectedConnection.connectionDetails.ip,
+          port: parseInt(selectedConnection.connectionDetails.port, 10)
+        })
       });
 
-      console.log('Server response:', response.data);
-
-      if (response.data.success) {
+      const data = await response.json();
+      // console.log('Received response:', data);
+      
+      if (data.success) {
         setTemporaryStatus('Connected successfully!');
-        startTelemetry(); // Start receiving position updates
+        startTelemetry();
       } else {
-        setTemporaryStatus(`Connection failed: ${response.data.message}`, true);
+        setTemporaryStatus(`Connection failed: ${data.message}`, true);
       }
     } catch (error) {
-      console.error('Connection error:', error);
+      // console.error('Connection error details:', error);
       setTemporaryStatus(`Connection error: ${error.message}`, true);
     } finally {
       setIsConnecting(false);
@@ -160,31 +159,30 @@ function VehicleConnections() {
       setIsConnecting(true);
       setTemporaryStatus('Disconnecting from vehicle...');
       
-      const response = await axios.post('http://localhost:8081/disconnect', {}, {
+      const response = await fetch('http://localhost:3001/disconnect', {
+        method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         }
       });
 
-      console.log('Server response:', response.data);
-
-      if (response.data.success) {
+      const data = await response.json();
+      
+      if (data.success) {
         setTemporaryStatus('Disconnected successfully!');
-        
-        // Close the websocket if it exists
         if (websocket) {
-          websocket.close();
+          clearInterval(websocket); // Clear the interval instead of closing the websocket
           setWebsocket(null);
         }
-        
-        // Clear position data
         setPosition(null);
       } else {
-        setTemporaryStatus(`Disconnection failed: ${response.data.message}`, true);
+        setTemporaryStatus(`Disconnection failed: ${data.message}`, true);
       }
     } catch (error) {
-      console.error('Disconnection error:', error);
-      setTemporaryStatus(`Disconnection error: ${error.message}`, true);
+      // console.error('Disconnection error:', error);
+      const errorMessage = error.response?.data?.message || error.message;
+      setTemporaryStatus(`Disconnection error: ${errorMessage}`, true);
     } finally {
       setIsConnecting(false);
     }
