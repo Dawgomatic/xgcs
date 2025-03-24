@@ -50,13 +50,11 @@ function VehicleConnections() {
 
     setConnectionStatus(message);
 
-    // Only set timeout for error messages
-    if (isError) {
-      const timeout = setTimeout(() => {
-        setConnectionStatus('');
-      }, 3000);
-      setStatusTimeout(timeout);
-    }
+    // Set timeout for all messages, not just errors
+    const timeout = setTimeout(() => {
+      setConnectionStatus('');
+    }, 3000);
+    setStatusTimeout(timeout);
   };
 
   const handleAddClick = () => {
