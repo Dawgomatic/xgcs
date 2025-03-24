@@ -164,13 +164,11 @@ int main() {
                 return res;
             }
             
-            json telemetry_data = {
-                {"position", {
-                    {"lat", 47.123},
-                    {"lng", -122.456},
-                    {"alt", 100.0}
-                }}
-            };
+            // Get real telemetry data from the vehicle as JSON string
+            std::string telemetry_json = ConnectionManager::instance().get_telemetry_data_json(vehicleId);
+            
+            // Parse the JSON string
+            json telemetry_data = json::parse(telemetry_json);
             
             res.code = 200;
             res.set_header("Content-Type", "application/json");
