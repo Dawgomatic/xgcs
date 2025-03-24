@@ -8,24 +8,28 @@ function VehicleModal({ isOpen, onClose, onAdd, initialValue = null }) {
   const [connectionType, setConnectionType] = useState('serial');
   const [connectionDetails, setConnectionDetails] = useState({});
   const [advancedSettings, setAdvancedSettings] = useState(false);
+  const [vehicleType, setVehicleType] = useState('');
 
   useEffect(() => {
     if (initialValue) {
       setInputValue(initialValue.name || '');
       setConnectionType(initialValue.connectionType || 'serial');
       setConnectionDetails(initialValue.connectionDetails || {});
+      setVehicleType(initialValue.connectionDetails?.vehicleType || '');
     } else {
       setInputValue('');
       setConnectionType('serial');
       setConnectionDetails({});
+      setVehicleType('');
     }
   }, [initialValue]);
 
   const handleAdd = () => {
     if (inputValue) {
-      onAdd({ name: inputValue, connectionType, connectionDetails });
+      onAdd({ name: inputValue, connectionType, connectionDetails, vehicleType });
       setInputValue('');
       setConnectionDetails({});
+      setVehicleType('');
       onClose();
     }
   };
@@ -151,6 +155,20 @@ function VehicleModal({ isOpen, onClose, onAdd, initialValue = null }) {
           </div>
         </>
       )}
+      <div className="form-group">
+        <label>Vehicle Type:</label>
+        <select 
+          value={vehicleType}
+          onChange={(e) => setVehicleType(e.target.value)}
+        >
+          <option value="">Select Type</option>
+          <option value="quadcopter">Quadcopter</option>
+          <option value="hexacopter">Hexacopter</option>
+          <option value="rover">Rover</option>
+          <option value="plane">Plane</option>
+          <option value="vtol">VTOL</option>
+        </select>
+      </div>
       <div className="button-group">
         <button onClick={onClose}>Cancel</button>
         <button onClick={handleAdd}>Save</button>

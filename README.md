@@ -212,3 +212,20 @@ cd ardupilot/Tools/autotest
 python3 sim_vehicle.py -v ArduPlane --console --map
 ```
 
+### Run xgcs
+```bash
+cd xgcs/client
+yarn start
+
+cd xgcs/server
+mkdir build
+cd build
+cmake ..
+make
+./server
+
+cd xgcs
+node proxy-server.js
+```
+
+

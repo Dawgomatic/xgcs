@@ -35,12 +35,12 @@ public:
                            std::function<void(const std::string&)> callback);
 
 private:
-    ConnectionManager() = default;
+    ConnectionManager();
     
     std::unordered_map<std::string, std::shared_ptr<mavsdk::System>> _systems;
     std::unordered_map<std::string, VehicleInfo> _vehicle_info;
     std::unordered_map<std::string, mavsdk::Mavsdk::ConnectionHandle> _connections;
     
     mutable std::mutex _mutex;
-    mavsdk::Mavsdk _mavsdk{mavsdk::Mavsdk::Configuration{mavsdk::ComponentType::GroundStation}};
+    mavsdk::Mavsdk _mavsdk;
 }; 

@@ -29,7 +29,7 @@ include_directories(
 # Add executable
 add_executable(server 
     src/main.cpp
-    src/vehicle_connection.cpp
+    src/connection_manager.cpp
 )
 
 # Link libraries

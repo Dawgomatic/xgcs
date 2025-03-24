@@ -12,7 +12,7 @@ function VehicleConnections() {
   const [connectionStatus, setConnectionStatus] = useState('');
   const [isConnecting, setIsConnecting] = useState(false);
   const [statusTimeout, setStatusTimeout] = useState(null);
-  const [websocket, setWebsocket] = useState(null);
+  const [activeConnections, setActiveConnections] = useState({});
   const [position, setPosition] = useState(null);
 
   useEffect(() => {
@@ -92,11 +92,10 @@ function VehicleConnections() {
     }
   };
 
-  const startTelemetry = () => {
-    // Use polling instead of WebSockets
+  const startTelemetry = (vehicleId) => {
     const intervalId = setInterval(async () => {
       try {
-        const response = await fetch('http://localhost:3001/telemetry');
+        const response = await fetch(`http://localhost:3001/telemetry?vehicleId=${vehicleId}`);
         const data = await response.json();
         
         if (data.position) {
@@ -105,10 +104,12 @@ function VehicleConnections() {
       } catch (error) {
         // console.error('Telemetry error:', error);
       }
-    }, 100); // Poll every 100ms
+    }, 100);
     
-    // Store the interval ID to clear it later
-    setWebsocket(intervalId); // Reuse the websocket state to store the interval ID
+    setActiveConnections(prev => ({
+      ...prev,
+      [vehicleId]: intervalId
+    }));
   };
 
   const handleConnect = async () => {
@@ -122,7 +123,6 @@ function VehicleConnections() {
     setTemporaryStatus('Connecting to vehicle...');
 
     try {
-      // Use the proxy server at port 3001
       const response = await fetch('http://localhost:3001/connect', {
         method: 'POST',
         headers: {
@@ -131,21 +131,21 @@ function VehicleConnections() {
         },
         body: JSON.stringify({
           ip: selectedConnection.connectionDetails.ip,
-          port: parseInt(selectedConnection.connectionDetails.port, 10)
+          port: parseInt(selectedConnection.connectionDetails.port, 10),
+          name: selectedConnection.name,
+          type: selectedConnection.connectionDetails.vehicleType || 'unknown'
         })
       });
 
       const data = await response.json();
-      // console.log('Received response:', data);
       
       if (data.success) {
         setTemporaryStatus('Connected successfully!');
-        startTelemetry();
+        startTelemetry(selectedConnection.name);
       } else {
         setTemporaryStatus(`Connection failed: ${data.message}`, true);
       }
     } catch (error) {
-      // console.error('Connection error details:', error);
       setTemporaryStatus(`Connection error: ${error.message}`, true);
     } finally {
       setIsConnecting(false);
@@ -153,6 +153,14 @@ function VehicleConnections() {
   };
 
   const handleDisconnect = async () => {
+    if (selectedItem === null) {
+      setTemporaryStatus('Please select a connection first', true);
+      return;
+    }
+
+    const selectedConnection = items[selectedItem];
+    const vehicleId = selectedConnection.name;
+    
     try {
       setIsConnecting(true);
       setTemporaryStatus('Disconnecting from vehicle...');
@@ -162,23 +170,33 @@ function VehicleConnections() {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
-        }
+        },
+        body: JSON.stringify({
+          name: vehicleId
+        })
       });
 
       const data = await response.json();
       
       if (data.success) {
         setTemporaryStatus('Disconnected successfully!');
-        if (websocket) {
-          clearInterval(websocket); // Clear the interval instead of closing the websocket
-          setWebsocket(null);
+        
+        if (activeConnections[vehicleId]) {
+          clearInterval(activeConnections[vehicleId]);
+          setActiveConnections(prev => {
+            const newConnections = {...prev};
+            delete newConnections[vehicleId];
+            return newConnections;
+          });
         }
-        setPosition(null);
+        
+        if (Object.keys(activeConnections).length === 0) {
+          setPosition(null);
+        }
       } else {
         setTemporaryStatus(`Disconnection failed: ${data.message}`, true);
       }
     } catch (error) {
-      // console.error('Disconnection error:', error);
       const errorMessage = error.response?.data?.message || error.message;
       setTemporaryStatus(`Disconnection error: ${errorMessage}`, true);
     } finally {
@@ -212,7 +230,7 @@ function VehicleConnections() {
             </button>
             <button 
               onClick={handleDisconnect}
-              disabled={isConnecting || !websocket}
+              disabled={isConnecting || selectedItem === null || !activeConnections[items[selectedItem]?.name]}
             >
               Disconnect
             </button>
