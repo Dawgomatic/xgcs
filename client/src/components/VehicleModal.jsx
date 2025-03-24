@@ -1,179 +1,172 @@
 import React, { useState, useEffect } from 'react';
-import Modal from 'react-modal';
-
-Modal.setAppElement('#root'); // Set the app element for accessibility
+import '../styles/VehicleModal.css';
 
 function VehicleModal({ isOpen, onClose, onAdd, initialValue = null }) {
-  const [inputValue, setInputValue] = useState('');
-  const [connectionType, setConnectionType] = useState('serial');
-  const [connectionDetails, setConnectionDetails] = useState({});
-  const [advancedSettings, setAdvancedSettings] = useState(false);
-  const [vehicleType, setVehicleType] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    connectionDetails: {
+      vehicleType: 'drone',
+      connectionType: 'udp',
+      ip: '127.0.0.1',
+      port: '14540',
+      serialPort: '',
+      baudRate: '57600'
+    },
+    modelUrl: '',
+    modelScale: 1.0
+  });
 
   useEffect(() => {
     if (initialValue) {
-      setInputValue(initialValue.name || '');
-      setConnectionType(initialValue.connectionType || 'serial');
-      setConnectionDetails(initialValue.connectionDetails || {});
-      setVehicleType(initialValue.connectionDetails?.vehicleType || '');
-    } else {
-      setInputValue('');
-      setConnectionType('serial');
-      setConnectionDetails({});
-      setVehicleType('');
+      setFormData({
+        ...initialValue,
+        modelUrl: initialValue.modelUrl || '',
+        modelScale: initialValue.modelScale || 1.0
+      });
     }
   }, [initialValue]);
 
-  const handleAdd = () => {
-    if (inputValue) {
-      onAdd({ name: inputValue, connectionType, connectionDetails, vehicleType });
-      setInputValue('');
-      setConnectionDetails({});
-      setVehicleType('');
-      onClose();
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name.includes('.')) {
+      const [parent, child] = name.split('.');
+      setFormData({
+        ...formData,
+        [parent]: {
+          ...formData[parent],
+          [child]: value
+        }
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
     }
   };
 
-  const handleConnectionDetailChange = (key, value) => {
-    setConnectionDetails((prevDetails) => ({
-      ...prevDetails,
-      [key]: value,
-    }));
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onAdd(formData);
   };
 
+  if (!isOpen) return null;
+
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel="Add/Edit Vehicle"
-      className="modal-content"
-      overlayClassName="modal"
-    >
-      <h2>{initialValue ? 'Edit Vehicle' : 'Add New Link'}</h2>
-      <div>
-        <label>Name</label>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Enter name"
-        />
-      </div>
-      <div>
-        <label>Type</label>
-        <select
-          value={connectionType}
-          onChange={(e) => setConnectionType(e.target.value)}
-        >
-          <option value="serial">Serial</option>
-          <option value="tcp">TCP</option>
-          <option value="udp">UDP</option>
-        </select>
-      </div>
-      {connectionType === 'serial' && (
-        <>
-          <div>
-            <label>Serial Port</label>
-            <input
-              type="text"
-              value={connectionDetails.port || ''}
-              onChange={(e) => handleConnectionDetailChange('port', e.target.value)}
-              placeholder="ttyS0"
-            />
-          </div>
-          <div>
-            <label>Baud Rate</label>
-            <input
-              type="text"
-              value={connectionDetails.baudRate || ''}
-              onChange={(e) => handleConnectionDetailChange('baudRate', e.target.value)}
-              placeholder="57600"
-            />
-          </div>
-          <div>
-            <label>
-              <input
-                type="checkbox"
-                checked={advancedSettings}
-                onChange={() => setAdvancedSettings(!advancedSettings)}
-              />
-              Advanced Settings
-            </label>
-          </div>
-          {advancedSettings && (
+    <div className="modal">
+      <div className="modal-content">
+        <h2>{initialValue ? 'Edit Connection' : 'Add Connection'}</h2>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="name">Name:</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+
+          <label htmlFor="connectionDetails.vehicleType">Vehicle Type:</label>
+          <select
+            id="connectionDetails.vehicleType"
+            name="connectionDetails.vehicleType"
+            value={formData.connectionDetails.vehicleType}
+            onChange={handleChange}
+          >
+            <option value="drone">Drone</option>
+            <option value="rover">Rover</option>
+            <option value="boat">Boat</option>
+          </select>
+
+          <label htmlFor="connectionDetails.connectionType">Connection Type:</label>
+          <select
+            id="connectionDetails.connectionType"
+            name="connectionDetails.connectionType"
+            value={formData.connectionDetails.connectionType}
+            onChange={handleChange}
+          >
+            <option value="udp">UDP</option>
+            <option value="tcp">TCP</option>
+            <option value="serial">Serial</option>
+          </select>
+
+          {formData.connectionDetails.connectionType === 'serial' ? (
             <>
-              <div>
-                <label>Parity</label>
-                <select
-                  value={connectionDetails.parity || 'None'}
-                  onChange={(e) => handleConnectionDetailChange('parity', e.target.value)}
-                >
-                  <option value="None">None</option>
-                  <option value="Even">Even</option>
-                  <option value="Odd">Odd</option>
-                </select>
-              </div>
-              <div>
-                <label>Data Bits</label>
-                <input
-                  type="text"
-                  value={connectionDetails.dataBits || '8'}
-                  onChange={(e) => handleConnectionDetailChange('dataBits', e.target.value)}
-                />
-              </div>
-              <div>
-                <label>Stop Bits</label>
-                <input
-                  type="text"
-                  value={connectionDetails.stopBits || '1'}
-                  onChange={(e) => handleConnectionDetailChange('stopBits', e.target.value)}
-                />
-              </div>
+              <label htmlFor="connectionDetails.serialPort">Serial Port:</label>
+              <input
+                id="connectionDetails.serialPort"
+                name="connectionDetails.serialPort"
+                type="text"
+                value={formData.connectionDetails.serialPort}
+                onChange={handleChange}
+                required={formData.connectionDetails.connectionType === 'serial'}
+              />
+
+              <label htmlFor="connectionDetails.baudRate">Baud Rate:</label>
+              <input
+                id="connectionDetails.baudRate"
+                name="connectionDetails.baudRate"
+                type="text"
+                value={formData.connectionDetails.baudRate}
+                onChange={handleChange}
+                required={formData.connectionDetails.connectionType === 'serial'}
+              />
+            </>
+          ) : (
+            <>
+              <label htmlFor="connectionDetails.ip">IP Address:</label>
+              <input
+                id="connectionDetails.ip"
+                name="connectionDetails.ip"
+                type="text"
+                value={formData.connectionDetails.ip}
+                onChange={handleChange}
+                required={formData.connectionDetails.connectionType !== 'serial'}
+              />
+
+              <label htmlFor="connectionDetails.port">Port:</label>
+              <input
+                id="connectionDetails.port"
+                name="connectionDetails.port"
+                type="text"
+                value={formData.connectionDetails.port}
+                onChange={handleChange}
+                required={formData.connectionDetails.connectionType !== 'serial'}
+              />
             </>
           )}
-        </>
-      )}
-      {(connectionType === 'tcp' || connectionType === 'udp') && (
-        <>
-          <div>
-            <label>IP Address</label>
-            <input
-              type="text"
-              value={connectionDetails.ip || ''}
-              onChange={(e) => handleConnectionDetailChange('ip', e.target.value)}
-              placeholder="Enter IP address"
-            />
+
+          {/* 3D Model Fields */}
+          <label htmlFor="modelUrl">3D Model URL (optional):</label>
+          <input
+            id="modelUrl"
+            name="modelUrl"
+            type="text"
+            value={formData.modelUrl}
+            onChange={handleChange}
+            placeholder="https://example.com/model.glb"
+          />
+
+          <label htmlFor="modelScale">Model Scale:</label>
+          <input
+            id="modelScale"
+            name="modelScale"
+            type="number"
+            value={formData.modelScale}
+            onChange={(e) => setFormData({...formData, modelScale: parseFloat(e.target.value)})}
+            min="0.1"
+            max="10"
+            step="0.1"
+          />
+
+          <div className="button-group">
+            <button type="button" onClick={onClose}>Cancel</button>
+            <button type="submit">{initialValue ? 'Save' : 'Add'}</button>
           </div>
-          <div>
-            <label>Port</label>
-            <input
-              type="text"
-              value={connectionDetails.port || ''}
-              onChange={(e) => handleConnectionDetailChange('port', e.target.value)}
-              placeholder="Enter port"
-            />
-          </div>
-        </>
-      )}
-      <div className="form-group">
-        <label>Vehicle Type:</label>
-        <select 
-          value={vehicleType}
-          onChange={(e) => setVehicleType(e.target.value)}
-        >
-          <option value="">Select Type</option>
-          <option value="quadcopter">Quadcopter</option>
-          <option value="hexacopter">Hexacopter</option>
-          <option value="rover">Rover</option>
-          <option value="plane">Plane</option>
-          <option value="vtol">VTOL</option>
-        </select>
+        </form>
       </div>
-      <div className="button-group">
-        <button onClick={onClose}>Cancel</button>
-        <button onClick={handleAdd}>Save</button>
-      </div>
-    </Modal>
+    </div>
   );
 }
 

@@ -277,4 +277,34 @@ ConnectionManager::TelemetryData ConnectionManager::get_telemetry_data(const std
     data.attitude.yaw = attitude.yaw_deg;
     
     return data;
+}
+
+struct ConnectionData {
+    std::string id;
+    std::string type;
+    std::string port;
+    int baudRate;
+    std::string host;
+    int tcpPort;
+    std::string modelUrl;
+    double modelScale;
+};
+
+bool ConnectionManager::addConnection(const std::string& id, const std::string& type, 
+                                     const std::string& port, int baudRate,
+                                     const std::string& host, int tcpPort,
+                                     const std::string& modelUrl, double modelScale) {
+    // ... existing code
+    
+    ConnectionData data;
+    data.id = id;
+    data.type = type;
+    data.port = port;
+    data.baudRate = baudRate;
+    data.host = host;
+    data.tcpPort = tcpPort;
+    data.modelUrl = modelUrl;
+    data.modelScale = modelScale;
+    
+    // ... rest of the function
 } 

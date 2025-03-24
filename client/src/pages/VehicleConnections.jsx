@@ -14,6 +14,7 @@ function VehicleConnections() {
   const [statusTimeout, setStatusTimeout] = useState(null);
   const [activeConnections, setActiveConnections] = useState({});
   const [position, setPosition] = useState(null);
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
     // Load items from localStorage when the component mounts
@@ -133,7 +134,9 @@ function VehicleConnections() {
           ip: selectedConnection.connectionDetails.ip,
           port: parseInt(selectedConnection.connectionDetails.port, 10),
           name: selectedConnection.name,
-          type: selectedConnection.connectionDetails.vehicleType || 'unknown'
+          type: selectedConnection.connectionDetails.vehicleType || 'unknown',
+          modelUrl: selectedConnection.modelUrl || '',
+          modelScale: selectedConnection.modelScale || 1.0
         })
       });
 
