@@ -1,9 +1,12 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
 import {
   Cartesian3,
   Math as CesiumMath,
   HeadingPitchRoll,
   Transforms,
+  // Remove SampledPositionProperty & JulianDate if no longer needed here
+  // SampledPositionProperty, 
+  // JulianDate
 } from 'cesium';
 import { Color as CesiumColor } from '@cesium/engine';
 
@@ -17,9 +20,9 @@ export function VehicleProvider({ children }) {
   const viewerRef = useRef(null);
 
   // Set Cesium viewer reference for use in entity creation
-  const setViewer = (viewer) => {
+  const setViewer = useCallback((viewer) => {
     viewerRef.current = viewer;
-  };
+  }, []);
 
   // Fetch connected vehicles 
   useEffect(() => {
@@ -62,7 +65,6 @@ export function VehicleProvider({ children }) {
             [vehicleId]: data
           }));
           
-          // If we have a viewer, update the entity
           if (viewerRef.current) {
             updateVehicleEntity(vehicleId, data);
           }
@@ -72,10 +74,8 @@ export function VehicleProvider({ children }) {
       }
     };
     
-    // Fetch immediately
     fetchTelemetry();
     
-    // Set up polling interval
     const intervalId = setInterval(fetchTelemetry, 100);
     telemetryIntervals.current[vehicleId] = intervalId;
     
@@ -92,14 +92,30 @@ export function VehicleProvider({ children }) {
 
   // Update or create a vehicle entity based on telemetry data
   const updateVehicleEntity = (vehicleId, data) => {
-    if (!viewerRef.current) return;
+    if (!viewerRef.current) {
+      console.warn("updateVehicleEntity called but viewerRef is not current.");
+      return;
+    }
     
     const viewer = viewerRef.current;
-    let entity = vehicleEntities[vehicleId];
+
+    // --- Add detailed logging before the check ---
+    console.log(`[${new Date().toISOString()}] updateVehicleEntity called with vehicleId:`, vehicleId);
+    try {
+      const currentEntityIds = viewer.entities.values.map(e => e.id);
+      console.log(`[${new Date().toISOString()}] Cesium known entity IDs before getById:`, currentEntityIds);
+    } catch (e) {
+      console.error("Error getting entity IDs:", e)
+    }
+    const foundEntity = viewer.entities.getById(vehicleId);
+    console.log(`[${new Date().toISOString()}] Result of viewer.entities.getById('${vehicleId}'):`, foundEntity);
+    // --- End detailed logging ---
+
+    let entity = foundEntity; // Use the variable we just checked
     
-    // If the entity doesn't exist, create it
     if (!entity) {
-      // Find the vehicle config from connectedVehicles
+      console.warn(`Creating NEW Cesium entity for vehicleId: ${vehicleId}`);
+
       const vehicleConfig = connectedVehicles.find(v => v.id === vehicleId || v.name === vehicleId);
       
       if (!vehicleConfig) {
@@ -108,22 +124,10 @@ export function VehicleProvider({ children }) {
       }
       
       // Create a new entity
-      entity = viewer.entities.add({
+      const entityProperties = {
         id: vehicleId,
-        position: undefined,
-        orientation: undefined,
-        model: {
-          uri: vehicleConfig.modelUrl || 'https://assets.ion.cesium.com/models/drone2/Scene/drone2.gltf',
-          scale: vehicleConfig.modelScale || 5.0,
-          minimumPixelSize: 128,
-          maximumScale: 20000
-        },
-        path: {
-          material: CesiumColor.fromRgba(0, 255, 255, 255),
-          width: 2,
-          leadTime: 0,
-          trailTime: 60 * 60 // 1 hour trail
-        },
+        position: undefined, // Position will be updated shortly
+        orientation: undefined, // Orientation will be updated shortly
         label: {
           text: vehicleId,
           font: '14pt sans-serif',
@@ -136,30 +140,44 @@ export function VehicleProvider({ children }) {
             y: -50
           }
         }
-      });
+      };
+
+      // Conditionally add model or point
+      if (vehicleConfig && vehicleConfig.modelUrl) {
+        console.log(`Using model URL for ${vehicleId}: ${vehicleConfig.modelUrl}`);
+        entityProperties.model = {
+          uri: vehicleConfig.modelUrl,
+          scale: vehicleConfig.modelScale || 5.0,
+          minimumPixelSize: 128,
+          maximumScale: 20000
+        };
+      } else {
+        console.log(`No model URL for ${vehicleId}, using fallback point.`);
+        entityProperties.point = {
+          pixelSize: 15,
+          color: CesiumColor.RED,
+          outlineColor: CesiumColor.WHITE,
+          outlineWidth: 2
+        };
+      }
+
+      entity = viewer.entities.add(entityProperties);
       
-      // Update the state with the new entity
       setVehicleEntities(prev => ({
         ...prev,
         [vehicleId]: entity
       }));
     }
     
-    // Now update the entity with the latest telemetry data
-    if (data && data.position) {
-      const position = {
-        longitude: data.position.lng,
-        latitude: data.position.lat,
-        height: data.position.alt
-      };
-      
-      entity.position = Cartesian3.fromDegrees(
-        position.longitude,
-        position.latitude,
-        position.height
+    if (entity && data && data.position) {
+      const positionCartesian = Cartesian3.fromDegrees(
+        data.position.lng,
+        data.position.lat,
+        data.position.alt
       );
       
-      // Update orientation if available
+      entity.position = positionCartesian;
+      
       if (data.attitude) {
         const hpr = new HeadingPitchRoll(
           CesiumMath.toRadians(data.attitude.yaw),
@@ -167,9 +185,12 @@ export function VehicleProvider({ children }) {
           CesiumMath.toRadians(data.attitude.roll)
         );
         entity.orientation = Transforms.headingPitchRollQuaternion(
-          entity.position._value,
+          positionCartesian,
           hpr
         );
+      } else {
+        // Explicitly clear orientation if attitude data is missing?
+        // entity.orientation = undefined; 
       }
     }
   };

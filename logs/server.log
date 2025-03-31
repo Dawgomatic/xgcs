@@ -1,177 +1,273 @@
 Starting server on port 8081...
-[34m[06:42:43|Info ] [0mMAVSDK version: v3.2.0 (mavsdk_impl.cpp:30)
+[34m[12:01:13|Info ] [0mMAVSDK version: v3.2.0 (mavsdk_impl.cpp:30)
 ConnectionManager initialized
 Adding vehicle: v1 with URL: tcp://127.0.0.1:5763
-[33m[06:42:53|Warn ] [0mConnection using tcp:// is deprecated, please use tcpin:// or tcpout:// (cli_arg.cpp:41)
-[32m[06:42:53|Debug] [0mNew system ID: 1 Comp ID: 1 (mavsdk_impl.cpp:730)
-[32m[06:42:53|Debug] [0mComponent Autopilot (1) added. (system_impl.cpp:377)
-[33m[06:42:53|Warn ] [0mVehicle type changed (new type: 1, old type: 0) (system_impl.cpp:217)
-[32m[06:42:53|Debug] [0mDiscovered 1 component(s) (system_impl.cpp:497)
-[32m[06:42:53|Debug] [0mRequest message 148 using REQUEST_MESSAGE (mavlink_request_message.cpp:78)
+[33m[12:01:21|Warn ] [0mConnection using tcp:// is deprecated, please use tcpin:// or tcpout:// (cli_arg.cpp:41)
+[32m[12:01:21|Debug] [0mNew system ID: 1 Comp ID: 1 (mavsdk_impl.cpp:730)
+[32m[12:01:21|Debug] [0mComponent Autopilot (1) added. (system_impl.cpp:377)
+[33m[12:01:21|Warn ] [0mVehicle type changed (new type: 1, old type: 0) (system_impl.cpp:217)
+[32m[12:01:21|Debug] [0mDiscovered 1 component(s) (system_impl.cpp:497)
+[32m[12:01:21|Debug] [0mRequest message 148 using REQUEST_MESSAGE (mavlink_request_message.cpp:78)
 New system discovered. Total systems: 1
   System connected: 1
 Started telemetry output for vehicle: v1
-[32m[06:42:53|Debug] [0mRequest message 242 using REQUEST_MESSAGE (mavlink_request_message.cpp:78)
-[32m[06:42:54|Debug] [0mNew system ID: 255 Comp ID: 230 (mavsdk_impl.cpp:730)
-[32m[06:42:54|Debug] [0mComponent Unsupported component (230) added. (system_impl.cpp:377)
-[32m[06:42:54|Debug] [0mDiscovered 1 component(s) (system_impl.cpp:497)
+[32m[12:01:21|Debug] [0mRequest message 242 using REQUEST_MESSAGE (mavlink_request_message.cpp:78)
+[32m[12:01:22|Debug] [0mNew system ID: 255 Comp ID: 230 (mavsdk_impl.cpp:730)
+[32m[12:01:22|Debug] [0mComponent Unsupported component (230) added. (system_impl.cpp:377)
+[32m[12:01:22|Debug] [0mDiscovered 1 component(s) (system_impl.cpp:497)
 New system discovered. Total systems: 2
   System connected: 1
   System connected: 1
 [v1] Armed: Yes
-[v1] Flight mode: Return to Launch
+[v1] Flight mode: Unknown
 [v1] Health: Gyro: NOT OK, Accel: NOT OK, Mag: NOT OK, GPS: NOT OK
-[v1] Attitude: Roll: 37.9956°, Pitch: -1.6542°, Yaw: 163.787°
-[v1] Position: Lat: -35.3631°, Lon: 149.166°, Alt: 99.98m
-[v1] Battery: 12.257V, 0%
-[v1] Battery: 12.257V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 38.0119°, Pitch: -1.82018°, Yaw: 177.484°
-[v1] Position: Lat: -35.3633°, Lon: 149.166°, Alt: 99.992m
-[v1] Battery: 12.259V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 38.0422°, Pitch: -1.7905°, Yaw: -168.523°
-[v1] Position: Lat: -35.3635°, Lon: 149.166°, Alt: 100.045m
-[v1] Battery: 12.262V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.8845°, Pitch: -1.90225°, Yaw: -154.708°
-[v1] Position: Lat: -35.3637°, Lon: 149.166°, Alt: 100.015m
-[v1] Battery: 12.261V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.8897°, Pitch: -1.66549°, Yaw: -140.605°
-[v1] Position: Lat: -35.3638°, Lon: 149.166°, Alt: 100.029m
-[v1] Battery: 12.259V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.947°, Pitch: -1.92675°, Yaw: -126.834°
-[v1] Position: Lat: -35.364°, Lon: 149.166°, Alt: 99.997m
-[v1] Battery: 12.259V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.9008°, Pitch: -1.91789°, Yaw: -112.868°
-[v1] Position: Lat: -35.3641°, Lon: 149.166°, Alt: 100.029m
-[v1] Battery: 12.259V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.8654°, Pitch: -1.98519°, Yaw: -99.0609°
-[v1] Position: Lat: -35.3641°, Lon: 149.165°, Alt: 100.018m
-[v1] Battery: 12.26V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.9245°, Pitch: -1.80894°, Yaw: -85.0006°
-[v1] Position: Lat: -35.3641°, Lon: 149.165°, Alt: 100.019m
-[v1] Battery: 12.26V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.8833°, Pitch: -1.9933°, Yaw: -71.079°
-[v1] Position: Lat: -35.3641°, Lon: 149.165°, Alt: 100.007m
-[v1] Battery: 12.261V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.8532°, Pitch: -1.89111°, Yaw: -56.9968°
-[v1] Position: Lat: -35.364°, Lon: 149.165°, Alt: 100.007m
-[v1] Battery: 12.26V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.8108°, Pitch: -1.97727°, Yaw: -43.08°
-[v1] Position: Lat: -35.3638°, Lon: 149.164°, Alt: 100.017m
-[v1] Battery: 12.261V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.7651°, Pitch: -1.93721°, Yaw: -29.233°
-[v1] Position: Lat: -35.3636°, Lon: 149.164°, Alt: 100.014m
+[v1] Attitude: Roll: 37.8935°, Pitch: -1.50226°, Yaw: 136.987°
+[v1] Position: Lat: -35.3609°, Lon: 149.166°, Alt: 50.025m
+[v1] Battery: 12.258V, 0%
 [v1] Battery: 12.258V, 0%
 [v1] Armed: Yes
-[v1] Flight mode: Return to Launch
+[v1] Flight mode: Unknown
 [v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.7747°, Pitch: -1.89516°, Yaw: -15.3019°
-[v1] Position: Lat: -35.3635°, Lon: 149.164°, Alt: 100.029m
-[v1] Battery: 12.261V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.8736°, Pitch: -1.97653°, Yaw: -1.53837°
-[v1] Position: Lat: -35.3632°, Lon: 149.164°, Alt: 99.997m
-[v1] Battery: 12.259V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.7361°, Pitch: -1.96086°, Yaw: 12.3657°
-[v1] Position: Lat: -35.363°, Lon: 149.164°, Alt: 100.026m
-[v1] Battery: 12.259V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 38.0806°, Pitch: -1.85467°, Yaw: 26.3675°
-[v1] Position: Lat: -35.3628°, Lon: 149.164°, Alt: 99.96m
-[v1] Battery: 12.256V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.7693°, Pitch: -1.88488°, Yaw: 40.3387°
-[v1] Position: Lat: -35.3627°, Lon: 149.164°, Alt: 100.009m
-[v1] Battery: 12.26V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 38.0562°, Pitch: -2.03357°, Yaw: 54.1128°
-[v1] Position: Lat: -35.3625°, Lon: 149.165°, Alt: 99.948m
-[v1] Battery: 12.259V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.5538°, Pitch: -2.00618°, Yaw: 68.0142°
-[v1] Position: Lat: -35.3624°, Lon: 149.165°, Alt: 100.003m
+[v1] Attitude: Roll: 37.793°, Pitch: -1.61898°, Yaw: 150.783°
+[v1] Position: Lat: -35.3611°, Lon: 149.166°, Alt: 50.048m
 [v1] Battery: 12.262V, 0%
 [v1] Armed: Yes
-[v1] Flight mode: Return to Launch
+[v1] Flight mode: Unknown
 [v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.8961°, Pitch: -1.70162°, Yaw: 82.0028°
-[v1] Position: Lat: -35.3624°, Lon: 149.165°, Alt: 99.958m
-[v1] Battery: 12.258V, 0%
+[v1] Attitude: Roll: 37.8622°, Pitch: -1.54447°, Yaw: 164.727°
+[v1] Position: Lat: -35.3613°, Lon: 149.166°, Alt: 50.041m
+[v1] Battery: 12.257V, 0%
 [v1] Armed: Yes
-[v1] Flight mode: Return to Launch
+[v1] Flight mode: Unknown
 [v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 38.062°, Pitch: -1.82957°, Yaw: 95.8477°
-[v1] Position: Lat: -35.3624°, Lon: 149.165°, Alt: 100.007m
-[v1] Battery: 12.259V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.8283°, Pitch: -1.95809°, Yaw: 109.706°
-[v1] Position: Lat: -35.3625°, Lon: 149.166°, Alt: 99.994m
-[v1] Battery: 12.261V, 0%
-[v1] Armed: Yes
-[v1] Flight mode: Return to Launch
-[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.8364°, Pitch: -1.90224°, Yaw: 123.686°
-[v1] Position: Lat: -35.3626°, Lon: 149.166°, Alt: 100.012m
+[v1] Attitude: Roll: 37.8738°, Pitch: -1.68005°, Yaw: 178.579°
+[v1] Position: Lat: -35.3615°, Lon: 149.166°, Alt: 50.031m
 [v1] Battery: 12.26V, 0%
 [v1] Armed: Yes
-[v1] Flight mode: Return to Launch
+[v1] Flight mode: Unknown
 [v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 37.9143°, Pitch: -1.93538°, Yaw: 137.522°
-[v1] Position: Lat: -35.3627°, Lon: 149.166°, Alt: 99.975m
+[v1] Attitude: Roll: 37.9262°, Pitch: -1.62828°, Yaw: -167.319°
+[v1] Position: Lat: -35.3617°, Lon: 149.166°, Alt: 50.027m
 [v1] Battery: 12.259V, 0%
 [v1] Armed: Yes
-[v1] Flight mode: Return to Launch
+[v1] Flight mode: Unknown
 [v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
-[v1] Attitude: Roll: 38.02°, Pitch: -1.78383°, Yaw: 151.571°
-[v1] Position: Lat: -35.3629°, Lon: 149.166°, Alt: 99.982m
+[v1] Attitude: Roll: 37.8223°, Pitch: -1.60089°, Yaw: -153.3°
+[v1] Position: Lat: -35.3619°, Lon: 149.166°, Alt: 50.021m
+[v1] Battery: 12.258V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.854°, Pitch: -1.67087°, Yaw: -139.555°
+[v1] Position: Lat: -35.3621°, Lon: 149.166°, Alt: 49.991m
+[v1] Battery: 12.259V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.6325°, Pitch: -1.64867°, Yaw: -125.648°
+[v1] Position: Lat: -35.3622°, Lon: 149.166°, Alt: 50.016m
+[v1] Battery: 12.26V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.8213°, Pitch: -1.40097°, Yaw: -111.678°
+[v1] Position: Lat: -35.3623°, Lon: 149.165°, Alt: 50.016m
+[v1] Battery: 12.259V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 38.0087°, Pitch: -1.72077°, Yaw: -97.9777°
+[v1] Position: Lat: -35.3623°, Lon: 149.165°, Alt: 50.017m
+[v1] Battery: 12.26V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.9223°, Pitch: -1.76249°, Yaw: -84.0616°
+[v1] Position: Lat: -35.3623°, Lon: 149.165°, Alt: 50.029m
+[v1] Battery: 12.261V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.8129°, Pitch: -1.69127°, Yaw: -70.1156°
+[v1] Position: Lat: -35.3623°, Lon: 149.165°, Alt: 50.036m
+[v1] Battery: 12.258V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 38.2774°, Pitch: -1.49039°, Yaw: -56.0505°
+[v1] Position: Lat: -35.3622°, Lon: 149.164°, Alt: 49.989m
+[v1] Battery: 12.255V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 38.0602°, Pitch: -1.73368°, Yaw: -42.232°
+[v1] Position: Lat: -35.362°, Lon: 149.164°, Alt: 50.015m
+[v1] Battery: 12.259V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.7118°, Pitch: -1.662°, Yaw: -28.1845°
+[v1] Position: Lat: -35.3618°, Lon: 149.164°, Alt: 49.998m
+[v1] Battery: 12.259V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.7695°, Pitch: -1.65714°, Yaw: -14.2963°
+[v1] Position: Lat: -35.3616°, Lon: 149.164°, Alt: 50.015m
+[v1] Battery: 12.259V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.9795°, Pitch: -1.5069°, Yaw: -0.369546°
+[v1] Position: Lat: -35.3614°, Lon: 149.164°, Alt: 49.979m
 [v1] Battery: 12.257V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 38.1349°, Pitch: -1.58503°, Yaw: 13.519°
+[v1] Position: Lat: -35.3612°, Lon: 149.164°, Alt: 50.013m
+[v1] Battery: 12.259V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.877°, Pitch: -1.6763°, Yaw: 27.3955°
+[v1] Position: Lat: -35.361°, Lon: 149.164°, Alt: 50.007m
+[v1] Battery: 12.26V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.7377°, Pitch: -1.57642°, Yaw: 41.5288°
+[v1] Position: Lat: -35.3609°, Lon: 149.164°, Alt: 50.046m
+[v1] Battery: 12.261V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.8469°, Pitch: -1.59212°, Yaw: 55.3278°
+[v1] Position: Lat: -35.3607°, Lon: 149.164°, Alt: 50m
+[v1] Battery: 12.259V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 38.0181°, Pitch: -1.59174°, Yaw: 69.3238°
+[v1] Position: Lat: -35.3606°, Lon: 149.165°, Alt: 50.018m
+[v1] Battery: 12.257V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 38.0703°, Pitch: -1.48208°, Yaw: 83.3135°
+[v1] Position: Lat: -35.3606°, Lon: 149.165°, Alt: 50.026m
+[v1] Battery: 12.259V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 38.0888°, Pitch: -1.44726°, Yaw: 97.3445°
+[v1] Position: Lat: -35.3606°, Lon: 149.165°, Alt: 50.048m
+[v1] Battery: 12.259V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.9496°, Pitch: -1.72394°, Yaw: 111.038°
+[v1] Position: Lat: -35.3607°, Lon: 149.165°, Alt: 50.032m
+[v1] Battery: 12.26V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.9111°, Pitch: -1.46498°, Yaw: 125.213°
+[v1] Position: Lat: -35.3608°, Lon: 149.166°, Alt: 50.021m
+[v1] Battery: 12.258V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.8692°, Pitch: -1.6872°, Yaw: 138.9°
+[v1] Position: Lat: -35.3609°, Lon: 149.166°, Alt: 50.017m
+[v1] Battery: 12.261V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.7625°, Pitch: -1.597°, Yaw: 152.97°
+[v1] Position: Lat: -35.3611°, Lon: 149.166°, Alt: 50.017m
+[v1] Battery: 12.259V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.8003°, Pitch: -1.63288°, Yaw: 166.888°
+[v1] Position: Lat: -35.3613°, Lon: 149.166°, Alt: 50.013m
+[v1] Battery: 12.261V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.9119°, Pitch: -1.56981°, Yaw: -179.199°
+[v1] Position: Lat: -35.3615°, Lon: 149.166°, Alt: 50.024m
+[v1] Battery: 12.259V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.777°, Pitch: -1.6894°, Yaw: -165.289°
+[v1] Position: Lat: -35.3617°, Lon: 149.166°, Alt: 50.025m
+[v1] Battery: 12.26V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.9874°, Pitch: -1.59945°, Yaw: -151.508°
+[v1] Position: Lat: -35.3619°, Lon: 149.166°, Alt: 50.013m
+[v1] Battery: 12.257V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.8974°, Pitch: -1.61481°, Yaw: -137.585°
+[v1] Position: Lat: -35.3621°, Lon: 149.166°, Alt: 50.027m
+[v1] Battery: 12.259V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 38.0814°, Pitch: -1.4677°, Yaw: -123.441°
+[v1] Position: Lat: -35.3622°, Lon: 149.165°, Alt: 50.025m
+[v1] Battery: 12.259V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.8306°, Pitch: -1.64558°, Yaw: -109.573°
+[v1] Position: Lat: -35.3623°, Lon: 149.165°, Alt: 50.012m
+[v1] Battery: 12.26V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.6565°, Pitch: -1.69116°, Yaw: -95.7211°
+[v1] Position: Lat: -35.3623°, Lon: 149.165°, Alt: 50.017m
+[v1] Battery: 12.26V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.6475°, Pitch: -1.4768°, Yaw: -81.5457°
+[v1] Position: Lat: -35.3623°, Lon: 149.165°, Alt: 50.03m
+[v1] Battery: 12.259V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 38.0317°, Pitch: -1.34571°, Yaw: -67.7031°
+[v1] Position: Lat: -35.3622°, Lon: 149.165°, Alt: 49.974m
+[v1] Battery: 12.257V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 38.0261°, Pitch: -1.63818°, Yaw: -54.0258°
+[v1] Position: Lat: -35.3621°, Lon: 149.164°, Alt: 50.014m
+[v1] Battery: 12.261V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.9411°, Pitch: -1.53383°, Yaw: -40.1924°
+[v1] Position: Lat: -35.362°, Lon: 149.164°, Alt: 49.99m
+[v1] Battery: 12.259V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 37.8973°, Pitch: -1.44382°, Yaw: -26.1407°
+[v1] Position: Lat: -35.3618°, Lon: 149.164°, Alt: 50.028m
+[v1] Battery: 12.26V, 0%
+[v1] Armed: Yes
+[v1] Flight mode: Unknown
+[v1] Health: Gyro: OK, Accel: OK, Mag: OK, GPS: OK
+[v1] Attitude: Roll: 38.0093°, Pitch: -1.56674°, Yaw: -12.2545°
+[v1] Position: Lat: -35.3616°, Lon: 149.164°, Alt: 50.003m
+[v1] Battery: 12.258V, 0%

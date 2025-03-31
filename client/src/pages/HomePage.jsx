@@ -20,6 +20,7 @@ import {
 import "cesium/Build/Cesium/Widgets/widgets.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock, faUnlock, faPlus, faEye, faEyeSlash, faCrosshairs } from '@fortawesome/free-solid-svg-icons';
+import { useVehicles } from '../context/VehicleContext'; // Import the context hook
 
 const defaultToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2MmM0MDgzZC00OGVkLTRjZTItOWI2MS1jMGVhYTM2MmMzODYiLCJpZCI6MjczNywiaWF0IjoxNjYyMTI4MjkxfQ.fPqhawtYLhwyZirKCi8fEjPEIn1CjYqETvA0bYYhWRA';
 
@@ -68,14 +69,20 @@ class HomeErrorBoundary extends React.Component {
 
 function HomePage() {
     const viewerContainer = useRef(null);
-    const [viewer, setViewer] = useState(null);
+    const viewerRef = useRef(null); // Use a ref for the viewer instance
     const [isLocked, setIsLocked] = useState(false);
-    const [vehicleEntities, setVehicleEntities] = useState({});
-    const [connectedVehicles, setConnectedVehicles] = useState([]);
     const [selectedVehicle, setSelectedVehicle] = useState(null);
-    const [telemetryData, setTelemetryData] = useState(null);
-    const telemetryIntervalRef = useRef(null);
     const defaultEntityRef = useRef(null);
+    
+    // Get data and functions from context
+    const { 
+        connectedVehicles, 
+        vehicleEntities, // Use entities from context for snapToVehicle
+        telemetryData, 
+        setViewer, // Function to pass viewer to context
+        startTelemetryPolling, // Use context's polling start
+        stopTelemetryPolling // Use context's polling stop
+    } = useVehicles();
 
     // Initialize state with values from localStorage if available
     const initialBoxStyle = JSON.parse(localStorage.getItem('boxStyle')) || {
@@ -91,184 +98,6 @@ function HomePage() {
 
     const boxRef = useRef(null);
 
-    // Function to start polling for telemetry data
-    const startTelemetryPolling = (vehicleId) => {
-        // Clear any existing interval
-        if (telemetryIntervalRef.current) {
-            clearInterval(telemetryIntervalRef.current);
-        }
-        
-        // Find the vehicle config from connectedVehicles
-        const vehicleConfig = connectedVehicles.find(v => v.id === vehicleId);
-        
-        // Function to fetch telemetry data
-        const fetchTelemetry = async () => {
-            try {
-                const response = await fetch(`http://localhost:3001/telemetry?vehicleId=${vehicleId}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setTelemetryData(data);
-                    
-                    // Update the entity position and orientation with vehicle config
-                    updateVehicleEntity(vehicleId, data, vehicleConfig);
-                }
-            } catch (error) {
-                console.error('Error fetching telemetry:', error);
-            }
-        };
-        
-        // Fetch immediately
-        fetchTelemetry();
-        
-        // Set up polling interval
-        telemetryIntervalRef.current = setInterval(fetchTelemetry, 100);
-    };
-
-    // Update or create a vehicle entity based on telemetry data
-    const updateVehicleEntity = (vehicleId, data, vehicleConfig) => {
-        if (!viewer) return;
-        
-        // If we have position data
-        if (data.position) {
-            const { lat, lng, alt } = data.position;
-            const position = Cartesian3.fromDegrees(lng, lat, alt);
-            
-            // If we have attitude data
-            let orientation;
-            if (data.attitude) {
-                const { roll, pitch, yaw } = data.attitude;
-                const hpr = new HeadingPitchRoll(
-                    degreesToRadians(yaw),
-                    degreesToRadians(pitch),
-                    degreesToRadians(roll)
-                );
-                orientation = Transforms.headingPitchRollQuaternion(position, hpr);
-            }
-            
-            // Check if we already have an entity for this vehicle
-            if (vehicleEntities[vehicleId]) {
-                // Update existing entity
-                const entity = vehicleEntities[vehicleId];
-                entity.position = position;
-                if (orientation) {
-                    entity.orientation = orientation;
-                }
-                
-                // If the vehicle has a 3D model configured, use it
-                if (vehicleConfig && vehicleConfig.modelUrl) {
-                    // Remove the point if it exists
-                    if (entity.point) {
-                        entity.point = undefined;
-                    }
-                    
-                    // Add or update the model
-                    if (!entity.model) {
-                        entity.model = {
-                            uri: vehicleConfig.modelUrl,
-                            minimumPixelSize: 128,
-                            maximumScale: 20000,
-                            scale: vehicleConfig.modelScale || 1.0,
-                            runAnimations: false,
-                            heightReference: 0
-                        };
-                    } else {
-                        entity.model.uri = vehicleConfig.modelUrl;
-                        entity.model.scale = vehicleConfig.modelScale || 1.0;
-                    }
-                } else {
-                    // Ensure the point is visible if no model is configured
-                    if (!entity.point) {
-                        entity.point = {
-                            pixelSize: 15,
-                            color: Color.RED,
-                            outlineColor: Color.WHITE,
-                            outlineWidth: 2,
-                            heightReference: 0 // NONE
-                        };
-                    }
-                }
-                
-                // Ensure the label is visible
-                if (!entity.label) {
-                    entity.label = {
-                        text: vehicleId,
-                        font: '14pt sans-serif',
-                        style: LabelStyle.FILL_AND_OUTLINE,
-                        outlineWidth: 2,
-                        verticalOrigin: VerticalOrigin.BOTTOM,
-                        pixelOffset: new Cartesian3(0, -15, 0),
-                        fillColor: Color.WHITE,
-                        outlineColor: Color.BLACK,
-                        showBackground: true,
-                        backgroundColor: new Color(0.165, 0.165, 0.165, 0.8),
-                        backgroundPadding: new Cartesian3(7, 5, 0),
-                        disableDepthTestDistance: Number.POSITIVE_INFINITY
-                    };
-                }
-            } else {
-                // Create a new entity with a point
-                const entity = viewer.entities.add({
-                    name: vehicleId,
-                    position: position,
-                    orientation: orientation,
-                    point: {
-                        pixelSize: 15,
-                        color: Color.RED,
-                        outlineColor: Color.WHITE,
-                        outlineWidth: 2,
-                        heightReference: 0 // NONE
-                    },
-                    label: {
-                        text: vehicleId,
-                        font: '14pt sans-serif',
-                        style: LabelStyle.FILL_AND_OUTLINE,
-                        outlineWidth: 2,
-                        verticalOrigin: VerticalOrigin.BOTTOM,
-                        pixelOffset: new Cartesian3(0, -15, 0),
-                        fillColor: Color.WHITE,
-                        outlineColor: Color.BLACK,
-                        showBackground: true,
-                        backgroundColor: new Color(0.165, 0.165, 0.165, 0.8),
-                        backgroundPadding: new Cartesian3(7, 5, 0),
-                        disableDepthTestDistance: Number.POSITIVE_INFINITY
-                    },
-                    path: {
-                        show: true,
-                        width: 3,
-                        material: Color.RED,
-                        leadTime: 0,
-                        trailTime: 60,
-                        resolution: 1
-                    }
-                });
-                
-                // Store the entity reference
-                setVehicleEntities(prev => ({
-                    ...prev,
-                    [vehicleId]: entity
-                }));
-                
-                // Hide the default entity if we have a real vehicle
-                if (defaultEntityRef.current) {
-                    defaultEntityRef.current.show = false;
-                }
-                
-                // If the vehicle has a 3D model configured, use it
-                if (vehicleConfig && vehicleConfig.modelUrl) {
-                    entity.model = {
-                        uri: vehicleConfig.modelUrl,
-                        minimumPixelSize: 128,
-                        maximumScale: 20000,
-                        scale: vehicleConfig.modelScale || 1.0,
-                        runAnimations: false,
-                        heightReference: 0
-                    };
-                    entity.point = undefined; // Remove the point
-                }
-            }
-        }
-    };
-
     // Save box style and lock state to localStorage
     useEffect(() => {
         localStorage.setItem('boxStyle', JSON.stringify(boxStyle));
@@ -281,7 +110,10 @@ function HomePage() {
         Ion.defaultAccessToken = savedToken;
         window.CESIUM_BASE_URL = '/cesium';
 
-        if (viewerContainer.current) {
+        let isMounted = true; // Flag to prevent state updates on unmounted component
+
+        if (viewerContainer.current && !viewerRef.current) {
+            console.log("Attempting to initialize Cesium Viewer...");
             const cesiumViewer = new Viewer(viewerContainer.current, {
                 homeButton: false,
                 timeline: true,
@@ -296,20 +128,48 @@ function HomePage() {
                 )
             });
 
-            setViewer(cesiumViewer);
+            viewerRef.current = cesiumViewer;
+            setViewer(cesiumViewer); // Pass viewer instance to context
+            console.log("Cesium viewer instance created and passed to context.");
 
-            // Add a default entity
-            const entity = addDefaultEntity(cesiumViewer);
-            defaultEntityRef.current = entity;
-
-            // Clean up on unmount
-            return () => {
-                if (cesiumViewer && !cesiumViewer.isDestroyed()) {
-                    cesiumViewer.destroy();
-                }
-            };
+            // Add a default entity 
+            const defaultEntity = addDefaultEntity(cesiumViewer);
+            if (defaultEntity) {
+                defaultEntityRef.current = defaultEntity;
+                console.log("Default entity added.");
+            } else {
+                console.warn("Failed to add default entity.");
+            }
+        } else {
+            // Log if the effect runs but doesn't initialize (e.g., viewer already exists)
+            if (viewerRef.current) {
+                console.log("Viewer initialization effect ran, but viewer already exists.");
+            } else {
+                console.log("Viewer initialization effect ran, but viewerContainer is not ready.");
+            }
         }
-    }, []);
+
+        // Clean up on unmount
+        return () => {
+            isMounted = false;
+            console.log("HomePage unmounting - cleaning up viewer...");
+            // Check if viewerRef.current exists and is not already destroyed
+            const viewerInstance = viewerRef.current;
+            if (viewerInstance && !viewerInstance.isDestroyed()) {
+                console.log("Destroying Cesium viewer instance...");
+                viewerInstance.destroy();
+                console.log("Cesium viewer instance destroyed.");
+            }
+            // Always clear the ref and context on cleanup
+            viewerRef.current = null;
+            // Check if setViewer is still valid before calling
+            if (typeof setViewer === 'function') {
+                setViewer(null); 
+            }
+            console.log("Viewer ref and context viewer cleared.");
+        };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // <<<< Use Empty dependency array to run only ONCE on mount
 
     // Add this function to create a default entity with a point
     const addDefaultEntity = (cesiumViewer) => {
@@ -372,58 +232,44 @@ function HomePage() {
 
     // Ultra-simple version of snapToVehicle
     const snapToVehicle = () => {
+        const viewer = viewerRef.current;
         if (!viewer) return;
         
         let entityToSnap;
         
         if (selectedVehicle && vehicleEntities[selectedVehicle]) {
             entityToSnap = vehicleEntities[selectedVehicle];
-        } else if (defaultEntityRef.current) {
+        } else if (defaultEntityRef.current && defaultEntityRef.current.show) {
             entityToSnap = defaultEntityRef.current;
         } else {
-            console.warn("No entity to snap to");
-            return; // No entity to snap to
+            const firstVehicleId = Object.keys(vehicleEntities)[0];
+            if (firstVehicleId) {
+                entityToSnap = vehicleEntities[firstVehicleId];
+            } else {
+                console.warn("No entity to snap to");
+                return;
+            }
         }
         
-        // Just use zoomTo which is the most reliable method
-        viewer.zoomTo(entityToSnap);
+        if (entityToSnap) {
+            viewer.zoomTo(entityToSnap);
+        }
     };
 
-    // Fetch connected vehicles
-    useEffect(() => {
-        const fetchConnectedVehicles = async () => {
-            try {
-                const response = await fetch('http://localhost:3001/connections');
-                if (response.ok) {
-                    const data = await response.json();
-                    setConnectedVehicles(data.connections || []);
-                }
-            } catch (error) {
-                console.error('Error fetching connections:', error);
-            }
-        };
-
-        // Fetch initially
-        fetchConnectedVehicles();
-
-        // Set up polling
-        const interval = setInterval(fetchConnectedVehicles, 5000);
-        
-        return () => clearInterval(interval);
-    }, []);
-
-    // Start telemetry polling when a vehicle is selected
+    // Start/Stop telemetry polling when selectedVehicle changes
     useEffect(() => {
         if (selectedVehicle) {
             startTelemetryPolling(selectedVehicle);
         }
         
         return () => {
-            if (telemetryIntervalRef.current) {
-                clearInterval(telemetryIntervalRef.current);
+            if (selectedVehicle) {
+                // Consider if stopping polling here is right,
+                // maybe only stop on unmount or disconnect?
+                // Context handles stop on disconnect, so maybe do nothing here?
             }
         };
-    }, [selectedVehicle]); // Include startTelemetryPolling in dependencies
+    }, [selectedVehicle, startTelemetryPolling, stopTelemetryPolling]);
 
     // Handle mouse down for dragging the telemetry box
     const handleMouseDown = (e) => {
@@ -487,6 +333,9 @@ function HomePage() {
         setIsLocked(!isLocked);
     };
 
+    // Get telemetry for the selected vehicle from context data
+    const currentTelemetry = telemetryData[selectedVehicle];
+
     return (
         <HomeErrorBoundary>
             <div id="wrapper" style={{ 
@@ -526,13 +375,13 @@ function HomePage() {
                             <select 
                                 id="vehicle-select"
                                 value={selectedVehicle || ''}
-                                onChange={(e) => setSelectedVehicle(e.target.value)}
+                                onChange={(e) => setSelectedVehicle(e.target.value || null)}
                                 style={{ padding: '5px', width: '100%' }}
                             >
                                 <option value="">Select Vehicle</option>
                                 {connectedVehicles.map(vehicle => (
-                                    <option key={vehicle.id} value={vehicle.id}>
-                                        {vehicle.id}
+                                    <option key={vehicle.id || vehicle.name} value={vehicle.id || vehicle.name}>
+                                        {vehicle.id || vehicle.name}
                                     </option>
                                 ))}
                             </select>
@@ -550,7 +399,7 @@ function HomePage() {
                 </div>
                 
                 {/* Telemetry data display */}
-                {telemetryData && (
+                {currentTelemetry && (
                     <div
                         ref={boxRef}
                         style={{
@@ -580,18 +429,19 @@ function HomePage() {
                         />
                         <h3 style={{ margin: '0 0 10px 0' }}>Telemetry: {selectedVehicle}</h3>
                         <div style={{ fontSize: '0.9em' }}>
-                            <div><strong>Position:</strong> {telemetryData.position.lat.toFixed(6)}°, {telemetryData.position.lng.toFixed(6)}°, {telemetryData.position.alt.toFixed(1)}m</div>
-                            <div><strong>Attitude:</strong> R: {telemetryData.attitude.roll.toFixed(1)}°, P: {telemetryData.attitude.pitch.toFixed(1)}°, Y: {telemetryData.attitude.yaw.toFixed(1)}°</div>
-                            <div><strong>Battery:</strong> {telemetryData.battery.voltage.toFixed(1)}V, {telemetryData.battery.remaining.toFixed(0)}%</div>
-                            <div><strong>Flight Mode:</strong> {telemetryData.flight_mode}</div>
-                            <div><strong>Armed:</strong> {telemetryData.armed ? 'Yes' : 'No'}</div>
-                            <div><strong>Health:</strong></div>
-                            <ul style={{ margin: '5px 0', paddingLeft: '20px' }}>
-                                <li>Gyro: {telemetryData.health.gyro_ok ? 'OK' : 'NOT OK'}</li>
-                                <li>Accel: {telemetryData.health.accel_ok ? 'OK' : 'NOT OK'}</li>
-                                <li>Mag: {telemetryData.health.mag_ok ? 'OK' : 'NOT OK'}</li>
-                                <li>GPS: {telemetryData.health.gps_ok ? 'OK' : 'NOT OK'}</li>
-                            </ul>
+                            <div><strong>Position:</strong> {currentTelemetry.position.lat.toFixed(6)}°, {currentTelemetry.position.lng.toFixed(6)}°, {currentTelemetry.position.alt.toFixed(1)}m</div>
+                            <div><strong>Attitude:</strong> R: {currentTelemetry.attitude.roll.toFixed(1)}°, P: {currentTelemetry.attitude.pitch.toFixed(1)}°, Y: {currentTelemetry.attitude.yaw.toFixed(1)}°</div>
+                            {currentTelemetry.battery && <div><strong>Battery:</strong> {currentTelemetry.battery.voltage?.toFixed(1)}V, {currentTelemetry.battery.remaining?.toFixed(0)}%</div>}
+                            {currentTelemetry.flight_mode && <div><strong>Flight Mode:</strong> {currentTelemetry.flight_mode}</div>}
+                            {currentTelemetry.armed !== undefined && <div><strong>Armed:</strong> {currentTelemetry.armed ? 'Yes' : 'No'}</div>}
+                            {currentTelemetry.health && <div><strong>Health:</strong>
+                                <ul style={{ margin: '5px 0', paddingLeft: '20px' }}>
+                                    <li>Gyro: {currentTelemetry.health.gyro_ok ? 'OK' : 'NOT OK'}</li>
+                                    <li>Accel: {currentTelemetry.health.accel_ok ? 'OK' : 'NOT OK'}</li>
+                                    <li>Mag: {currentTelemetry.health.mag_ok ? 'OK' : 'NOT OK'}</li>
+                                    <li>GPS: {currentTelemetry.health.gps_ok ? 'OK' : 'NOT OK'}</li>
+                                </ul>
+                            </div>}
                         </div>
                         <div
                             style={{
