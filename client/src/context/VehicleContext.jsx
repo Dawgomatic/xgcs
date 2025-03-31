@@ -4,9 +4,12 @@ import {
   Math as CesiumMath,
   HeadingPitchRoll,
   Transforms,
-  // Remove SampledPositionProperty & JulianDate if no longer needed here
-  // SampledPositionProperty, 
-  // JulianDate
+  SampledPositionProperty,
+  JulianDate,
+  TimeIntervalCollection,
+  TimeInterval,
+  PolylineGlowMaterialProperty,
+  ConstantPositionProperty
 } from 'cesium';
 import { Color as CesiumColor } from '@cesium/engine';
 
@@ -18,6 +21,8 @@ export function VehicleProvider({ children }) {
   const [telemetryData, setTelemetryData] = useState({});
   const telemetryIntervals = useRef({});
   const viewerRef = useRef(null);
+  const pathInitializedRef = useRef({});
+  const previousPositionRef = useRef({});
 
   // Set Cesium viewer reference for use in entity creation
   const setViewer = useCallback((viewer) => {
@@ -98,24 +103,13 @@ export function VehicleProvider({ children }) {
     }
     
     const viewer = viewerRef.current;
+    const pathEntityId = `${vehicleId}_path`;
 
-    // --- Add detailed logging before the check ---
-    console.log(`[${new Date().toISOString()}] updateVehicleEntity called with vehicleId:`, vehicleId);
-    try {
-      const currentEntityIds = viewer.entities.values.map(e => e.id);
-      console.log(`[${new Date().toISOString()}] Cesium known entity IDs before getById:`, currentEntityIds);
-    } catch (e) {
-      console.error("Error getting entity IDs:", e)
-    }
-    const foundEntity = viewer.entities.getById(vehicleId);
-    console.log(`[${new Date().toISOString()}] Result of viewer.entities.getById('${vehicleId}'):`, foundEntity);
-    // --- End detailed logging ---
+    let entity = viewer.entities.getById(vehicleId);
 
-    let entity = foundEntity; // Use the variable we just checked
-    
+    // --- Entity Creation Block ---
     if (!entity) {
       console.warn(`Creating NEW Cesium entity for vehicleId: ${vehicleId}`);
-
       const vehicleConfig = connectedVehicles.find(v => v.id === vehicleId || v.name === vehicleId);
       
       if (!vehicleConfig) {
@@ -126,8 +120,8 @@ export function VehicleProvider({ children }) {
       // Create a new entity
       const entityProperties = {
         id: vehicleId,
-        position: undefined, // Position will be updated shortly
-        orientation: undefined, // Orientation will be updated shortly
+        // Position and path will be added on first/second update
+        orientation: undefined, 
         label: {
           text: vehicleId,
           font: '14pt sans-serif',
@@ -139,7 +133,7 @@ export function VehicleProvider({ children }) {
             x: 0,
             y: -50
           }
-        }
+        } // Removed path from initial creation
       };
 
       // Conditionally add model or point
@@ -163,21 +157,87 @@ export function VehicleProvider({ children }) {
 
       entity = viewer.entities.add(entityProperties);
       
-      setVehicleEntities(prev => ({
-        ...prev,
-        [vehicleId]: entity
-      }));
-    }
+      // Note: Position is NOT set here initially
+      setVehicleEntities(prev => ({ ...prev, [vehicleId]: entity })); // Store main entity ref
+      pathInitializedRef.current[vehicleId] = false; // Initial state
+      delete previousPositionRef.current[vehicleId]; // Clear any stale previous position
+      console.log(`[${new Date().toISOString()}] Created minimal entity for ${vehicleId}`);
+    } // End of if(!entity)
     
+    // --- Handle position and path updates ---
     if (entity && data && data.position) {
       const positionCartesian = Cartesian3.fromDegrees(
         data.position.lng,
         data.position.lat,
         data.position.alt
       );
-      
+      const time = JulianDate.now();
+
+      // --- Update Main Entity Position ALWAYS ---
+      // Keep the main entity's position as a simple Cartesian3/ConstantPositionProperty
       entity.position = positionCartesian;
-      
+
+      // --- Path Entity Logic ---
+      const initState = pathInitializedRef.current[vehicleId];
+
+      if (initState === true) {
+        // Path fully initialized, add sample to path entity
+        const pathEntity = viewer.entities.getById(pathEntityId);
+        if (pathEntity && pathEntity.position instanceof SampledPositionProperty) {
+          pathEntity.position.addSample(time, positionCartesian);
+        } else if (pathEntity) {
+          console.warn(`[${new Date().toISOString()}] Path entity found for ${vehicleId}, but its position is not SampledPositionProperty.`);
+          // Attempt recovery? Or assume it will fix itself if init state was wrong?
+        } else {
+          console.warn(`[${new Date().toISOString()}] Path entity ${pathEntityId} not found even though init flag is true.`);
+          // Reset flag?
+          pathInitializedRef.current[vehicleId] = false;
+        }
+
+      } else if (initState === 'pending') {
+        // Second update: Initialize SampledPositionProperty and create path entity
+        const previousPosition = previousPositionRef.current[vehicleId];
+
+        if (previousPosition) {
+          console.log(`[${new Date().toISOString()}] Initializing path entity for ${vehicleId}`);
+          const previousTime = JulianDate.addSeconds(time, -0.1, new JulianDate()); // Estimate previous time
+
+          const pathSampledPosition = new SampledPositionProperty();
+          pathSampledPosition.addSample(previousTime, previousPosition);
+          pathSampledPosition.addSample(time, positionCartesian);
+
+          // Create/Configure the path entity
+          const pathEntity = viewer.entities.getOrCreateEntity(pathEntityId);
+          pathEntity.position = pathSampledPosition; // Assign ONLY to path entity
+          pathEntity.path = {
+            resolution: 1,
+            material: new PolylineGlowMaterialProperty({
+              glowPower: 0.2,
+              color: CesiumColor.YELLOW,
+            }),
+            width: 5,
+            leadTime: 0,
+            trailTime: 60,
+          };
+          console.log(`[${new Date().toISOString()}] Path entity ${pathEntityId} configured.`);
+
+          // *** Set the flag to true ***
+          pathInitializedRef.current[vehicleId] = true;
+          delete previousPositionRef.current[vehicleId]; // Clean up stored position
+
+        } else {
+          console.error(`[${new Date().toISOString()}] Path init state is 'pending' but no previous position found for ${vehicleId}. Resetting.`);
+          pathInitializedRef.current[vehicleId] = false; // Reset state
+        }
+
+      } else { // initState === false
+        // First update: Store position and set flag to 'pending'
+        console.log(`[${new Date().toISOString()}] Storing initial position for path generation for ${vehicleId}`);
+        previousPositionRef.current[vehicleId] = positionCartesian.clone(); // Store a copy
+        pathInitializedRef.current[vehicleId] = 'pending';
+      }
+
+      // --- Attitude Update (applies to main entity) ---
       if (data.attitude) {
         const hpr = new HeadingPitchRoll(
           CesiumMath.toRadians(data.attitude.yaw),
@@ -214,8 +274,9 @@ export function VehicleProvider({ children }) {
       if (data.success) {
         // Stop polling for this vehicle
         stopTelemetryPolling(vehicleId);
+        const pathEntityId = `${vehicleId}_path`; // Ensure ID is defined
         
-        // If we have an entity for this vehicle, remove it
+        // Remove main entity
         if (vehicleEntities[vehicleId] && viewerRef.current) {
           viewerRef.current.entities.remove(vehicleEntities[vehicleId]);
           setVehicleEntities(prev => {
@@ -223,7 +284,23 @@ export function VehicleProvider({ children }) {
             delete updated[vehicleId];
             return updated;
           });
+          console.log(`Removed main entity ${vehicleId}`);
         }
+        
+        // Remove PATH entity using its ID
+        if (viewerRef.current) {
+          const pathEntityToRemove = viewerRef.current.entities.getById(pathEntityId);
+          if (pathEntityToRemove) {
+            viewerRef.current.entities.remove(pathEntityToRemove);
+            console.log(`Removed path entity ${pathEntityId}`);
+          } else {
+            console.log(`Path entity ${pathEntityId} not found during disconnect.`);
+          }
+        }
+        
+        // *** Clear BOTH refs ***
+        delete pathInitializedRef.current[vehicleId];
+        delete previousPositionRef.current[vehicleId];
         
         // Remove telemetry data
         setTelemetryData(prev => {
