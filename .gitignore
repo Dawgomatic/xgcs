@@ -31,3 +31,6 @@ server/build/
 # IDE
 .vscode/
 .idea/ 
+# Additional node_modules patterns
+**/node_modules/
+**/node_modules/**
