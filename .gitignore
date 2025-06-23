@@ -123,3 +123,9 @@ jspm_packages/
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Comprehensive exclusions
+**/node_modules/
+*.pem
+*.key
+id_rsa*
