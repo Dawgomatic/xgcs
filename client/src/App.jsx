@@ -8,6 +8,8 @@ import Settings from './pages/Settings';
 import HomePage from './pages/HomePage';
 import VehicleConnections from './pages/VehicleConnections';
 import TemplatePage from './pages/TemplatePage';
+import MissionPlanning from './pages/MissionPlanning';
+import Simulation from './pages/Simulation';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/vehicle-connections" element={<VehicleConnections />} />
                 <Route path="/template" element={<TemplatePage />} />
+                <Route path="/mission-planning" element={<MissionPlanning />} />
+                <Route path="/simulation" element={<Simulation />} />
               </Routes>
             </div>
           </div>

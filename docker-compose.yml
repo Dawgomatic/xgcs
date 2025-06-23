@@ -1,0 +1,138 @@
+version: '3.8'
+
+services:
+  # Frontend React application
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - xgcs-network
+    restart: unless-stopped
+
+  # Backend Node.js server
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    networks:
+      - xgcs-network
+    restart: unless-stopped
+
+  # ArduPilot SITL Container
+  sitl-arducopter:
+    image: ardupilot/ardupilot-sitl:latest
+    container_name: sitl-arducopter
+    ports:
+      - "5760:5760"  # MAVLink
+      - "5761:5761"  # MAVLink2
+      - "5762:5762"  # MAVLink3
+      - "5763:5763"  # MAVLink4
+      - "5501:5501"  # SITL
+      - "5502:5502"  # SITL2
+      - "5503:5503"  # SITL3
+      - "5504:5504"  # SITL4
+    environment:
+      - SITL_INSTANCE=0
+      - VEHICLE_TYPE=ArduCopter
+      - FRAME_TYPE=quad
+      - SPEEDUP=1.0
+      - HOME_LOCATION=37.7749,-122.4194,0,0
+    command: >
+      --model quad
+      --home 37.7749,-122.4194,0,0
+      --speedup 1.0
+      --instance 0
+    networks:
+      - xgcs-network
+    profiles:
+      - sitl
+
+  # Additional SITL instances for multiple vehicles
+  sitl-arduplane:
+    image: ardupilot/ardupilot-sitl:latest
+    container_name: sitl-arduplane
+    ports:
+      - "5770:5760"  # MAVLink
+      - "5771:5761"  # MAVLink2
+      - "5505:5501"  # SITL
+      - "5506:5502"  # SITL2
+    environment:
+      - SITL_INSTANCE=1
+      - VEHICLE_TYPE=ArduPlane
+      - FRAME_TYPE=plane
+      - SPEEDUP=1.0
+      - HOME_LOCATION=37.7749,-122.4194,0,0
+    command: >
+      --model plane
+      --home 37.7749,-122.4194,0,0
+      --speedup 1.0
+      --instance 1
+    networks:
+      - xgcs-network
+    profiles:
+      - sitl
+
+  sitl-ardurover:
+    image: ardupilot/ardupilot-sitl:latest
+    container_name: sitl-ardurover
+    ports:
+      - "5780:5760"  # MAVLink
+      - "5781:5761"  # MAVLink2
+      - "5507:5501"  # SITL
+      - "5508:5502"  # SITL2
+    environment:
+      - SITL_INSTANCE=2
+      - VEHICLE_TYPE=ArduRover
+      - FRAME_TYPE=rover
+      - SPEEDUP=1.0
+      - HOME_LOCATION=37.7749,-122.4194,0,0
+    command: >
+      --model rover
+      --home 37.7749,-122.4194,0,0
+      --speedup 1.0
+      --instance 2
+    networks:
+      - xgcs-network
+    profiles:
+      - sitl
+
+  # MAVSDK Server for vehicle communication
+  mavsdk-server:
+    build:
+      context: ./MAVSDK
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - MAVSDK_SERVER_PORT=5001
+    volumes:
+      - ./MAVSDK:/app
+    networks:
+      - xgcs-network
+    depends_on:
+      - sitl-arducopter
+    profiles:
+      - sitl
+
+networks:
+  xgcs-network:
+    driver: bridge 

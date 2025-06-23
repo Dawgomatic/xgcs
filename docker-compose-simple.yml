@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  # Frontend React application
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - xgcs-network
+
+  # Backend Node.js server
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    networks:
+      - xgcs-network
+
+  # Simple SITL using Gazebo (more reliable than ArduPilot SITL)
+  sitl-gazebo:
+    image: osrf/gazebo:gazebo11
+    container_name: sitl-gazebo
+    ports:
+      - "11345:11345"  # Gazebo server
+      - "5760:5760"    # MAVLink
+      - "5761:5761"    # MAVLink2
+    environment:
+      - DISPLAY=${DISPLAY}
+      - GAZEBO_MODEL_PATH=/opt/ros/noetic/share/gazebo_models
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./gazebo_worlds:/opt/gazebo_worlds
+    command: >
+      gazebo --verbose
+      /opt/gazebo_worlds/empty.world
+    networks:
+      - xgcs-network
+
+  # Alternative: Use PX4 SITL (more reliable than ArduPilot)
+  sitl-px4:
+    image: px4io/px4-dev-simulation-focal:latest
+    container_name: sitl-px4
+    ports:
+      - "14540:14540"  # MAVLink
+      - "14550:14550"  # MAVLink2
+    environment:
+      - PX4_SIM_SPEED_FACTOR=1.0
+    command: >
+      bash -c "
+      cd /src/Firmware &&
+      make px4_sitl gazebo_plane &&
+      ./Tools/sitl_run.sh gazebo_plane
+      "
+    networks:
+      - xgcs-network
+
+  # Simple MAVLink proxy for testing
+  mavlink-proxy:
+    image: alpine:latest
+    container_name: mavlink-proxy
+    ports:
+      - "14550:14550"
+    command: >
+      sh -c "
+      apk add --no-cache socat &&
+      socat UDP-LISTEN:14550,fork UDP:localhost:5760
+      "
+    depends_on:
+      - sitl-gazebo
+    networks:
+      - xgcs-network
+
+networks:
+  xgcs-network:
+    driver: bridge 

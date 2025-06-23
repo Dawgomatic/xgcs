@@ -64,6 +64,11 @@ public:
 
     TelemetryData get_telemetry_data(const std::string& vehicle_id) const;
 
+    bool addConnection(const std::string& id, const std::string& type, 
+                      const std::string& port, int baudRate,
+                      const std::string& host, int tcpPort,
+                      const std::string& modelUrl, double modelScale);
+
 private:
     ConnectionManager();
     

@@ -1,4 +1,175 @@
-# xgcs
+# XGCS - Modern Ground Control Station
+
+A modern, React-based ground control station that recreates QGroundControl functionality with a contemporary web interface.
+
+## Overview
+
+XGCS (eXtended Ground Control Station) is a complete rewrite of QGroundControl using modern web technologies:
+
+- **Frontend**: React with Material-UI
+- **Backend**: C++ with MAVSDK and Crow framework
+- **Map Engine**: Cesium for 3D visualization
+- **Communication**: MAVLink via MAVSDK
+
+## Architecture
+
+### Frontend (React)
+- **FlightDisplay**: Main flight interface with 3D map, instrument panel, and vehicle controls
+- **MissionPlanning**: Waypoint management and mission planning
+- **VehicleConnections**: Vehicle connection management
+- **Settings**: Application configuration
+
+### Backend (C++)
+- **MAVSDK Integration**: Vehicle communication and control
+- **REST API**: Frontend-backend communication
+- **Video Streaming**: Real-time video feed handling
+
+## Key Features
+
+### Flight Display
+- 3D map with Cesium integration
+- Real-time vehicle tracking
+- Artificial horizon and compass
+- Flight mode selection
+- Video streaming panel
+- Telemetry display
+
+### Mission Planning
+- Waypoint creation and editing
+- Mission upload/download
+- Distance and time calculations
+- Mission validation
+
+### Vehicle Management
+- Multiple vehicle support
+- Connection status monitoring
+- Parameter management
+- Firmware updates
+
+## Migration from QGroundControl
+
+This project maintains functional parity with QGroundControl while modernizing the architecture:
+
+| QGC Component | XGCS Equivalent | Technology |
+|---------------|-----------------|------------|
+| FlyView.qml | FlightDisplay.jsx | React + Material-UI |
+| FlyViewMap.qml | FlightMap.jsx | Cesium 3D |
+| FlyViewInstrumentPanel.qml | InstrumentPanel.jsx | React + Recharts |
+| FlightModeDropdown.qml | FlightModeSelector.jsx | Material-UI |
+| FlyViewVideo.qml | VideoPanel.jsx | HTML5 Video |
+| PlanView | MissionPlanning.jsx | React + Material-UI |
+
+## Getting Started
+
+### Prerequisites
+- Node.js 16+
+- C++17 compiler
+- MAVSDK
+- CMake 3.10+
+
+### Installation
+
+1. **Frontend Setup**
+```bash
+cd client
+npm install
+npm start
+```
+
+2. **Backend Setup**
+```bash
+cd server
+mkdir build && cd build
+cmake ..
+make
+./server
+```
+
+3. **Access the Application**
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8081
+
+## Development
+
+### Project Structure
+```
+xgcs/
+├── client/                 # React frontend
+│   ├── src/
+│   │   ├── components/     # Reusable components
+│   │   ├── pages/         # Main application pages
+│   │   ├── context/       # React context providers
+│   │   └── utils/         # Utility functions
+├── server/                # C++ backend
+│   ├── src/              # Source files
+│   ├── include/          # Header files
+│   └── CMakeLists.txt    # Build configuration
+└── MAVSDK/               # MAVSDK integration
+```
+
+### Key Components
+
+#### FlightDisplay.jsx
+Main flight interface that maps from QGC's FlyView.qml:
+- 3D map integration
+- Flight controls (takeoff, land, RTL)
+- Instrument panel
+- Video streaming
+
+#### FlightMap.jsx
+3D map component using Cesium:
+- Vehicle position tracking
+- Mission waypoint display
+- Map controls (zoom, center, layers)
+
+#### InstrumentPanel.jsx
+Real-time vehicle instrumentation:
+- Artificial horizon
+- Compass
+- Telemetry values
+- Flight mode display
+
+#### MissionPlanning.jsx
+Mission planning interface:
+- Waypoint management
+- Mission upload/download
+- Distance calculations
+- Mission validation
+
+## API Endpoints
+
+### Vehicle Management
+- `GET /api/vehicles` - List connected vehicles
+- `POST /api/vehicles/connect` - Connect to vehicle
+- `GET /api/vehicles/{id}/status` - Vehicle status
+
+### Mission Management
+- `GET /api/missions` - List missions
+- `POST /api/missions` - Upload mission
+- `GET /api/missions/{id}` - Download mission
+
+### Flight Control
+- `POST /api/vehicles/{id}/takeoff` - Takeoff command
+- `POST /api/vehicles/{id}/land` - Land command
+- `POST /api/vehicles/{id}/rtl` - Return to launch
+
+## Contributing
+
+1. Follow the migration patterns established in the codebase
+2. Maintain functional parity with QGroundControl
+3. Use Material-UI for consistent styling
+4. Document any hallucinated constructs in `hallucinations_log.md`
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- QGroundControl team for the original implementation
+- MAVSDK for vehicle communication
+- Cesium for 3D mapping
+- Material-UI for the component library
 
 ## Prerequisites
 

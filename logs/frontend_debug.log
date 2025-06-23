@@ -1,0 +1,7 @@
+yarn run v1.22.22
+$ react-app-rewired start
+Something is already running on port 3000.
+Done in 0.56s.
+ing is already running on port 3000.
+[STDOUT] Done in 0.56s.
+[EXIT] Process exited with code 0

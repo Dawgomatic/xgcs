@@ -21,6 +21,32 @@ import "cesium/Build/Cesium/Widgets/widgets.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock, faUnlock, faPlus, faEye, faEyeSlash, faCrosshairs } from '@fortawesome/free-solid-svg-icons';
 import { useVehicles } from '../context/VehicleContext'; // Import the context hook
+import { 
+  Box, 
+  Grid, 
+  Paper, 
+  Typography, 
+  IconButton, 
+  Chip,
+  Card,
+  CardContent,
+  LinearProgress
+} from '@mui/material';
+import {
+  Flight,
+  Map,
+  Videocam,
+  Speed,
+  Height,
+  Battery90,
+  SignalCellular4Bar,
+  GpsFixed,
+  CompassCalibration
+} from '@mui/icons-material';
+import FlightMap from '../components/FlightMap';
+import InstrumentPanel from '../components/InstrumentPanel';
+import FlightModeSelector from '../components/FlightModeSelector';
+import VideoPanel from '../components/VideoPanel';
 
 const defaultToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2MmM0MDgzZC00OGVkLTRjZTItOWI2MS1jMGVhYTM2MmMzODYiLCJpZCI6MjczNywiaWF0IjoxNjYyMTI4MjkxfQ.fPqhawtYLhwyZirKCi8fEjPEIn1CjYqETvA0bYYhWRA';
 
@@ -336,128 +362,119 @@ function HomePage() {
     // Get telemetry for the selected vehicle from context data
     const currentTelemetry = telemetryData[selectedVehicle];
 
+    // Flight display states
+    const [mapVisible, setMapVisible] = useState(true);
+    const [videoVisible, setVideoVisible] = useState(false);
+    const [instrumentPanelVisible, setInstrumentPanelVisible] = useState(true);
+
     return (
         <HomeErrorBoundary>
-            <div id="wrapper" style={{ 
-                width: '100%', 
-                height: '100%',
-                position: 'relative',
-                overflow: 'hidden',
-                left: '20px',
-                paddingtop: '-10px',
-            }}>
+            <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                {/* Main content area */}
+                <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+                    {/* Main Map Area */}
+                    <Box sx={{ 
+                        flex: 1, 
+                        position: 'relative',
+                        display: mapVisible ? 'block' : 'none'
+                    }}>
+                        <FlightMap 
+                            vehicle={selectedVehicle ? { id: selectedVehicle, ...currentTelemetry } : null}
+                            vehicles={connectedVehicles.map(v => ({ 
+                                id: v.id || v.name, 
+                                coordinate: currentTelemetry?.position ? {
+                                    lat: currentTelemetry.position.lat,
+                                    lon: currentTelemetry.position.lng
+                                } : null,
+                                altitude: currentTelemetry?.position?.alt || 0,
+                                flightMode: currentTelemetry?.flight_mode || 'UNKNOWN',
+                                batteryLevel: currentTelemetry?.battery?.remaining || 0,
+                                airspeed: currentTelemetry?.velocity?.airspeed || 0
+                            }))}
+                        />
+                    </Box>
+
+                    {/* Side Panel */}
+                    <Box sx={{ 
+                        width: 350, 
+                        display: 'flex', 
+                        flexDirection: 'column',
+                        borderLeft: 1,
+                        borderColor: 'divider',
+                        bgcolor: 'background.paper'
+                    }}>
+                        {/* Instrument Panel */}
+                        {instrumentPanelVisible && (
+                            <Box sx={{ flex: 1, p: 2, borderBottom: 1, borderColor: 'divider' }}>
+                                <Typography variant="h6" gutterBottom>
+                                    Instrument Panel
+                                </Typography>
+                                <InstrumentPanel 
+                                    vehicle={selectedVehicle ? { id: selectedVehicle, ...currentTelemetry } : null}
+                                />
+                            </Box>
+                        )}
+
+                        {/* Video Panel */}
+                        {videoVisible && (
+                            <Box sx={{ flex: 1, p: 2 }}>
+                                <Typography variant="h6" gutterBottom>
+                                    Video Feed
+                                </Typography>
+                                <VideoPanel vehicle={selectedVehicle} />
+                            </Box>
+                        )}
+
+                        {/* Vehicle Info */}
+                        {currentTelemetry && (
+                            <Box sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
+                                <Typography variant="h6" gutterBottom>
+                                    Vehicle: {selectedVehicle}
+                                </Typography>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <Typography variant="body2">Flight Mode:</Typography>
+                                        <Chip 
+                                            label={currentTelemetry.flight_mode || 'UNKNOWN'} 
+                                            size="small" 
+                                            color="primary"
+                                        />
+                                    </Box>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <Typography variant="body2">Altitude:</Typography>
+                                        <Typography variant="body2">
+                                            {currentTelemetry.position?.alt ? `${currentTelemetry.position.alt.toFixed(1)} m` : 'N/A'}
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <Typography variant="body2">Battery:</Typography>
+                                        <Typography variant="body2">
+                                            {currentTelemetry.battery?.remaining ? `${currentTelemetry.battery.remaining.toFixed(0)}%` : 'N/A'}
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <Typography variant="body2">Armed:</Typography>
+                                        <Typography variant="body2">
+                                            {currentTelemetry.armed !== undefined ? (currentTelemetry.armed ? 'Yes' : 'No') : 'N/A'}
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            </Box>
+                        )}
+                    </Box>
+                </Box>
+
+                {/* Legacy Cesium viewer (hidden but kept for compatibility) */}
                 <div ref={viewerContainer} id="cesiumContainer" style={{ 
                     position: 'absolute',
                     top: 0,
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    overflow: 'hidden'
+                    overflow: 'hidden',
+                    display: 'none' // Hide the old viewer
                 }}></div>
-                
-                {/* Control panel */}
-                <div style={{
-                    position: 'absolute',
-                    top: 10,
-                    left: 10,
-                    zIndex: 1000,
-                    background: 'rgba(255,255,255,0.8)',
-                    padding: '10px',
-                    borderRadius: '5px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '10px'
-                }}>
-                    {/* Vehicle selection dropdown */}
-                    {connectedVehicles.length > 0 && (
-                        <div>
-                            <label htmlFor="vehicle-select" style={{ display: 'block', marginBottom: '5px' }}>Select Vehicle:</label>
-                            <select 
-                                id="vehicle-select"
-                                value={selectedVehicle || ''}
-                                onChange={(e) => setSelectedVehicle(e.target.value || null)}
-                                style={{ padding: '5px', width: '100%' }}
-                            >
-                                <option value="">Select Vehicle</option>
-                                {connectedVehicles.map(vehicle => (
-                                    <option key={vehicle.id || vehicle.name} value={vehicle.id || vehicle.name}>
-                                        {vehicle.id || vehicle.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
-                    
-                    {/* Snap to Vehicle button */}
-                    <button 
-                        onClick={snapToVehicle}
-                        style={{ padding: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}
-                    >
-                        <FontAwesomeIcon icon={faCrosshairs} />
-                        Snap to Vehicle
-                    </button>
-                </div>
-                
-                {/* Telemetry data display */}
-                {currentTelemetry && (
-                    <div
-                        ref={boxRef}
-                        style={{
-                            position: 'absolute',
-                            width: boxStyle.width,
-                            height: boxStyle.height,
-                            top: boxStyle.top,
-                            left: boxStyle.left,
-                            backgroundColor: 'rgba(173, 216, 230, 0.8)',
-                            cursor: isLocked ? 'default' : 'move',
-                            zIndex: 9999,
-                            padding: '10px',
-                            borderRadius: '5px',
-                            overflow: 'auto'
-                        }}
-                        onMouseDown={handleMouseDown}
-                    >
-                        <FontAwesomeIcon
-                            icon={isBoxLocked ? faLock : faUnlock}
-                            style={{
-                                position: 'absolute',
-                                top: 5,
-                                right: 5,
-                                cursor: 'pointer',
-                            }}
-                            onClick={toggleBoxLock}
-                        />
-                        <h3 style={{ margin: '0 0 10px 0' }}>Telemetry: {selectedVehicle}</h3>
-                        <div style={{ fontSize: '0.9em' }}>
-                            <div><strong>Position:</strong> {currentTelemetry.position.lat.toFixed(6)}°, {currentTelemetry.position.lng.toFixed(6)}°, {currentTelemetry.position.alt.toFixed(1)}m</div>
-                            <div><strong>Attitude:</strong> R: {currentTelemetry.attitude.roll.toFixed(1)}°, P: {currentTelemetry.attitude.pitch.toFixed(1)}°, Y: {currentTelemetry.attitude.yaw.toFixed(1)}°</div>
-                            {currentTelemetry.battery && <div><strong>Battery:</strong> {currentTelemetry.battery.voltage?.toFixed(1)}V, {currentTelemetry.battery.remaining?.toFixed(0)}%</div>}
-                            {currentTelemetry.flight_mode && <div><strong>Flight Mode:</strong> {currentTelemetry.flight_mode}</div>}
-                            {currentTelemetry.armed !== undefined && <div><strong>Armed:</strong> {currentTelemetry.armed ? 'Yes' : 'No'}</div>}
-                            {currentTelemetry.health && <div><strong>Health:</strong>
-                                <ul style={{ margin: '5px 0', paddingLeft: '20px' }}>
-                                    <li>Gyro: {currentTelemetry.health.gyro_ok ? 'OK' : 'NOT OK'}</li>
-                                    <li>Accel: {currentTelemetry.health.accel_ok ? 'OK' : 'NOT OK'}</li>
-                                    <li>Mag: {currentTelemetry.health.mag_ok ? 'OK' : 'NOT OK'}</li>
-                                    <li>GPS: {currentTelemetry.health.gps_ok ? 'OK' : 'NOT OK'}</li>
-                                </ul>
-                            </div>}
-                        </div>
-                        <div
-                            style={{
-                                position: 'absolute',
-                                width: 10,
-                                height: 10,
-                                bottom: 0,
-                                right: 0,
-                                backgroundColor: 'darkblue',
-                                cursor: isLocked ? 'default' : 'nwse-resize',
-                            }}
-                            onMouseDown={handleResize}
-                        />
-                    </div>
-                )}
-            </div>
+            </Box>
         </HomeErrorBoundary>
     );
 }

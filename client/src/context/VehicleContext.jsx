@@ -81,7 +81,7 @@ export function VehicleProvider({ children }) {
     
     fetchTelemetry();
     
-    const intervalId = setInterval(fetchTelemetry, 100);
+    const intervalId = setInterval(fetchTelemetry, 50);
     telemetryIntervals.current[vehicleId] = intervalId;
     
     return intervalId;
@@ -210,7 +210,7 @@ export function VehicleProvider({ children }) {
           const pathEntity = viewer.entities.getOrCreateEntity(pathEntityId);
           pathEntity.position = pathSampledPosition; // Assign ONLY to path entity
           pathEntity.path = {
-            resolution: 1,
+            resolution: 0.01,
             material: new PolylineGlowMaterialProperty({
               glowPower: 0.2,
               color: CesiumColor.YELLOW,

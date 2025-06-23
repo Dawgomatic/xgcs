@@ -107,6 +107,9 @@ bool ConnectionManager::add_vehicle(const std::string& vehicle_id,
             // Initialize telemetry plugin for this system
             _telemetry_plugins[vehicle_id] = std::make_shared<mavsdk::Telemetry>(system);
             
+            // Set high position update rate
+            _telemetry_plugins[vehicle_id]->set_rate_position(50.0); // 50Hz = 20ms updates
+            
             // Start telemetry console output
             start_telemetry_console_output(vehicle_id);
         }
