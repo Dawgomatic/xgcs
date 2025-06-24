@@ -449,12 +449,45 @@ show_status
 
 # Optionally open the browser
 if [ "$USE_TERMINAL" = false ]; then
-    # Only open browser if not already running
-    if ! pgrep -f "react-app-rewired" > /dev/null; then
-        log "Opening browser..."
-        xdg-open http://localhost:3000 2>/dev/null &
+    # Wait a moment for services to be ready, then open browser
+    log "Waiting for services to be ready..."
+    sleep 5
+    
+    # Check if frontend is accessible
+    if curl -s http://localhost:3000 > /dev/null 2>&1; then
+        log "Frontend is ready, opening browser..."
+        
+        # Try to open browser with xdg-open first (most reliable)
+        if command -v xdg-open >/dev/null 2>&1; then
+            log "Opening browser with xdg-open..."
+            xdg-open http://localhost:3000 2>/dev/null &
+        # Fallback to specific browsers if xdg-open fails
+        elif command -v firefox >/dev/null 2>&1; then
+            log "Opening browser with Firefox..."
+            firefox http://localhost:3000 2>/dev/null &
+        elif command -v google-chrome >/dev/null 2>&1; then
+            log "Opening browser with Google Chrome..."
+            google-chrome http://localhost:3000 2>/dev/null &
+        elif command -v chromium-browser >/dev/null 2>&1; then
+            log "Opening browser with Chromium..."
+            chromium-browser http://localhost:3000 2>/dev/null &
+        else
+            log "No browser found. Please manually open http://localhost:3000"
+        fi
     else
-        log "Frontend already running, skipping browser open"
+        log "Frontend not ready yet, will retry in 5 seconds..."
+        sleep 5
+        if curl -s http://localhost:3000 > /dev/null 2>&1; then
+            log "Frontend now ready, opening browser..."
+            if command -v xdg-open >/dev/null 2>&1; then
+                xdg-open http://localhost:3000 2>/dev/null &
+            else
+                log "No browser found. Please manually open http://localhost:3000"
+            fi
+        else
+            log "Warning: Frontend still not accessible at http://localhost:3000"
+            log "Please manually open http://localhost:3000 in your browser"
+        fi
     fi
 fi
 
