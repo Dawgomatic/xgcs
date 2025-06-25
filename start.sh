@@ -1,499 +1,314 @@
 #!/bin/bash
 
-# Unified XGCS Startup Script
-# Combines functionality from start.sh, debug_start.sh, simple_debug.sh, and restart_frontend.sh
+# XGCS Unified Startup Script
+# Handles both Docker and Native modes with automatic detection
 
-# Function to display help
-show_help() {
-    echo "Usage: ./start.sh [options]"
-    echo ""
-    echo "Options:"
-    echo "  -h, --help           Show this help message"
-    echo "  -t, --terminal       Start each component in a new terminal window"
-    echo "  -v, --verbose        Show verbose output"
-    echo "  -l, --logging        Enable logging to files (default: logs/*.log)"
-    echo "  -d, --debug          Enable debug mode with comprehensive logging"
-    echo "  -f, --frontend-only  Start only the frontend (useful for development)"
-    echo "  -r, --restart        Restart all components (kill existing first)"
-    echo ""
-    echo "Examples:"
-    echo "  ./start.sh                    # Normal startup"
-    echo "  ./start.sh --logging          # With file logging"
-    echo "  ./start.sh --debug            # Debug mode with detailed logs"
-    echo "  ./start.sh --frontend-only    # Start only frontend"
-    echo "  ./start.sh --restart          # Restart all components"
-    echo ""
-    echo "This script starts the following components:"
-    echo "  1. React frontend client (port 3000)"
-    echo "  2. C++ backend server (port 8081)"
-    echo "  3. Proxy server"
+set -e  # Exit on error
+
+# Colors for output
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+# ASCII Art Banner
+echo -e "${BLUE}"
+echo "╔═══════════════════════════════════════════════════════════╗"
+echo "║                                                           ║"
+echo "║   ✈️  XGCS - Next Generation Ground Control Station  ✈️    ║"
+echo "║                                                           ║"
+echo "╚═══════════════════════════════════════════════════════════╝"
+echo -e "${NC}"
+
+# Get script directory
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd "$SCRIPT_DIR"
+
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
 }
 
-# Set default values
-USE_TERMINAL=false
-VERBOSE=false
-ENABLE_LOGGING=false
-DEBUG_MODE=false
-FRONTEND_ONLY=false
-RESTART_MODE=false
+# Function to check if a port is in use
+port_in_use() {
+    lsof -i:$1 >/dev/null 2>&1
+}
 
-# Parse command line arguments
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        -h|--help)
-            show_help
-            exit 0
-            ;;
-        -t|--terminal)
-            USE_TERMINAL=true
-            shift
-            ;;
-        -v|--verbose)
-            VERBOSE=true
-            shift
-            ;;
-        -l|--logging)
-            ENABLE_LOGGING=true
-            shift
-            ;;
-        -d|--debug)
-            DEBUG_MODE=true
-            ENABLE_LOGGING=true
-            VERBOSE=true
-            shift
-            ;;
-        -f|--frontend-only)
-            FRONTEND_ONLY=true
-            shift
-            ;;
-        -r|--restart)
-            RESTART_MODE=true
-            shift
-            ;;
-        *)
-            echo "Unknown option: $1"
-            show_help
-            exit 1
-            ;;
-    esac
-done
-
-# Get the base directory (where this script is located)
-BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-LOG_DIR="$BASE_DIR/logs"
-LOCK_FILE="$BASE_DIR/start.lock"
-
-# Check if script is already running using lock file
-if [ -f "$LOCK_FILE" ]; then
-    LOCK_PID=$(cat "$LOCK_FILE" 2>/dev/null)
-    if [ -n "$LOCK_PID" ] && kill -0 "$LOCK_PID" 2>/dev/null; then
-        echo "Error: Another instance of start.sh is already running (PID: $LOCK_PID)"
-        echo "Use --restart to kill existing processes and start fresh"
-        exit 1
-    else
-        # Lock file exists but process is dead, remove it
-        rm -f "$LOCK_FILE"
+# Function to kill processes on a port
+kill_port() {
+    local port=$1
+    if port_in_use $port; then
+        echo -e "${YELLOW}Killing process on port $port...${NC}"
+        lsof -ti:$port | xargs -r kill -9 2>/dev/null || true
+        sleep 1
     fi
+}
+
+# Function to wait for a service
+wait_for_service() {
+    local name=$1
+    local url=$2
+    local max_attempts=30
+    local attempt=1
+    
+    echo -n "Waiting for $name to start"
+    while [ $attempt -le $max_attempts ]; do
+        if curl -s -o /dev/null -w "%{http_code}" "$url" | grep -q "200\|404"; then
+            echo -e " ${GREEN}✓${NC}"
+            return 0
+        fi
+        echo -n "."
+        sleep 1
+        ((attempt++))
+    done
+    echo -e " ${RED}✗${NC}"
+    return 1
+}
+
+# Check prerequisites
+echo -e "${BLUE}Checking prerequisites...${NC}"
+
+# Check for Docker
+DOCKER_AVAILABLE=false
+if command_exists docker && command_exists docker-compose; then
+    DOCKER_AVAILABLE=true
+elif command_exists docker && docker compose version >/dev/null 2>&1; then
+    DOCKER_AVAILABLE=true
 fi
 
-# Create lock file
-echo $$ > "$LOCK_FILE"
+# Check for Node.js and Yarn
+NODE_AVAILABLE=false
+if command_exists node && command_exists yarn; then
+    NODE_AVAILABLE=true
+fi
 
-# Function to cleanup lock file
-cleanup_lock() {
-    rm -f "$LOCK_FILE"
-}
-
-# Create logs directory if it doesn't exist
-mkdir -p "$LOG_DIR"
-
-# Function to log messages
-log() {
-    local timestamp="[$(date '+%Y-%m-%d %H:%M:%S')]"
-    echo "$timestamp $1"
-    
-    if [ "$ENABLE_LOGGING" = true ]; then
-        echo "$timestamp $1" >> "$LOG_DIR/startup.log"
-    fi
-}
-
-# Function to kill existing processes
-kill_existing_processes() {
-    log "Killing existing processes..."
-    
-    # Kill by process names
-    pkill -f 'node proxy-server.js' 2>/dev/null || true
-    pkill -f 'yarn start' 2>/dev/null || true
-    pkill -f 'react-app-rewired' 2>/dev/null || true
-    pkill -f '/server/build/server' 2>/dev/null || true
-    
-    # Kill by port
-    lsof -ti:3000 | xargs -r kill -9 2>/dev/null || true
-    lsof -ti:8081 | xargs -r kill -9 2>/dev/null || true
-    
-    # Kill any existing browser windows opened by this script
-    pkill -f "xdg-open.*localhost:3000" 2>/dev/null || true
-    
-    sleep 3
-    log "Process cleanup complete"
-}
-
-# Function to check dependencies
-check_dependencies() {
-    log "Checking dependencies..."
-    
-    local missing_deps=()
-    
-    if ! command -v yarn >/dev/null 2>&1; then
-        missing_deps+=("yarn")
-    fi
-    
-    if ! command -v node >/dev/null 2>&1; then
-        missing_deps+=("node")
-    fi
-    
-    if [ "$FRONTEND_ONLY" = false ]; then
-        if ! command -v cmake >/dev/null 2>&1; then
-            missing_deps+=("cmake")
-        fi
-    fi
-    
-    if [ ${#missing_deps[@]} -ne 0 ]; then
-        log "Error: Missing dependencies: ${missing_deps[*]}"
-        log "Please install the missing dependencies and try again."
+# Determine startup mode
+STARTUP_MODE=""
+if [ "$1" = "--docker" ]; then
+    if [ "$DOCKER_AVAILABLE" = true ]; then
+        STARTUP_MODE="docker"
+    else
+        echo -e "${RED}Error: Docker mode requested but Docker is not available!${NC}"
         exit 1
     fi
-    
-    log "All required dependencies found."
-}
-
-# Function to build the server
-build_server() {
-    if [ "$FRONTEND_ONLY" = true ]; then
-        log "Skipping server build (frontend-only mode)"
-        return
-    fi
-    
-    log "Checking if server needs to be built..."
-    
-    local server_dir="$BASE_DIR/server"
-    local build_dir="$server_dir/build"
-    local server_binary="$build_dir/server"
-    
-    if [ ! -d "$build_dir" ]; then
-        log "Creating build directory..."
-        mkdir -p "$build_dir"
-    fi
-    
-    if [ ! -f "$server_binary" ]; then
-        log "Building server..."
-        cd "$build_dir" && cmake .. && make
-        if [ $? -ne 0 ]; then
-            log "Error: Failed to build server."
-            exit 1
-        fi
-        log "Server built successfully."
+elif [ "$1" = "--native" ]; then
+    if [ "$NODE_AVAILABLE" = true ]; then
+        STARTUP_MODE="native"
     else
-        log "Server binary exists, skipping build."
+        echo -e "${RED}Error: Native mode requested but Node.js/Yarn is not available!${NC}"
+        exit 1
     fi
-}
-
-# Function to start a component
-start_component() {
-    local name="$1"
-    local dir="$2"
-    local cmd="$3"
-    local log_file="$LOG_DIR/${name}.log"
-    local debug_log_file="$LOG_DIR/${name}_debug.log"
-    
-    log "Starting $name..."
-    
-    # Choose log file based on mode
-    local actual_log_file="$log_file"
-    if [ "$DEBUG_MODE" = true ]; then
-        actual_log_file="$debug_log_file"
-    fi
-    
-    if [ "$USE_TERMINAL" = true ]; then
-        # Try different terminal emulators
-        if command -v gnome-terminal >/dev/null 2>&1; then
-            gnome-terminal -- bash -c "cd '$dir' && echo 'Starting $name...' && $cmd; read -p 'Press Enter to close...'"
-        elif command -v xterm >/dev/null 2>&1; then
-            xterm -title "$name" -e "cd '$dir' && echo 'Starting $name...' && $cmd; read -p 'Press Enter to close...'" &
-        elif command -v konsole >/dev/null 2>&1; then
-            konsole --noclose -e bash -c "cd '$dir' && echo 'Starting $name...' && $cmd; read -p 'Press Enter to close...'" &
-        else
-            log "No terminal emulator found. Running $name in background."
-            if [ "$ENABLE_LOGGING" = true ]; then
-                cd "$dir" && $cmd > "$actual_log_file" 2>&1 &
-            else
-                cd "$dir" && $cmd > /dev/null 2>&1 &
-            fi
-        fi
-    else
-        # Run in background
-        if [ "$ENABLE_LOGGING" = true ]; then
-            cd "$dir" && $cmd > "$actual_log_file" 2>&1 &
-        else
-            cd "$dir" && $cmd > /dev/null 2>&1 &
-        fi
+else
+    # Auto-detect mode
+    if [ "$DOCKER_AVAILABLE" = true ] && [ "$NODE_AVAILABLE" = true ]; then
+        echo -e "${BLUE}Both Docker and Native modes are available.${NC}"
+        echo "Select startup mode:"
+        echo "  1) Docker mode (recommended for production)"
+        echo "  2) Native mode (recommended for development)"
+        echo ""
+        read -p "Enter choice [1-2] (default: 1): " choice
+        choice=${choice:-1}
         
-        local pid=$!
-        log "$name started with PID: $pid"
-        
-        if [ "$ENABLE_LOGGING" = true ]; then
-            log "$name logs at $actual_log_file"
-        fi
-        
-        # Store PID for cleanup
-        case "$name" in
-            "frontend")
-                FRONTEND_PID=$pid
-                ;;
-            "backend")
-                BACKEND_PID=$pid
-                ;;
-            "proxy")
-                PROXY_PID=$pid
-                ;;
+        case $choice in
+            1) STARTUP_MODE="docker" ;;
+            2) STARTUP_MODE="native" ;;
+            *) echo -e "${RED}Invalid choice!${NC}"; exit 1 ;;
         esac
-    fi
-}
-
-# Function to start frontend with debug logging
-start_frontend_debug() {
-    log "Starting frontend with debug logging..."
-    cd "$BASE_DIR/client"
-    
-    # Create a temporary script for verbose logging
-    cat > temp_start.js << 'EOF'
-const { spawn } = require('child_process');
-const fs = require('fs');
-
-const logFile = fs.createWriteStream('../logs/frontend_debug.log', { flags: 'a' });
-
-const child = spawn('yarn', ['start'], {
-    stdio: ['pipe', 'pipe', 'pipe'],
-    env: { ...process.env, CI: 'false', GENERATE_SOURCEMAP: 'true' }
-});
-
-child.stdout.on('data', (data) => {
-    const output = data.toString();
-    logFile.write(`[STDOUT] ${output}`);
-    process.stdout.write(output);
-});
-
-child.stderr.on('data', (data) => {
-    const output = data.toString();
-    logFile.write(`[STDERR] ${output}`);
-    process.stderr.write(output);
-});
-
-child.on('close', (code) => {
-    logFile.write(`[EXIT] Process exited with code ${code}\n`);
-    process.exit(code);
-});
-
-process.on('SIGINT', () => {
-    child.kill('SIGINT');
-    process.exit(0);
-});
-EOF
-
-    nohup node temp_start.js > "$LOG_DIR/frontend_debug.log" 2>&1 &
-    FRONTEND_PID=$!
-    log "Frontend started with PID: $FRONTEND_PID"
-}
-
-# Function to clear frontend cache
-clear_frontend_cache() {
-    log "Clearing frontend cache..."
-    cd "$BASE_DIR/client"
-    rm -rf node_modules/.cache
-    log "Frontend cache cleared"
-}
-
-# Function to start all components
-start_all() {
-    # Start frontend
-    if [ "$DEBUG_MODE" = true ]; then
-        start_frontend_debug
+    elif [ "$DOCKER_AVAILABLE" = true ]; then
+        echo -e "${BLUE}Using Docker mode (Node.js/Yarn not available)${NC}"
+        STARTUP_MODE="docker"
+    elif [ "$NODE_AVAILABLE" = true ]; then
+        echo -e "${BLUE}Using Native mode (Docker not available)${NC}"
+        STARTUP_MODE="native"
     else
-        start_component "frontend" "$BASE_DIR/client" "yarn start"
+        echo -e "${RED}Error: Neither Docker nor Node.js/Yarn is available!${NC}"
+        echo "Please install either:"
+        echo "  - Docker and Docker Compose for Docker mode"
+        echo "  - Node.js and Yarn for Native mode"
+        exit 1
     fi
-    
-    # Give the frontend a moment to start
-    sleep 3
-    
-    if [ "$FRONTEND_ONLY" = false ]; then
-        # Start backend
-        start_component "backend" "$BASE_DIR/server/build" "./server"
-        
-        # Give the backend a moment to start
-        sleep 3
-        
-        # Start proxy server
-        start_component "proxy" "$BASE_DIR" "node proxy-server.js"
-    fi
-    
-    log "All components started successfully!"
-}
-
-# Function to display status
-show_status() {
-    echo ""
-    echo "=== XGCS Status ==="
-    echo "Frontend: http://localhost:3000"
-    if [ "$FRONTEND_ONLY" = false ]; then
-        echo "Backend:  http://localhost:8081"
-    fi
-    echo ""
-    
-    if [ "$ENABLE_LOGGING" = true ]; then
-        echo "=== Log Files ==="
-        if [ "$DEBUG_MODE" = true ]; then
-            echo "Frontend: $LOG_DIR/frontend_debug.log"
-            echo "Backend:  $LOG_DIR/backend_debug.log"
-            echo "Proxy:    $LOG_DIR/proxy_debug.log"
-        else
-            echo "Frontend: $LOG_DIR/frontend.log"
-            echo "Backend:  $LOG_DIR/backend.log"
-            echo "Proxy:    $LOG_DIR/proxy.log"
-        fi
-        echo ""
-        echo "=== View logs ==="
-        echo "tail -f $LOG_DIR/frontend.log"
-        echo "tail -f $LOG_DIR/backend.log"
-        echo ""
-    fi
-    
-    if [ "$DEBUG_MODE" = true ]; then
-        echo "=== Process IDs ==="
-        echo "Frontend PID: $FRONTEND_PID"
-        if [ "$FRONTEND_ONLY" = false ]; then
-            echo "Backend PID:  $BACKEND_PID"
-            echo "Proxy PID:    $PROXY_PID"
-        fi
-        echo ""
-    fi
-}
-
-# Function to cleanup on exit
-cleanup() {
-    echo ""
-    log "Shutting down all components..."
-    
-    if [ -n "$FRONTEND_PID" ]; then
-        kill $FRONTEND_PID 2>/dev/null || true
-    fi
-    if [ -n "$BACKEND_PID" ]; then
-        kill $BACKEND_PID 2>/dev/null || true
-    fi
-    if [ -n "$PROXY_PID" ]; then
-        kill $PROXY_PID 2>/dev/null || true
-    fi
-    
-    # Clean up temporary files
-    rm -f "$BASE_DIR/client/temp_start.js"
-    
-    # Kill by process names as backup
-    pkill -f 'node proxy-server.js' 2>/dev/null || true
-    pkill -f 'yarn start' 2>/dev/null || true
-    pkill -f 'react-app-rewired' 2>/dev/null || true
-    pkill -f '/server/build/server' 2>/dev/null || true
-    
-    # Clean up lock file
-    cleanup_lock
-    
-    log "Cleanup complete"
-    exit 0
-}
-
-# Set up signal handlers
-trap cleanup SIGINT SIGTERM
-trap cleanup_lock EXIT
-
-# Main execution
-log "=== XGCS Unified Startup Script ==="
-
-if [ "$DEBUG_MODE" = true ]; then
-    log "Running in DEBUG mode"
-elif [ "$ENABLE_LOGGING" = true ]; then
-    log "Running with LOGGING enabled"
 fi
 
-if [ "$FRONTEND_ONLY" = true ]; then
-    log "Running in FRONTEND-ONLY mode"
-fi
+echo -e "${GREEN}Starting XGCS in ${STARTUP_MODE^^} mode...${NC}"
 
-if [ "$RESTART_MODE" = true ]; then
-    log "Running in RESTART mode"
-fi
+# Clean up any existing processes
+echo -e "${BLUE}Cleaning up existing processes...${NC}"
+kill_port 3000  # Frontend
+kill_port 3001  # Proxy
+kill_port 5000  # Node.js backend
+kill_port 8081  # C++ backend
 
-check_dependencies
+# Create logs directory
+mkdir -p logs
 
-if [ "$RESTART_MODE" = true ]; then
-    kill_existing_processes
-fi
-
-if [ "$FRONTEND_ONLY" = false ]; then
-    build_server
-fi
-
-if [ "$RESTART_MODE" = true ] || [ "$FRONTEND_ONLY" = true ]; then
-    clear_frontend_cache
-fi
-
-start_all
-show_status
-
-# Optionally open the browser
-if [ "$USE_TERMINAL" = false ]; then
-    # Wait a moment for services to be ready, then open browser
-    log "Waiting for services to be ready..."
-    sleep 5
+if [ "$STARTUP_MODE" = "docker" ]; then
+    # Docker mode
+    echo -e "${BLUE}Starting Docker services...${NC}"
     
-    # Check if frontend is accessible
-    if curl -s http://localhost:3000 > /dev/null 2>&1; then
-        log "Frontend is ready, opening browser..."
-        
-        # Try to open browser with xdg-open first (most reliable)
-        if command -v xdg-open >/dev/null 2>&1; then
-            log "Opening browser with xdg-open..."
-            xdg-open http://localhost:3000 2>/dev/null &
-        # Fallback to specific browsers if xdg-open fails
-        elif command -v firefox >/dev/null 2>&1; then
-            log "Opening browser with Firefox..."
-            firefox http://localhost:3000 2>/dev/null &
-        elif command -v google-chrome >/dev/null 2>&1; then
-            log "Opening browser with Google Chrome..."
-            google-chrome http://localhost:3000 2>/dev/null &
-        elif command -v chromium-browser >/dev/null 2>&1; then
-            log "Opening browser with Chromium..."
-            chromium-browser http://localhost:3000 2>/dev/null &
-        else
-            log "No browser found. Please manually open http://localhost:3000"
-        fi
+    # Determine docker compose command
+    if docker compose version >/dev/null 2>&1; then
+        DOCKER_COMPOSE="docker compose"
     else
-        log "Frontend not ready yet, will retry in 5 seconds..."
-        sleep 5
-        if curl -s http://localhost:3000 > /dev/null 2>&1; then
-            log "Frontend now ready, opening browser..."
-            if command -v xdg-open >/dev/null 2>&1; then
-                xdg-open http://localhost:3000 2>/dev/null &
-            else
-                log "No browser found. Please manually open http://localhost:3000"
+        DOCKER_COMPOSE="docker-compose"
+    fi
+    
+    # Stop any running containers
+    $DOCKER_COMPOSE down 2>/dev/null || true
+    
+    # Start all services
+    $DOCKER_COMPOSE up -d
+    
+    # Wait for services
+    wait_for_service "Frontend" "http://localhost:3000"
+    wait_for_service "Backend" "http://localhost:5000/health"
+    
+    echo -e "${GREEN}✅ All Docker services started!${NC}"
+    
+elif [ "$STARTUP_MODE" = "native" ]; then
+    # Native mode
+    echo -e "${BLUE}Starting Native services...${NC}"
+    
+    # Check if C++ backend exists and build if necessary
+    if [ ! -f "server/build/server" ]; then
+        echo -e "${YELLOW}C++ backend not built. Building now...${NC}"
+        if [ -f "build_cpp_backend.sh" ]; then
+            ./build_cpp_backend.sh
+            if [ $? -ne 0 ]; then
+                echo -e "${RED}Failed to build C++ backend!${NC}"
+                echo "Continuing without C++ backend (limited functionality)"
             fi
-        else
-            log "Warning: Frontend still not accessible at http://localhost:3000"
-            log "Please manually open http://localhost:3000 in your browser"
         fi
+    fi
+    
+    # Start Node.js simulation backend
+    echo -e "${BLUE}Starting Node.js simulation backend...${NC}"
+    cd server/src
+    node server.js > ../../logs/node_backend.log 2>&1 &
+    NODE_PID=$!
+    cd ../..
+    echo -e "${GREEN}Node.js backend started (PID: $NODE_PID)${NC}"
+    
+    # Start C++ backend
+    echo -e "${BLUE}Starting C++ MAVSDK backend...${NC}"
+    if [ -f "server/build/server" ]; then
+        cd server/build
+        ./server > ../../logs/cpp_backend.log 2>&1 &
+        CPP_PID=$!
+        cd ../..
+        echo -e "${GREEN}C++ backend started (PID: $CPP_PID)${NC}"
+    else
+        echo -e "${YELLOW}C++ backend not available, skipping...${NC}"
+    fi
+    
+    # Start proxy server
+    echo -e "${BLUE}Starting proxy server...${NC}"
+    node proxy-server.js > logs/proxy.log 2>&1 &
+    PROXY_PID=$!
+    echo -e "${GREEN}Proxy server started (PID: $PROXY_PID)${NC}"
+    
+    # Start frontend
+    echo -e "${BLUE}Starting React frontend...${NC}"
+    cd client
+    yarn start > ../logs/frontend.log 2>&1 &
+    FRONTEND_PID=$!
+    cd ..
+    echo -e "${GREEN}Frontend started (PID: $FRONTEND_PID)${NC}"
+    
+    # Wait for services to start
+    echo -e "${BLUE}Waiting for services to start...${NC}"
+    wait_for_service "Frontend" "http://localhost:3000"
+    wait_for_service "Proxy" "http://localhost:3001/health"
+    wait_for_service "Node.js Backend" "http://localhost:5000/health"
+    
+    if [ -f "server/build/server" ]; then
+        wait_for_service "C++ Backend" "http://localhost:8081/connections"
+    fi
+    
+    echo -e "${GREEN}✅ All Native services started!${NC}"
+fi
+
+# Display status and URLs
+echo ""
+echo -e "${BLUE}════════════════════════════════════════════════════════════${NC}"
+echo -e "${GREEN}🚀 XGCS is running!${NC}"
+echo -e "${BLUE}════════════════════════════════════════════════════════════${NC}"
+echo ""
+echo -e "${BLUE}Access points:${NC}"
+echo -e "  Frontend:    ${GREEN}http://localhost:3000${NC}"
+
+if [ "$STARTUP_MODE" = "docker" ]; then
+    echo -e "  Backend API: ${GREEN}http://localhost:5000${NC}"
+    echo ""
+    echo -e "${BLUE}Quick actions:${NC}"
+    echo -e "  • View logs:        ${YELLOW}docker compose logs -f${NC}"
+    echo -e "  • Stop everything:  ${YELLOW}docker compose down${NC}"
+    echo -e "  • Restart backend:  ${YELLOW}docker compose restart backend${NC}"
+else
+    echo -e "  Proxy:       ${GREEN}http://localhost:3001${NC}"
+    echo -e "  C++ Backend: ${GREEN}http://localhost:8081${NC} (if available)"
+    echo -e "  Node.js Backend: ${GREEN}http://localhost:5000${NC}"
+    echo ""
+    if [ -f "server/build/server" ]; then
+        echo -e "${BLUE}Process IDs:${NC}"
+        echo -e "  Frontend:    ${YELLOW}$FRONTEND_PID${NC}"
+        echo -e "  Proxy:       ${YELLOW}$PROXY_PID${NC}"
+        echo -e "  Node.js Backend: ${YELLOW}$NODE_PID${NC}"
+        echo -e "  C++ Backend: ${YELLOW}$CPP_PID${NC}"
+        echo ""
+    else
+        echo -e "${BLUE}Process IDs:${NC}"
+        echo -e "  Frontend:    ${YELLOW}$FRONTEND_PID${NC}"
+        echo -e "  Proxy:       ${YELLOW}$PROXY_PID${NC}"
+        echo -e "  Node.js Backend: ${YELLOW}$NODE_PID${NC}"
+        echo ""
+    fi
+    echo -e "${BLUE}Log files:${NC}"
+    echo -e "  Frontend:    ${YELLOW}logs/frontend.log${NC}"
+    echo -e "  Proxy:       ${YELLOW}logs/proxy.log${NC}"
+    echo -e "  Node.js Backend: ${YELLOW}logs/node_backend.log${NC}"
+    if [ -f "server/build/server" ]; then
+        echo -e "  C++ Backend: ${YELLOW}logs/cpp_backend.log${NC}"
+    fi
+    echo ""
+    echo -e "${BLUE}Quick actions:${NC}"
+    echo -e "  • View logs:        ${YELLOW}tail -f logs/*.log${NC}"
+    echo -e "  • Stop everything:  ${YELLOW}./stop.sh${NC}"
+    echo -e "  • Restart:          ${YELLOW}./start.sh${NC}"
+fi
+
+echo ""
+echo -e "${BLUE}Next steps:${NC}"
+echo -e "  1. Go to ${GREEN}http://localhost:3000${NC}"
+echo -e "  2. Create a SITL simulation in the Simulation tab"
+echo -e "  3. Connect to it in the Connections tab"
+echo ""
+
+# Optional: Open browser
+if command_exists xdg-open; then
+    read -p "Open XGCS in browser? [Y/n] " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+        xdg-open http://localhost:3000 2>/dev/null &
+    fi
+elif command_exists open; then
+    read -p "Open XGCS in browser? [Y/n] " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+        open http://localhost:3000 2>/dev/null &
     fi
 fi
 
-log "Startup complete! Press Ctrl+C to stop all components"
-
-# If not using terminals, keep the script running to make it easy to Ctrl+C
-if [ "$USE_TERMINAL" = false ]; then
-    wait
+# Keep script running if in native mode
+if [ "$STARTUP_MODE" = "native" ]; then
+    echo ""
+    echo -e "${YELLOW}Press Ctrl+C to stop all services${NC}"
+    
+    # Trap Ctrl+C to cleanup
+    trap 'echo -e "\n${YELLOW}Stopping services...${NC}"; kill_port 3000; kill_port 3001; kill_port 5000; kill_port 8081; exit' INT
+    
+    # Wait indefinitely
+    while true; do
+        sleep 1
+    done
 fi 

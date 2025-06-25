@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const storageRoutes = require('./routes/storage');
 const simulationRoutes = require('./routes/simulation_docker');
+const connectionRoutes = require('./routes/connection');
+const missionRoutes = require('./routes/mission');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,6 +27,8 @@ app.get('/health', (req, res) => {
 // Register the routes
 app.use('/api', storageRoutes);
 app.use('/api/simulation', simulationRoutes);
+app.use('/api', connectionRoutes);
+app.use('/api/mission', missionRoutes);
 
 app.listen(PORT, () => {
   console.log(`🚀 XGCS Backend Server running on http://localhost:${PORT}`);

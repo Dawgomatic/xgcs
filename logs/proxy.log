@@ -1,1 +1,33 @@
 CORS proxy server running on http://localhost:3001
+Proxying simulation requests to Node.js backend at http://localhost:5000
+Proxying other API requests to C++ backend at http://localhost:8081
+2025-06-25T03:43:46.012Z - GET /api/simulation/list
+2025-06-25T03:43:46.889Z - GET /api/connections
+2025-06-25T03:43:51.891Z - GET /api/connections
+2025-06-25T03:43:53.546Z - GET /api/simulation/list
+2025-06-25T03:43:56.889Z - GET /api/connections
+2025-06-25T03:44:01.889Z - GET /api/connections
+2025-06-25T03:44:03.019Z - GET /favicon.ico
+2025-06-25T03:44:03.023Z - GET /api/simulation/list
+2025-06-25T03:44:03.025Z - GET /api/connections
+2025-06-25T03:44:03.026Z - GET /api/simulation/list
+2025-06-25T03:44:03.027Z - GET /api/connections
+2025-06-25T03:44:06.465Z - GET /api/simulation/list
+2025-06-25T03:44:06.466Z - GET /api/connections
+2025-06-25T03:44:06.467Z - GET /api/simulation/list
+2025-06-25T03:44:06.467Z - GET /api/connections
+2025-06-25T03:44:10.753Z - POST /api/simulation/create
+2025-06-25T03:44:11.462Z - GET /api/connections
+2025-06-25T03:44:16.462Z - GET /api/connections
+2025-06-25T03:44:21.462Z - GET /api/connections
+2025-06-25T03:44:26.463Z - GET /api/connections
+2025-06-25T03:44:29.003Z - GET /api/simulation/list
+2025-06-25T03:44:29.005Z - GET /api/simulation/list
+2025-06-25T03:44:30.806Z - GET /api/simulation/list
+2025-06-25T03:44:31.097Z - GET /api/simulation/list
+2025-06-25T03:44:31.269Z - GET /api/simulation/list
+2025-06-25T03:44:31.539Z - GET /api/connections
+2025-06-25T03:44:36.538Z - GET /api/connections
+2025-06-25T03:44:36.595Z - GET /api/simulation/list
+2025-06-25T03:44:36.595Z - GET /api/simulation/list
+2025-06-25T03:44:41.537Z - GET /api/connections

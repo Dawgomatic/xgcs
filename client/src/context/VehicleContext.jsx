@@ -33,7 +33,7 @@ export function VehicleProvider({ children }) {
   useEffect(() => {
     const fetchConnectedVehicles = async () => {
       try {
-        const response = await fetch('http://localhost:3001/connections');
+        const response = await fetch('/api/connections');
         if (response.ok) {
           const data = await response.json();
           setConnectedVehicles(data.connections || []);
@@ -62,7 +62,7 @@ export function VehicleProvider({ children }) {
     // Function to fetch telemetry data
     const fetchTelemetry = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/telemetry?vehicleId=${vehicleId}`);
+        const response = await fetch(`/api/telemetry?vehicleId=${vehicleId}`);
         if (response.ok) {
           const data = await response.json();
           setTelemetryData(prev => ({
@@ -258,7 +258,7 @@ export function VehicleProvider({ children }) {
   // Disconnect a vehicle
   const disconnectVehicle = async (vehicleId) => {
     try {
-      const response = await fetch('http://localhost:3001/disconnect', {
+      const response = await fetch('/api/disconnect', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

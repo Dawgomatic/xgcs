@@ -15,6 +15,7 @@ function VehicleConnections() {
   const [activeConnections, setActiveConnections] = useState({});
   const [position, setPosition] = useState(null);
   const [formData, setFormData] = useState({});
+  const [simulations, setSimulations] = useState([]);
 
   useEffect(() => {
     // Load items from localStorage when the component mounts
@@ -23,6 +24,9 @@ function VehicleConnections() {
       console.log('Loaded items from localStorage:', savedItems);
       setItems(JSON.parse(savedItems));
     }
+    
+    // Load running simulations
+    loadSimulations();
   }, []);
 
   useEffect(() => {
@@ -41,6 +45,21 @@ function VehicleConnections() {
       }
     };
   }, [statusTimeout]);
+
+  // Load running simulations
+  const loadSimulations = async () => {
+    try {
+      const response = await fetch('/api/simulation/list');
+      if (response.ok) {
+        const data = await response.json();
+        // Filter only running simulations
+        const runningSimulations = (data.simulations || []).filter(sim => sim.status === 'running');
+        setSimulations(runningSimulations);
+      }
+    } catch (error) {
+      console.error('Error loading simulations:', error);
+    }
+  };
 
   // Helper function to set status with timeout
   const setTemporaryStatus = (message, isError = false) => {
@@ -96,14 +115,19 @@ function VehicleConnections() {
   const startTelemetry = (vehicleId) => {
     const intervalId = setInterval(async () => {
       try {
-        const response = await fetch(`http://localhost:3001/telemetry?vehicleId=${vehicleId}`);
+        const response = await fetch(`/api/telemetry?vehicleId=${vehicleId}`);
         const data = await response.json();
         
-        if (data.position) {
+        if (data.success && data.position) {
           setPosition(data.position);
+        } else if (!data.success) {
+          console.error(`Telemetry error for ${vehicleId}:`, data.message);
+          // Stop telemetry if we can't get data
+          stopTelemetry(vehicleId);
+          setTemporaryStatus(`Lost telemetry for ${vehicleId}`, true);
         }
       } catch (error) {
-        // console.error('Telemetry error:', error);
+        console.error('Telemetry fetch error:', error);
       }
     }, 100);
     
@@ -111,6 +135,17 @@ function VehicleConnections() {
       ...prev,
       [vehicleId]: intervalId
     }));
+  };
+  
+  const stopTelemetry = (vehicleId) => {
+    if (activeConnections[vehicleId]) {
+      clearInterval(activeConnections[vehicleId]);
+      setActiveConnections(prev => {
+        const newConnections = {...prev};
+        delete newConnections[vehicleId];
+        return newConnections;
+      });
+    }
   };
 
   const handleConnect = async () => {
@@ -124,7 +159,7 @@ function VehicleConnections() {
     setTemporaryStatus('Connecting to vehicle...');
 
     try {
-      const response = await fetch('http://localhost:3001/connect', {
+      const response = await fetch('/api/connect', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -147,6 +182,9 @@ function VehicleConnections() {
         startTelemetry(selectedConnection.name);
       } else {
         setTemporaryStatus(`Connection failed: ${data.message}`, true);
+        if (data.message.includes('C++ backend')) {
+          setTemporaryStatus('Please ensure the C++ backend is running (./start.sh or ./build_cpp_backend.sh)', true);
+        }
       }
     } catch (error) {
       setTemporaryStatus(`Connection error: ${error.message}`, true);
@@ -168,7 +206,7 @@ function VehicleConnections() {
       setIsConnecting(true);
       setTemporaryStatus('Disconnecting from vehicle...');
       
-      const response = await fetch('http://localhost:3001/disconnect', {
+      const response = await fetch('/api/disconnect', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -184,14 +222,7 @@ function VehicleConnections() {
       if (data.success) {
         setTemporaryStatus('Disconnected successfully!');
         
-        if (activeConnections[vehicleId]) {
-          clearInterval(activeConnections[vehicleId]);
-          setActiveConnections(prev => {
-            const newConnections = {...prev};
-            delete newConnections[vehicleId];
-            return newConnections;
-          });
-        }
+        stopTelemetry(vehicleId);
         
         if (Object.keys(activeConnections).length === 0) {
           setPosition(null);
@@ -242,7 +273,68 @@ function VehicleConnections() {
       </div>
 
       <div className="settings-section">
-        <h2>Available Connections</h2>
+        <h2>Running Simulations</h2>
+        <div className="items-container">
+          {simulations.length === 0 ? (
+            <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+              No running simulations. Start a simulation from the Simulation tab.
+            </div>
+          ) : (
+            simulations.map((sim) => (
+              <div
+                key={sim.id}
+                className="item-card simulation-card"
+                style={{ 
+                  backgroundColor: '#e8f5e9',
+                  border: '1px solid #4caf50',
+                  marginBottom: '10px',
+                  padding: '15px',
+                  cursor: 'pointer'
+                }}
+                onClick={() => {
+                  // Auto-create a connection for this simulation
+                  const newConnection = {
+                    name: `SITL: ${sim.name || sim.id}`,
+                    connectionDetails: {
+                      vehicleType: sim.vehicleType === 'arducopter' ? 'drone' : sim.vehicleType,
+                      connectionType: 'tcp',
+                      ip: 'localhost',
+                      port: sim.port.toString()
+                    },
+                    modelUrl: '',
+                    modelScale: 1.0
+                  };
+                  const existingIndex = items.findIndex(item => 
+                    item.connectionDetails.port === newConnection.connectionDetails.port
+                  );
+                  if (existingIndex === -1) {
+                    setItems([...items, newConnection]);
+                    setSelectedItem(items.length);
+                  } else {
+                    setSelectedItem(existingIndex);
+                  }
+                }}
+              >
+                <div>
+                  <strong>{sim.name || `${sim.vehicleType} ${sim.id}`}</strong>
+                  <div style={{ fontSize: '12px', color: '#666', marginTop: '5px' }}>
+                    Port: {sim.port} • Type: {sim.vehicleType} • Status: {sim.status}
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+        <button 
+          onClick={loadSimulations}
+          style={{ marginTop: '10px' }}
+        >
+          Refresh Simulations
+        </button>
+      </div>
+
+      <div className="settings-section">
+        <h2>Saved Connections</h2>
         <div className="items-container">
           {items.map((item, index) => (
             <div

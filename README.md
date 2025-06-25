@@ -1,6 +1,84 @@
 # XGCS - Modern Ground Control Station
 
-A modern, React-based ground control station that recreates QGroundControl functionality with a contemporary web interface.
+A modern, web-based ground control station for ArduPilot vehicles with Docker-based SITL simulation support.
+
+## 🚀 Quick Start
+
+### Using Docker (Recommended)
+```bash
+# Start all services
+docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Access the application
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:5000
+```
+
+### Using Native Development
+```bash
+# Start with script (frontend + C++ backend)
+./start.sh
+
+# Or start only frontend
+./start.sh --frontend-only
+```
+
+## 🎯 Key Features
+
+- **Multi-Vehicle Support**: Manage multiple ArduPilot SITL simulations simultaneously
+- **Docker-Based SITL**: Isolated simulation environments with automatic port management
+- **Persistent State**: Simulations survive restarts and page navigation
+- **Real-Time Telemetry**: Live vehicle data visualization
+- **Mission Planning**: Create and upload mission waypoints
+- **Modern UI**: React-based frontend with Material-UI
+
+## 📚 Documentation
+
+- [User Guide](./USER_GUIDE.md) - Complete guide for using XGCS
+- [Architecture Overview](./ARCHITECTURE.md) - Technical architecture and design
+- [Quick Reference](./QUICK_REFERENCE.md) - Common commands and operations
+- [SITL Setup Guide](./ardupilot/README_SITL_DOCKER.md) - ArduPilot SITL Docker setup
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React, Material-UI, Cesium (3D visualization)
+- **Backend**: Node.js (API), C++ (vehicle communication)
+- **Simulation**: ArduPilot SITL in Docker containers
+- **Communication**: MAVLink protocol
+- **Storage**: File-based persistence (simulations.json)
+
+## 📋 Requirements
+
+- Docker and Docker Compose
+- Node.js 18+ (for native development)
+- Git
+
+## 🚁 Supported Vehicles
+
+- ArduCopter (Multi-rotor)
+- ArduPlane (Fixed-wing)
+- ArduRover (Ground vehicles)
+- ArduSub (Underwater vehicles)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📄 License
+
+[Your License Here]
+
+## 🔗 Links
+
+- [ArduPilot Documentation](https://ardupilot.org/)
+- [MAVLink Protocol](https://mavlink.io/)
+- [Issue Tracker](https://github.com/your-repo/issues)
 
 ## Overview
 

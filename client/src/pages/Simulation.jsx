@@ -60,6 +60,7 @@ import {
 const Simulation = () => {
   const [simulations, setSimulations] = useState([]);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [logs, setLogs] = useState([]);
   const [newSimulation, setNewSimulation] = useState({
     name: '',
     vehicleType: 'arducopter',
@@ -76,6 +77,14 @@ const Simulation = () => {
       alt: 0
     }
   });
+
+  // Add logging function
+  const addLog = (message, type = 'info') => {
+    const timestamp = new Date().toISOString();
+    const logEntry = { timestamp, message, type };
+    console.log(`[Simulation] ${message}`);
+    setLogs(prev => [...prev, logEntry]);
+  };
 
   // Vehicle type options
   const vehicleTypes = [
@@ -97,24 +106,36 @@ const Simulation = () => {
 
   // Load existing simulations on component mount
   useEffect(() => {
+    addLog('Component mounted, loading simulations...');
     loadSimulations();
   }, []);
 
   // Load simulations from backend
   const loadSimulations = async () => {
+    addLog('Fetching simulations from backend...');
     try {
       const response = await fetch('/api/simulation/list');
+      addLog(`Backend response status: ${response.status}`);
+      
       if (response.ok) {
         const data = await response.json();
+        addLog(`Loaded ${data.simulations?.length || 0} simulations`);
         setSimulations(data.simulations || []);
+      } else {
+        const errorText = await response.text();
+        addLog(`Failed to load simulations: ${response.status} - ${errorText}`, 'error');
       }
     } catch (error) {
+      addLog(`Error loading simulations: ${error.message}`, 'error');
       console.error('Error loading simulations:', error);
     }
   };
 
   // Add new simulation
   const handleAddSimulation = async () => {
+    addLog('Creating new simulation...');
+    addLog(`Simulation config: ${JSON.stringify(newSimulation, null, 2)}`);
+    
     try {
       const response = await fetch('/api/simulation/create', {
         method: 'POST',
@@ -124,16 +145,21 @@ const Simulation = () => {
         body: JSON.stringify(newSimulation),
       });
 
+      addLog(`Create simulation response status: ${response.status}`);
+
       if (response.ok) {
         const data = await response.json();
+        addLog(`Simulation created successfully: ${data.simulation?.id}`);
         setSimulations(prev => [...prev, data.simulation]);
         setAddDialogOpen(false);
         resetNewSimulation();
       } else {
         const error = await response.json();
+        addLog(`Failed to create simulation: ${error.error}`, 'error');
         alert(`Failed to create simulation: ${error.error}`);
       }
     } catch (error) {
+      addLog(`Error creating simulation: ${error.message}`, 'error');
       console.error('Error creating simulation:', error);
       alert('Failed to create simulation');
     }
@@ -141,12 +167,19 @@ const Simulation = () => {
 
   // Start simulation
   const startSimulation = async (simulationId) => {
+    addLog(`Starting simulation: ${simulationId}`);
+    
     try {
       const response = await fetch(`/api/simulation/${simulationId}/start`, {
         method: 'POST',
       });
 
+      addLog(`Start simulation response status: ${response.status}`);
+
       if (response.ok) {
+        const data = await response.json();
+        addLog(`Simulation start initiated: ${data.message}`);
+        
         // Update local state
         setSimulations(prev => prev.map(sim => 
           sim.id === simulationId 
@@ -158,9 +191,11 @@ const Simulation = () => {
         pollSimulationStatus(simulationId);
       } else {
         const error = await response.json();
+        addLog(`Failed to start simulation: ${error.error}`, 'error');
         alert(`Failed to start simulation: ${error.error}`);
       }
     } catch (error) {
+      addLog(`Error starting simulation: ${error.message}`, 'error');
       console.error('Error starting simulation:', error);
       alert('Failed to start simulation');
     }
@@ -168,12 +203,18 @@ const Simulation = () => {
 
   // Stop simulation
   const stopSimulation = async (simulationId) => {
+    addLog(`Stopping simulation: ${simulationId}`);
+    
     try {
       const response = await fetch(`/api/simulation/${simulationId}/stop`, {
         method: 'POST',
       });
 
+      addLog(`Stop simulation response status: ${response.status}`);
+
       if (response.ok) {
+        const data = await response.json();
+        addLog(`Simulation stop initiated: ${data.message}`);
         setSimulations(prev => prev.map(sim => 
           sim.id === simulationId 
             ? { ...sim, status: 'stopping' }
@@ -181,9 +222,11 @@ const Simulation = () => {
         ));
       } else {
         const error = await response.json();
+        addLog(`Failed to stop simulation: ${error.error}`, 'error');
         alert(`Failed to stop simulation: ${error.error}`);
       }
     } catch (error) {
+      addLog(`Error stopping simulation: ${error.message}`, 'error');
       console.error('Error stopping simulation:', error);
       alert('Failed to stop simulation');
     }
@@ -195,18 +238,26 @@ const Simulation = () => {
       return;
     }
 
+    addLog(`Deleting simulation: ${simulationId}`);
+
     try {
       const response = await fetch(`/api/simulation/${simulationId}`, {
         method: 'DELETE',
       });
 
+      addLog(`Delete simulation response status: ${response.status}`);
+
       if (response.ok) {
+        const data = await response.json();
+        addLog(`Simulation deleted: ${data.message}`);
         setSimulations(prev => prev.filter(sim => sim.id !== simulationId));
       } else {
         const error = await response.json();
+        addLog(`Failed to delete simulation: ${error.error}`, 'error');
         alert(`Failed to delete simulation: ${error.error}`);
       }
     } catch (error) {
+      addLog(`Error deleting simulation: ${error.message}`, 'error');
       console.error('Error deleting simulation:', error);
       alert('Failed to delete simulation');
     }
@@ -214,11 +265,16 @@ const Simulation = () => {
 
   // Poll simulation status
   const pollSimulationStatus = (simulationId) => {
+    addLog(`Starting status polling for simulation: ${simulationId}`);
+    
     const interval = setInterval(async () => {
       try {
         const response = await fetch(`/api/simulation/${simulationId}/status`);
+        
         if (response.ok) {
           const status = await response.json();
+          addLog(`Status update for ${simulationId}: ${status.status} (container: ${status.containerId})`);
+          
           setSimulations(prev => prev.map(sim => 
             sim.id === simulationId 
               ? { ...sim, ...status }
@@ -226,14 +282,39 @@ const Simulation = () => {
           ));
           
           if (status.status === 'running' || status.status === 'stopped' || status.status === 'error') {
+            addLog(`Stopping status polling for ${simulationId} - final status: ${status.status}`);
             clearInterval(interval);
           }
+        } else {
+          addLog(`Failed to get status for ${simulationId}: ${response.status}`, 'error');
         }
       } catch (error) {
+        addLog(`Error polling simulation status: ${error.message}`, 'error');
         console.error('Error polling simulation status:', error);
         clearInterval(interval);
       }
     }, 2000);
+  };
+
+  // Get simulation logs
+  const getSimulationLogs = async (simulationId) => {
+    addLog(`Fetching logs for simulation: ${simulationId}`);
+    
+    try {
+      const response = await fetch(`/api/simulation/${simulationId}/logs`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        addLog(`Retrieved ${data.logs?.length || 0} log entries for ${simulationId}`);
+        return data.logs || [];
+      } else {
+        addLog(`Failed to get logs for ${simulationId}: ${response.status}`, 'error');
+        return [];
+      }
+    } catch (error) {
+      addLog(`Error getting logs for ${simulationId}: ${error.message}`, 'error');
+      return [];
+    }
   };
 
   // Reset new simulation form
@@ -294,17 +375,68 @@ const Simulation = () => {
         <Typography variant="h4">
           Simulation Management
         </Typography>
-        <Button
-          variant="contained"
-          startIcon={<Add />}
-          onClick={() => {
-            setNewSimulation(prev => ({ ...prev, port: getNextPort() }));
-            setAddDialogOpen(true);
-          }}
-        >
-          Add Simulation
-        </Button>
+        <Box>
+          <Button
+            variant="outlined"
+            startIcon={<Refresh />}
+            onClick={() => {
+              addLog('Manual refresh triggered');
+              loadSimulations();
+            }}
+            sx={{ mr: 1 }}
+          >
+            Refresh
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => {
+              setNewSimulation(prev => ({ ...prev, port: getNextPort() }));
+              setAddDialogOpen(true);
+            }}
+          >
+            Add Simulation
+          </Button>
+        </Box>
       </Box>
+
+      {/* Logs Section */}
+      <Paper sx={{ p: 2, mb: 3, maxHeight: 200, overflow: 'auto' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+          <Typography variant="h6">Debug Logs</Typography>
+          <Button
+            size="small"
+            onClick={() => setLogs([])}
+            disabled={logs.length === 0}
+          >
+            Clear Logs
+          </Button>
+        </Box>
+        <Box sx={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>
+          {logs.length === 0 ? (
+            <Typography variant="body2" color="text.secondary">
+              No logs yet. Create or start a simulation to see activity.
+            </Typography>
+          ) : (
+            logs.slice(-20).map((log, index) => (
+              <Box
+                key={index}
+                sx={{
+                  color: log.type === 'error' ? 'error.main' : 
+                         log.type === 'warning' ? 'warning.main' : 'text.primary',
+                  mb: 0.5
+                }}
+              >
+                <span style={{ color: 'text.secondary' }}>
+                  {new Date(log.timestamp).toLocaleTimeString()}
+                </span>
+                {' '}
+                {log.message}
+              </Box>
+            ))
+          )}
+        </Box>
+      </Paper>
 
       {/* Simulations List */}
       <Grid container spacing={3}>

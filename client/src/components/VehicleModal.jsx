@@ -6,9 +6,9 @@ function VehicleModal({ isOpen, onClose, onAdd, initialValue = null }) {
     name: '',
     connectionDetails: {
       vehicleType: 'drone',
-      connectionType: 'udp',
+      connectionType: 'tcp',
       ip: '127.0.0.1',
-      port: '14540',
+      port: '5760',
       serialPort: '',
       baudRate: '57600'
     },
