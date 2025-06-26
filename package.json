@@ -5,6 +5,7 @@
     "cesium": "^1.126.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "http-proxy": "^1.18.1",
     "http-proxy-middleware": "^3.0.3",
     "node-fetch": "^2.7.0",
     "react-router-dom": "6.18.0",

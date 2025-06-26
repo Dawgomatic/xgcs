@@ -23,7 +23,11 @@ let nextPort = 5760;
 // Save simulations to file
 async function saveSimulations() {
   try {
-    const simulationsArray = Array.from(simulations.values());
+    // Create clean copies without circular references
+    const simulationsArray = Array.from(simulations.values()).map(sim => {
+      const { mockDataInterval, ...cleanSim } = sim;
+      return cleanSim;
+    });
     await fs.writeFile(SIMULATIONS_FILE, JSON.stringify(simulationsArray, null, 2));
     log(`Saved ${simulationsArray.length} simulations to file`);
   } catch (error) {
@@ -212,20 +216,20 @@ class DockerManager {
     let image, command;
     switch (simulation.vehicleType.toLowerCase()) {
       case 'arducopter':
-        image = 'xgcs-ardupilot-sitl:latest';
-        command = `/ardupilot/build/sitl/bin/arducopter --model ${simulation.frameType || 'quad'} --home ${simulation.homeLocation.lat},${simulation.homeLocation.lng},${simulation.homeLocation.alt},0 --speedup ${simulation.speedFactor || 1.0} --instance 0`;
+        image = 'custom-ardupilot-sitl:latest';
+        command = `./build/sitl/bin/arducopter --model ${simulation.frameType || 'quad'} --home ${simulation.homeLocation.lat},${simulation.homeLocation.lng},${simulation.homeLocation.alt},0 --sysid ${simulation.systemId || 1} --speedup ${simulation.speedFactor || 1.0} --defaults /ardupilot/Tools/autotest/default_params/copter.parm -I0`;
         break;
       case 'arduplane':
-        image = 'xgcs-ardupilot-sitl:latest';
-        command = `/ardupilot/build/sitl/bin/arduplane --model plane --home ${simulation.homeLocation.lat},${simulation.homeLocation.lng},${simulation.homeLocation.alt},0 --speedup ${simulation.speedFactor || 1.0} --instance 0`;
+        image = 'custom-ardupilot-sitl:latest';
+        command = `./build/sitl/bin/arduplane --model plane --home ${simulation.homeLocation.lat},${simulation.homeLocation.lng},${simulation.homeLocation.alt},0 --sysid ${simulation.systemId || 1} --speedup ${simulation.speedFactor || 1.0} --defaults /ardupilot/Tools/autotest/default_params/plane.parm -I0`;
         break;
       case 'ardurover':
-        image = 'xgcs-ardupilot-sitl:latest';
-        command = `/ardupilot/build/sitl/bin/ardurover --model rover --home ${simulation.homeLocation.lat},${simulation.homeLocation.lng},${simulation.homeLocation.alt},0 --speedup ${simulation.speedFactor || 1.0} --instance 0`;
+        image = 'custom-ardupilot-sitl:latest';
+        command = `./build/sitl/bin/ardurover --model rover --home ${simulation.homeLocation.lat},${simulation.homeLocation.lng},${simulation.homeLocation.alt},0 --sysid ${simulation.systemId || 1} --speedup ${simulation.speedFactor || 1.0} --defaults /ardupilot/Tools/autotest/default_params/rover.parm -I0`;
         break;
       case 'ardusub':
-        image = 'xgcs-ardupilot-sitl:latest';
-        command = `/ardupilot/build/sitl/bin/ardusub --model sub --home ${simulation.homeLocation.lat},${simulation.homeLocation.lng},${simulation.homeLocation.alt},0 --speedup ${simulation.speedFactor || 1.0} --instance 0`;
+        image = 'custom-ardupilot-sitl:latest';
+        command = `./build/sitl/bin/ardusub --model sub --home ${simulation.homeLocation.lat},${simulation.homeLocation.lng},${simulation.homeLocation.alt},0 --sysid ${simulation.systemId || 1} --speedup ${simulation.speedFactor || 1.0} --defaults /ardupilot/Tools/autotest/default_params/sub.parm -I0`;
         break;
       default:
         // Fallback to PX4 SITL if ArduPilot image not available
@@ -290,10 +294,7 @@ class DockerManager {
 
     } catch (error) {
       log(`Failed to create container: ${error.message}`, 'error');
-      
-      // Fallback to mock simulation if Docker fails
-      log('Falling back to mock simulation');
-      return this.createMockSimulation(simulation);
+      throw error; // Don't fall back to mock - fail properly
     }
   }
 
@@ -427,6 +428,7 @@ router.post('/create', async (req, res) => {
       frameType: config.frameType || 'quad',
       ipAddress: config.ipAddress || 'localhost',
       port: port,
+      systemId: config.systemId || 1,
       speedFactor: config.speedFactor || 1.0,
       enableLogging: config.enableLogging !== false,
       enableVideo: config.enableVideo || false,
@@ -465,7 +467,33 @@ router.post('/create', async (req, res) => {
 // List simulations
 router.get('/list', (req, res) => {
   try {
-    const simulationList = Array.from(simulations.values());
+    const simulationList = Array.from(simulations.values()).map(sim => {
+      // Create a clean copy without circular references
+      const { mockDataInterval, ...cleanSim } = sim;
+      return {
+        id: cleanSim.id,
+        name: cleanSim.name,
+        vehicleType: cleanSim.vehicleType,
+        frameType: cleanSim.frameType,
+        ipAddress: cleanSim.ipAddress,
+        port: cleanSim.port,
+        systemId: cleanSim.systemId,
+        speedFactor: cleanSim.speedFactor,
+        enableLogging: cleanSim.enableLogging,
+        enableVideo: cleanSim.enableVideo,
+        customParams: cleanSim.customParams,
+        homeLocation: cleanSim.homeLocation,
+        status: cleanSim.status,
+        createdAt: cleanSim.createdAt,
+        startedAt: cleanSim.startedAt,
+        stoppedAt: cleanSim.stoppedAt,
+        error: cleanSim.error,
+        stats: cleanSim.stats,
+        containerId: cleanSim.containerId,
+        mockData: cleanSim.mockData,
+        processId: cleanSim.processId
+      };
+    });
     log(`Listing ${simulationList.length} simulations`);
     res.json({ 
       success: true, 

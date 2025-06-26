@@ -1,11 +1,11 @@
 [
   {
-    "id": "bf2bf5d2-44c4-49be-bb18-55ffaa954bc4",
-    "name": "Test Flight",
+    "id": "e8b1c12e-563a-4d37-b98c-16fa421ba972",
+    "name": "new",
     "vehicleType": "arducopter",
     "frameType": "quad",
     "ipAddress": "localhost",
-    "port": 5781,
+    "port": 5760,
     "speedFactor": 1,
     "enableLogging": true,
     "enableVideo": false,
@@ -16,18 +16,11 @@
       "alt": 0
     },
     "status": "running",
-    "createdAt": "2025-06-24T04:20:50.136Z",
+    "createdAt": "2025-06-26T04:29:49.087Z",
     "processId": null,
-    "stats": {
-      "uptime": 2,
-      "cpuUsage": 13.991120233324628,
-      "memoryUsage": 17.707671914561537,
-      "containerStatus": "running",
-      "mockData": null
-    },
-    "containerId": "64b1d6421c34539604671214b7b321ca45ef79aee98a0b8e771259f6f6eb95ea",
+    "stats": null,
+    "containerId": "087d664562a1",
     "mockData": null,
-    "startedAt": "2025-06-25T02:46:48.584Z",
-    "stoppedAt": "2025-06-25T02:46:33.981Z"
+    "startedAt": "2025-06-26T04:29:52.502Z"
   }
 ]

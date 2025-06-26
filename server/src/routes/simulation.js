@@ -119,7 +119,25 @@ router.post('/create', async (req, res) => {
 // List simulations
 router.get('/list', (req, res) => {
   try {
-    const simulationList = Array.from(simulations.values());
+    const simulationList = Array.from(simulations.values()).map(sim => ({
+      id: sim.id,
+      name: sim.name,
+      vehicleType: sim.vehicleType,
+      frameType: sim.frameType,
+      ipAddress: sim.ipAddress,
+      port: sim.port,
+      speedFactor: sim.speedFactor,
+      enableLogging: sim.enableLogging,
+      enableVideo: sim.enableVideo,
+      customParams: sim.customParams,
+      homeLocation: sim.homeLocation,
+      status: sim.status,
+      createdAt: sim.createdAt,
+      startedAt: sim.startedAt,
+      stoppedAt: sim.stoppedAt,
+      error: sim.error,
+      stats: sim.stats
+    }));
     res.json({ 
       success: true, 
       simulations: simulationList 

@@ -45,24 +45,33 @@ kill_port() {
     fi
 }
 
-# Function to wait for a service
+# Function to wait for a service with improved error checking
 wait_for_service() {
     local name=$1
     local url=$2
-    local max_attempts=30
+    local max_attempts=45 # Increased timeout
     local attempt=1
     
-    echo -n "Waiting for $name to start"
+    echo -n -e "${BLUE}Waiting for $name at $url to start${NC}"
     while [ $attempt -le $max_attempts ]; do
-        if curl -s -o /dev/null -w "%{http_code}" "$url" | grep -q "200\|404"; then
-            echo -e " ${GREEN}✓${NC}"
+        # Use curl with a timeout and silent-fail to check the service
+        if curl -s --max-time 2 -f -o /dev/null "$url"; then
+            echo -e " ${GREEN}✓ Online${NC}"
             return 0
         fi
+        
+        # Check for common HTTP status codes if curl succeeds but page isn't ready
+        local http_code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 2 "$url")
+        if [[ "$http_code" == "200" || "$http_code" == "404" || "$http_code" == "400" ]]; then
+             echo -e " ${GREEN}✓ Responding ($http_code)${NC}"
+             return 0
+        fi
+
         echo -n "."
         sleep 1
         ((attempt++))
     done
-    echo -e " ${RED}✗${NC}"
+    echo -e " ${RED}✗ Failed to start after $max_attempts seconds${NC}"
     return 1
 }
 
@@ -216,16 +225,17 @@ elif [ "$STARTUP_MODE" = "native" ]; then
     echo -e "${GREEN}Frontend started (PID: $FRONTEND_PID)${NC}"
     
     # Wait for services to start
-    echo -e "${BLUE}Waiting for services to start...${NC}"
-    wait_for_service "Frontend" "http://localhost:3000"
-    wait_for_service "Proxy" "http://localhost:3001/health"
+    echo -e "${BLUE}Waiting for all services to come online...${NC}"
     wait_for_service "Node.js Backend" "http://localhost:5000/health"
+    wait_for_service "Proxy" "http://localhost:3001/health"
     
     if [ -f "server/build/server" ]; then
         wait_for_service "C++ Backend" "http://localhost:8081/connections"
     fi
     
-    echo -e "${GREEN}✅ All Native services started!${NC}"
+    wait_for_service "Frontend" "http://localhost:3000"
+    
+    echo -e "${GREEN}✅ All Native services seem to be running!${NC}"
 fi
 
 # Display status and URLs

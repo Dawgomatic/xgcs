@@ -29,6 +29,25 @@ export function VehicleProvider({ children }) {
     viewerRef.current = viewer;
   }, []);
 
+  // Load saved connections from localStorage on mount
+  useEffect(() => {
+    const savedItems = localStorage.getItem('items');
+    if (savedItems) {
+      try {
+        const items = JSON.parse(savedItems);
+        // Convert saved items to connected vehicles format
+        const vehicles = items.map(item => ({
+          id: item.name,
+          name: item.name,
+          connected: false // Will be updated by fetchConnectedVehicles
+        }));
+        setConnectedVehicles(vehicles);
+      } catch (error) {
+        console.error('Error loading saved connections:', error);
+      }
+    }
+  }, []);
+
   // Fetch connected vehicles 
   useEffect(() => {
     const fetchConnectedVehicles = async () => {
@@ -36,7 +55,43 @@ export function VehicleProvider({ children }) {
         const response = await fetch('/api/connections');
         if (response.ok) {
           const data = await response.json();
-          setConnectedVehicles(data.connections || []);
+          const backendConnections = data.connections || [];
+          
+          // Merge with saved connections from localStorage
+          const savedItems = localStorage.getItem('items');
+          let savedConnections = [];
+          if (savedItems) {
+            try {
+              const items = JSON.parse(savedItems);
+              savedConnections = items.map(item => ({
+                id: item.name,
+                name: item.name,
+                connectionDetails: item.connectionDetails
+              }));
+            } catch (error) {
+              console.error('Error parsing saved connections:', error);
+            }
+          }
+          
+          // Update connection status based on backend
+          const updatedConnections = savedConnections.map(saved => {
+            const backendConnection = backendConnections.find(bc => 
+              bc.id === saved.id || bc.id === `SITL: ${saved.name}` || bc.id === saved.name
+            );
+            return {
+              ...saved,
+              connected: !!backendConnection
+            };
+          });
+          
+          setConnectedVehicles(updatedConnections);
+          
+          // Start telemetry for newly connected vehicles
+          backendConnections.forEach(connection => {
+            if (connection.connected && !telemetryIntervals.current[connection.id]) {
+              startTelemetryPolling(connection.id);
+            }
+          });
         }
       } catch (error) {
         console.error('Error fetching connections:', error);
@@ -62,16 +117,37 @@ export function VehicleProvider({ children }) {
     // Function to fetch telemetry data
     const fetchTelemetry = async () => {
       try {
-        const response = await fetch(`/api/telemetry?vehicleId=${vehicleId}`);
-        if (response.ok) {
-          const data = await response.json();
+        // Try different vehicle ID formats
+        const vehicleIdVariations = [
+          vehicleId,
+          `SITL: ${vehicleId}`,
+          vehicleId.replace('SITL: ', '')
+        ];
+        
+        let telemetryData = null;
+        for (const id of vehicleIdVariations) {
+          try {
+            const response = await fetch(`/api/telemetry?vehicleId=${encodeURIComponent(id)}`);
+            if (response.ok) {
+              const data = await response.json();
+              if (data.success && data.position) {
+                telemetryData = data;
+                break;
+              }
+            }
+          } catch (error) {
+            console.error(`Error fetching telemetry for ${id}:`, error);
+          }
+        }
+        
+        if (telemetryData) {
           setTelemetryData(prev => ({
             ...prev,
-            [vehicleId]: data
+            [vehicleId]: telemetryData
           }));
           
           if (viewerRef.current) {
-            updateVehicleEntity(vehicleId, data);
+            updateVehicleEntity(vehicleId, telemetryData);
           }
         }
       } catch (error) {
@@ -81,7 +157,7 @@ export function VehicleProvider({ children }) {
     
     fetchTelemetry();
     
-    const intervalId = setInterval(fetchTelemetry, 50);
+    const intervalId = setInterval(fetchTelemetry, 100);
     telemetryIntervals.current[vehicleId] = intervalId;
     
     return intervalId;
@@ -318,11 +394,37 @@ export function VehicleProvider({ children }) {
     }
   };
 
+  // Determine active vehicle (first connected vehicle)
+  const activeVehicle = connectedVehicles.find(v => v.connected) || null;
+  
+  // Create vehicles array with telemetry data for FlightDisplay
+  const vehicles = connectedVehicles.map(v => {
+    const telemetry = telemetryData[v.id];
+    return {
+      id: v.id,
+      name: v.name,
+      connected: v.connected,
+      connectionStatus: v.connected ? 'connected' : 'disconnected',
+      flightMode: telemetry?.flight_mode || 'UNKNOWN',
+      batteryLevel: telemetry?.battery?.remaining || 0,
+      airspeed: telemetry?.velocity?.airspeed || 0,
+      altitude: telemetry?.position?.alt || 0,
+      gpsSatellites: telemetry?.gps?.satellites || 0,
+      coordinate: telemetry?.position ? {
+        lat: telemetry.position.lat,
+        lon: telemetry.position.lng
+      } : null,
+      ...telemetry
+    };
+  });
+
   return (
     <VehicleContext.Provider value={{
       connectedVehicles,
       vehicleEntities,
       telemetryData,
+      activeVehicle,
+      vehicles,
       setViewer,
       startTelemetryPolling,
       stopTelemetryPolling,

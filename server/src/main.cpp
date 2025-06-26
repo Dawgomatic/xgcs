@@ -33,10 +33,13 @@ int main() {
             std::string ip = params["ip"].get<std::string>();
             int port = params["port"].get<int>();
             std::string vehicleId = params["name"].get<std::string>();
-            std::string vehicleType = params["type"].get<std::string>();
+            
+            // Trim whitespace from vehicleId
+            vehicleId.erase(0, vehicleId.find_first_not_of(" \t\n\r"));
+            vehicleId.erase(vehicleId.find_last_not_of(" \t\n\r") + 1);
             
             std::string connection_url = "tcp://" + ip + ":" + std::to_string(port);
-            bool success = ConnectionManager::instance().add_vehicle(vehicleId, connection_url, vehicleType);
+            bool success = ConnectionManager::instance().add_vehicle(vehicleId, connection_url);
             
             json response_json = {
                 {"success", success},
@@ -68,6 +71,10 @@ int main() {
         try {
             auto params = json::parse(req.body);
             std::string vehicleId = params["name"].get<std::string>();
+            
+            // Trim whitespace from vehicleId
+            vehicleId.erase(0, vehicleId.find_first_not_of(" \t\n\r"));
+            vehicleId.erase(vehicleId.find_last_not_of(" \t\n\r") + 1);
             
             ConnectionManager::instance().remove_vehicle(vehicleId);
             
@@ -138,49 +145,50 @@ int main() {
     ([](const crow::request& req) {
         crow::response res;
         res.add_header("Access-Control-Allow-Origin", "*");
-        
+        res.set_header("Content-Type", "application/json");
+
         try {
-            auto vehicleId = req.url_params.get("vehicleId");
+            auto vehicleId_ptr = req.url_params.get("vehicleId");
             
-            if (!vehicleId) {
-                json error_json = {
-                    {"error", "Vehicle ID not provided"}
-                };
-                
+            if (!vehicleId_ptr) {
                 res.code = 400;
-                res.set_header("Content-Type", "application/json");
-                res.body = error_json.dump();
+                res.body = json{
+                    {"success", false},
+                    {"error", "Vehicle ID not provided"}
+                }.dump();
                 return res;
             }
             
+            // Trim whitespace from vehicleId
+            std::string vehicleId = vehicleId_ptr;
+            vehicleId.erase(0, vehicleId.find_first_not_of(" \t\n\r"));
+            vehicleId.erase(vehicleId.find_last_not_of(" \t\n\r") + 1);
+
             if (!ConnectionManager::instance().is_vehicle_connected(vehicleId)) {
-                json error_json = {
-                    {"error", "Vehicle not connected"}
-                };
-                
                 res.code = 404;
-                res.set_header("Content-Type", "application/json");
-                res.body = error_json.dump();
+                res.body = json{
+                    {"success", false},
+                    {"error", "Vehicle not connected"},
+                    {"vehicleId", vehicleId}
+                }.dump();
                 return res;
             }
             
             // Get real telemetry data from the vehicle as JSON string
-            std::string telemetry_json = ConnectionManager::instance().get_telemetry_data_json(vehicleId);
+            std::string telemetry_json_str = ConnectionManager::instance().get_telemetry_data_json(vehicleId);
             
             // Parse the JSON string
-            json telemetry_data = json::parse(telemetry_json);
+            json telemetry_data = json::parse(telemetry_json_str);
+            telemetry_data["success"] = true;
             
             res.code = 200;
-            res.set_header("Content-Type", "application/json");
             res.body = telemetry_data.dump();
         } catch (const std::exception& e) {
-            json error_json = {
-                {"error", std::string("Error: ") + e.what()}
-            };
-            
             res.code = 500;
-            res.set_header("Content-Type", "application/json");
-            res.body = error_json.dump();
+            res.body = json{
+                {"success", false},
+                {"error", std::string("Error: ") + e.what()}
+            }.dump();
         }
         
         return res;
@@ -223,6 +231,36 @@ int main() {
         }
         
         return res;
+    });
+
+    CROW_ROUTE(app, "/mission/upload").methods("POST"_method)
+    ([](const crow::request& req) {
+        auto params = json::parse(req.body);
+        std::string vehicleId = params["vehicleId"].get<std::string>();
+        json missionJson = params["mission"];
+        
+        bool success = ConnectionManager::instance().upload_mission(vehicleId, missionJson);
+        
+        return crow::response(success ? 200 : 400, json{
+            {"success", success},
+            {"message", success ? "Mission uploaded" : "Mission upload failed"}
+        }.dump());
+    });
+
+    CROW_ROUTE(app, "/mission/start").methods("POST"_method)
+    ([](const crow::request& req) {
+        auto params = json::parse(req.body);
+        std::string vehicleId = params["vehicleId"].get<std::string>();
+        ConnectionManager::instance().start_mission(vehicleId);
+        return crow::response(200, json{{"success", true}}.dump());
+    });
+
+    CROW_ROUTE(app, "/mission/clear").methods("POST"_method)
+    ([](const crow::request& req) {
+        auto params = json::parse(req.body);
+        std::string vehicleId = params["vehicleId"].get<std::string>();
+        ConnectionManager::instance().clear_mission(vehicleId);
+        return crow::response(200, json{{"success", true}}.dump());
     });
 
     std::cout << "Starting server on port 8081..." << std::endl;

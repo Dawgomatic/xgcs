@@ -67,6 +67,7 @@ const Simulation = () => {
     frameType: 'quad',
     ipAddress: 'localhost',
     port: 5760,
+    systemId: 1,
     speedFactor: 1.0,
     enableLogging: true,
     enableVideo: false,
@@ -325,6 +326,7 @@ const Simulation = () => {
       frameType: 'quad',
       ipAddress: 'localhost',
       port: 5760,
+      systemId: 1,
       speedFactor: 1.0,
       enableLogging: true,
       enableVideo: false,
@@ -643,6 +645,18 @@ const Simulation = () => {
                 fullWidth
                 helperText="MAVLink port (default: 5760)"
                 inputProps={{ min: 5760, max: 5800 }}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="System ID"
+                type="number"
+                value={newSimulation.systemId}
+                onChange={(e) => setNewSimulation(prev => ({ ...prev, systemId: parseInt(e.target.value) }))}
+                fullWidth
+                helperText="MAVLink system ID (default: 1)"
+                inputProps={{ min: 1, max: 255 }}
               />
             </Grid>
 

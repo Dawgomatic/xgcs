@@ -95,10 +95,11 @@ const TopBar = () => {
     }
   };
 
-  const isFlightPage = location.pathname === '/';
+  const isFlightPage = location.pathname === '/flight-display';
 
   const menuItems = [
-    { text: 'Flight Display', icon: <Flight />, path: '/' },
+    { text: 'Home', icon: <Home />, path: '/' },
+    { text: 'Flight Display', icon: <Flight />, path: '/flight-display' },
     { text: 'Vehicle Connections', icon: <GpsFixed />, path: '/vehicle-connections' },
     { text: 'Mission Planning', icon: <Map />, path: '/mission-planning' },
     { text: 'Simulation', icon: <Memory />, path: '/simulation' },
@@ -122,6 +123,16 @@ const TopBar = () => {
           XGCS - Modern Ground Control Station
         </Typography>
 
+        {/* Connection Status - Show on all pages */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mr: 2 }}>
+          <Chip 
+            icon={<SignalCellular4Bar />}
+            label={connectionStatus}
+            color={connectionStatus === 'connected' ? 'success' : 'error'}
+            size="small"
+          />
+        </Box>
+
         <FormControlLabel
           control={
             <Switch
@@ -142,14 +153,6 @@ const TopBar = () => {
         {/* Flight Controls - Only show on flight pages */}
         {isFlightPage && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mr: 2 }}>
-            {/* Connection Status */}
-            <Chip 
-              icon={<SignalCellular4Bar />}
-              label={connectionStatus}
-              color={connectionStatus === 'connected' ? 'success' : 'error'}
-              size="small"
-            />
-
             {/* Flight Mode */}
             <FlightModeSelector 
               flightMode={flightMode}

@@ -1,81 +1,123 @@
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const PORT = 3001;
 
+// Log file
+const logFile = path.join(__dirname, 'logs', 'proxy.log');
+
+// Ensure logs directory exists
+if (!fs.existsSync(path.join(__dirname, 'logs'))) {
+  fs.mkdirSync(path.join(__dirname, 'logs'));
+}
+
+// Function to write to log file
+function writeLog(message) {
+  const timestamp = new Date().toISOString();
+  const logMessage = `${timestamp} - ${message}\n`;
+  fs.appendFileSync(logFile, logMessage);
+  console.log(message);
+}
+
 // Enable CORS for all routes
 app.use(cors());
-app.use(express.json());
 
 // Add logging middleware
 app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  writeLog(`${req.method} ${req.url}`);
   next();
+});
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    services: {
+      frontend: 'http://localhost:3000',
+      proxy: `http://localhost:${PORT}`,
+      cpp_backend: 'http://localhost:8081',
+      node_backend: 'http://localhost:5000'
+    }
+  });
 });
 
 // Proxy simulation API requests to the Node.js backend (port 5000)
 app.use('/api/simulation', createProxyMiddleware({
-  target: 'http://localhost:5000',
+  target: 'http://localhost:5000/api/simulation',
   changeOrigin: true,
-  ws: true,  // Enable WebSocket proxying
+  ws: true,
+  logLevel: 'debug',
   onProxyReq: function(proxyReq, req, res) {
-    console.log(`Proxying simulation request: ${req.method} ${req.url} -> http://localhost:5000${proxyReq.path}`);
+    writeLog(`Proxying simulation request: ${req.method} ${req.url} -> http://localhost:5000/api/simulation${req.url}`);
   },
   onProxyRes: function(proxyRes, req, res) {
-    // Add CORS headers to the proxied response
     proxyRes.headers['Access-Control-Allow-Origin'] = '*';
     proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, DELETE';
     proxyRes.headers['Access-Control-Allow-Headers'] = 'Content-Type';
-    console.log(`Simulation proxy response: ${proxyRes.statusCode}`);
+    writeLog(`Simulation proxy response: ${proxyRes.statusCode}`);
   },
   onError: function(err, req, res) {
-    console.error(`Simulation proxy error: ${err.message}`);
-    res.status(500).json({ error: 'Proxy error', details: err.message });
+    writeLog(`Simulation proxy error: ${err.message}`);
+    res.writeHead(502, {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    });
+    res.end(JSON.stringify({ 
+      error: 'Proxy error', 
+      message: 'Failed to connect to simulation backend',
+      details: err.message,
+      success: false 
+    }));
   }
 }));
 
-// Proxy all other API requests to the C++ backend (remove /api prefix)
+// Proxy all other API requests to the C++ backend
 app.use('/api', createProxyMiddleware({
   target: 'http://localhost:8081',
   changeOrigin: true,
   pathRewrite: {
-    '^/api': '', // Remove /api prefix when forwarding to C++ backend
+    '^/api': '' // Remove /api prefix when forwarding to C++ backend
   },
-  ws: true,  // Enable WebSocket proxying
+  ws: true,
+  timeout: 60000,
+  proxyTimeout: 60000,
+  logLevel: 'debug',
   onProxyReq: function(proxyReq, req, res) {
-    console.log(`Proxying API request: ${req.method} ${req.url} -> http://localhost:8081${proxyReq.path}`);
+    writeLog(`Proxying API request: ${req.method} ${req.url} -> http://localhost:8081${proxyReq.path}`);
+    
+    // Log headers and body for debugging POST requests
+    if (req.method === 'POST') {
+      writeLog(`Request headers: ${JSON.stringify(req.headers)}`);
+    }
   },
   onProxyRes: function(proxyRes, req, res) {
-    // Add CORS headers to the proxied response
     proxyRes.headers['Access-Control-Allow-Origin'] = '*';
-    proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';
+    proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, DELETE';
     proxyRes.headers['Access-Control-Allow-Headers'] = 'Content-Type';
-    console.log(`API proxy response: ${proxyRes.statusCode}`);
+    writeLog(`API proxy response: ${proxyRes.statusCode}`);
   },
   onError: function(err, req, res) {
-    console.error(`API proxy error: ${err.message}`);
-    res.status(500).json({ error: 'Proxy error', details: err.message });
+    writeLog(`API proxy error: ${err.message}`);
+    res.writeHead(502, {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    });
+    res.end(JSON.stringify({ 
+      error: 'Proxy error', 
+      message: 'Failed to connect to backend service at http://localhost:8081',
+      details: err.message,
+      success: false 
+    }));
   }
 }));
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-    res.json({ 
-        status: 'ok', 
-        timestamp: new Date().toISOString(),
-        services: {
-            frontend: 'http://localhost:3000',
-            proxy: `http://localhost:${PORT}`,
-            cpp_backend: 'http://localhost:8081',
-            node_backend: 'http://localhost:5000'
-        }
-    });
-});
-
 app.listen(PORT, () => {
-  console.log(`CORS proxy server running on http://localhost:${PORT}`);
-  console.log(`Proxying simulation requests to Node.js backend at http://localhost:5000`);
-  console.log(`Proxying other API requests to C++ backend at http://localhost:8081`);
+  writeLog(`CORS proxy server running on http://localhost:${PORT}`);
+  writeLog(`Proxying simulation requests to Node.js backend at http://localhost:5000`);
+  writeLog(`Proxying other API requests to C++ backend at http://localhost:8081`);
 }); 

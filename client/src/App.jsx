@@ -10,6 +10,7 @@ import VehicleConnections from './pages/VehicleConnections';
 import TemplatePage from './pages/TemplatePage';
 import MissionPlanning from './pages/MissionPlanning';
 import Simulation from './pages/Simulation';
+import FlightDisplay from './pages/FlightDisplay';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
               <Routes>
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/" element={<HomePage />} />
+                <Route path="/flight-display" element={<FlightDisplay />} />
                 <Route path="/vehicle-connections" element={<VehicleConnections />} />
                 <Route path="/template" element={<TemplatePage />} />
                 <Route path="/mission-planning" element={<MissionPlanning />} />

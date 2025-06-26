@@ -53,11 +53,14 @@ kill_port 5000 "Node.js Backend"
 kill_port 8081 "C++ Backend"
 
 # Also kill any related processes
-echo -e "${YELLOW}Cleaning up any remaining XGCS processes...${NC}"
+echo -e "${YELLOW}Cleaning up any remaining XGCS processes by name...${NC}"
 pkill -f 'yarn start' 2>/dev/null || true
 pkill -f 'node proxy-server.js' 2>/dev/null || true
 pkill -f 'node server.js' 2>/dev/null || true
-pkill -f './server' 2>/dev/null || true
-pkill -f 'react-app-rewired' 2>/dev/null || true
+pkill -f 'server/build/server' 2>/dev/null || true # More specific path
+pkill -f 'react-scripts' 2>/dev/null || true # For create-react-app
 
-echo -e "${GREEN}✅ All XGCS services stopped!${NC}" 
+# Final check for any remaining node processes related to the project
+pgrep -f "node .*xgcs" | xargs -r kill -9 2>/dev/null || true
+
+echo -e "${GREEN}✅ All XGCS services have been instructed to stop!${NC}" 
