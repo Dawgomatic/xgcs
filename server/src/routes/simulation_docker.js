@@ -74,8 +74,21 @@ async function scanDockerContainers() {
         const simulationId = name.substring(5); // Remove 'sitl-' prefix
         
         // Extract port from port mapping
-        const portMatch = ports.match(/:(\d+)-/);
-        const port = portMatch ? parseInt(portMatch[1]) : null;
+        // Handle format: "10:5762/tcp" where frontend port maps to Serial 2
+        let port = null;
+        if (ports) {
+          // Match the format where host port maps to 5762
+          const serial2Match = ports.match(/:(\d+):5762\/tcp/);
+          if (serial2Match) {
+            port = parseInt(serial2Match[1]);
+          } else {
+            // Fallback to old range format for compatibility
+            const rangeMatch = ports.match(/:(\d+)-/);
+            if (rangeMatch) {
+              port = parseInt(rangeMatch[1]);
+            }
+          }
+        }
         
         sitlContainers.push({
           name,
@@ -263,9 +276,6 @@ class DockerManager {
         '--name', containerName,
         '--rm',
         '-p', `${port}:5760`,
-        '-p', `${port + 1}:5761`,
-        '-p', `${port + 2}:5762`,
-        '-p', `${port + 3}:5763`,
         '-e', `SITL_INSTANCE=0`,
         '-e', `VEHICLE_TYPE=${simulation.vehicleType}`,
         '-e', `FRAME_TYPE=${simulation.frameType || 'quad'}`,
@@ -416,7 +426,38 @@ router.post('/create', async (req, res) => {
     
     const config = req.body;
     const simulationId = uuidv4();
-    const port = await getNextPort(); // Always get next available port
+    let port = config.port;
+    if (!port) {
+      // If no port specified, find next available
+      port = await getNextPort();
+    } else {
+      // Validate user-specified port is not in use
+      const usedPorts = Array.from(simulations.values()).map(sim => sim.port);
+      // Also check Docker containers
+      try {
+        const dockerManager = new DockerManager();
+        const containers = await dockerManager.runDockerCommand(['ps', '--format', '{{.Ports}}']);
+        const containerPorts = containers.split('\n')
+          .filter(line => line.trim())
+          .flatMap(line => {
+            const portSpecs = line.split(',').map(s => s.trim());
+            let ports = [];
+            for (const spec of portSpecs) {
+              const serial2Match = spec.match(/:(\d+):5762\/tcp/);
+              if (serial2Match) {
+                ports.push(parseInt(serial2Match[1]));
+              }
+            }
+            return ports;
+          });
+        usedPorts.push(...containerPorts);
+      } catch (error) {
+        log(`Warning: Could not check Docker container ports: ${error.message}`, 'warn');
+      }
+      if (usedPorts.includes(Number(port))) {
+        return res.status(400).json({ error: `Port ${port} is already in use.` });
+      }
+    }
     
     log(`Generated simulation ID: ${simulationId}`);
     log(`Assigned port: ${port}`);
@@ -789,8 +830,9 @@ router.delete('/:id', async (req, res) => {
 
 // Get next available port
 async function getNextPort() {
+  // Start at 5762, increment by 10 for each new sim
   const usedPorts = Array.from(simulations.values()).map(sim => sim.port);
-  
+
   // Also check for ports used by Docker containers
   try {
     const dockerManager = new DockerManager();
@@ -798,19 +840,22 @@ async function getNextPort() {
     const containerPorts = containers.split('\n')
       .filter(line => line.trim())
       .flatMap(line => {
-        // Example: "0.0.0.0:5760-5763->5760-5763/tcp, ..."
-        // Extract all host port ranges
+        // Handle format: "<host_port>:5762/tcp"
         const portSpecs = line.split(',').map(s => s.trim());
         let ports = [];
         for (const spec of portSpecs) {
-          // Match host port or range before the colon
-          // e.g., 0.0.0.0:5760-5763->5760-5763/tcp
-          const match = spec.match(/:(\d+)(-(\d+))?/);
-          if (match) {
-            const start = parseInt(match[1]);
-            const end = match[3] ? parseInt(match[3]) : start;
-            for (let p = start; p <= end; p++) {
-              ports.push(p);
+          const serial2Match = spec.match(/:(\d+):5762\/tcp/);
+          if (serial2Match) {
+            ports.push(parseInt(serial2Match[1]));
+          } else {
+            // Fallback to old range format for compatibility
+            const rangeMatch = spec.match(/:(\d+)(-(\d+))?/);
+            if (rangeMatch) {
+              const start = parseInt(rangeMatch[1]);
+              const end = rangeMatch[3] ? parseInt(rangeMatch[3]) : start;
+              for (let p = start; p <= end; p++) {
+                ports.push(p);
+              }
             }
           }
         }
@@ -822,9 +867,9 @@ async function getNextPort() {
     log(`Warning: Could not check Docker container ports: ${error.message}`, 'warn');
   }
   log(`All used ports: ${usedPorts.join(', ')}`);
-  let port = 5760;
+  let port = 5762;
   while (usedPorts.includes(port)) {
-    port++;
+    port += 10;
   }
   log(`Selected available port: ${port}`);
   return port;

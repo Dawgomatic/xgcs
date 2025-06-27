@@ -4,8 +4,32 @@
 #include <iostream>
 #include <crow/websocket.h>
 #include <thread>
+#include <unordered_map>
+#include <mutex>
+#include <algorithm>
 
 using json = nlohmann::json;
+
+// Global WebSocket connection store
+std::unordered_map<std::string, std::vector<crow::websocket::connection*>> g_websocket_connections;
+std::mutex g_websocket_mutex;
+// Map from connection* to vehicleId (set after first message)
+std::unordered_map<crow::websocket::connection*, std::string> g_conn_to_vehicle;
+
+// WebSocket context for per-connection vehicleId
+struct MavlinkWSContext {
+    std::string vehicleId;
+};
+
+// Utility to extract vehicleId from path
+std::string extract_vehicle_id_from_path(const std::string& path) {
+    // Expected: /api/mavlink/stream/<vehicleId>
+    auto pos = path.find_last_of('/');
+    if (pos != std::string::npos && pos + 1 < path.size()) {
+        return path.substr(pos + 1);
+    }
+    return "";
+}
 
 int main() {
     crow::SimpleApp app;
@@ -262,6 +286,78 @@ int main() {
         ConnectionManager::instance().clear_mission(vehicleId);
         return crow::response(200, json{{"success", true}}.dump());
     });
+
+    // MAVLink Streaming WebSocket endpoint
+    CROW_WEBSOCKET_ROUTE(app, "/api/mavlink/stream")
+    .onopen([&](crow::websocket::connection& conn) {
+        // Do nothing. Wait for first message to get vehicleId.
+    })
+    .onclose([&](crow::websocket::connection& conn, const std::string& reason, uint16_t code) {
+        std::string vehicleId;
+        {
+            std::lock_guard<std::mutex> lock(g_websocket_mutex);
+            auto it = g_conn_to_vehicle.find(&conn);
+            if (it != g_conn_to_vehicle.end()) {
+                vehicleId = it->second;
+                auto& connections = g_websocket_connections[vehicleId];
+                connections.erase(std::remove(connections.begin(), connections.end(), &conn), connections.end());
+                g_conn_to_vehicle.erase(it);
+            }
+        }
+        if (!vehicleId.empty()) {
+            std::cout << "WebSocket closed for vehicle: " << vehicleId << std::endl;
+            ConnectionManager::instance().stop_mavlink_streaming(vehicleId);
+        }
+    })
+    .onmessage([&](crow::websocket::connection& conn, const std::string& data, bool is_binary) {
+        std::string vehicleId;
+        {
+            std::lock_guard<std::mutex> lock(g_websocket_mutex);
+            auto it = g_conn_to_vehicle.find(&conn);
+            if (it == g_conn_to_vehicle.end()) {
+                // First message: treat as vehicleId
+                vehicleId = data;
+                g_conn_to_vehicle[&conn] = vehicleId;
+                g_websocket_connections[vehicleId].push_back(&conn);
+                std::cout << "WebSocket opened for vehicle: " << vehicleId << std::endl;
+                ConnectionManager::instance().start_mavlink_streaming(vehicleId);
+                return;
+            } else {
+                vehicleId = it->second;
+            }
+        }
+        // No-op for subsequent messages
+    });
+
+    // Start a background thread to send MAVLink messages to WebSocket clients
+    std::thread([&app]() {
+        while (true) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100)); // 10 Hz
+            
+            auto& cm = ConnectionManager::instance();
+            auto vehicles = cm.get_connected_vehicles();
+            
+            for (const auto& vehicleId : vehicles) {
+                auto messages = cm.get_mavlink_messages(vehicleId);
+                
+                if (!messages.empty()) {
+                    std::lock_guard<std::mutex> lock(g_websocket_mutex);
+                    auto it = g_websocket_connections.find(vehicleId);
+                    if (it != g_websocket_connections.end()) {
+                        for (const auto& msg : messages) {
+                            for (auto* conn : it->second) {
+                                try {
+                                    conn->send_text(msg.dump());
+                                } catch (...) {
+                                    // Connection might be closed, ignore
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }).detach();
 
     std::cout << "Starting server on port 8081..." << std::endl;
     app.bindaddr("0.0.0.0").port(8081).run();

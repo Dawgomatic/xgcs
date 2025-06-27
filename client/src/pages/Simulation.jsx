@@ -52,8 +52,10 @@ import {
   Computer,
   NetworkCheck,
   Visibility,
-  VisibilityOff
+  VisibilityOff,
+  ExpandMore
 } from '@mui/icons-material';
+import Collapse from '@mui/material/Collapse';
 
 // @hallucinated - React component for simulation management
 // Maps from QGC simulation features but uses modern React patterns
@@ -78,6 +80,8 @@ const Simulation = () => {
       alt: 0
     }
   });
+  const [openLogs, setOpenLogs] = useState({});
+  const [simLogs, setSimLogs] = useState({});
 
   // Add logging function
   const addLog = (message, type = 'info') => {
@@ -371,6 +375,15 @@ const Simulation = () => {
     return nextPort;
   };
 
+  const handleToggleLogs = async (simulationId) => {
+    setOpenLogs(prev => ({ ...prev, [simulationId]: !prev[simulationId] }));
+    if (!openLogs[simulationId]) {
+      // Only fetch logs if opening
+      const logs = await getSimulationLogs(simulationId);
+      setSimLogs(prev => ({ ...prev, [simulationId]: logs }));
+    }
+  };
+
   return (
     <Box sx={{ p: 3, height: '100vh', overflow: 'auto' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
@@ -557,7 +570,25 @@ const Simulation = () => {
                   >
                     Stop
                   </Button>
+                  <IconButton
+                    size="small"
+                    onClick={() => handleToggleLogs(simulation.id)}
+                    title={openLogs[simulation.id] ? 'Hide Logs' : 'Show Logs'}
+                  >
+                    <ExpandMore style={{ transform: openLogs[simulation.id] ? 'rotate(180deg)' : 'rotate(0deg)', transition: '0.2s' }} />
+                  </IconButton>
                 </CardActions>
+                <Collapse in={openLogs[simulation.id]} timeout="auto" unmountOnExit>
+                  <Box sx={{ bgcolor: '#111', color: '#fff', p: 2, fontFamily: 'monospace', fontSize: '0.8rem', maxHeight: 200, overflow: 'auto' }}>
+                    {simLogs[simulation.id]?.length > 0 ? (
+                      simLogs[simulation.id].map((line, idx) => (
+                        <div key={idx}>{line}</div>
+                      ))
+                    ) : (
+                      <Typography variant="body2" color="text.secondary">No logs available.</Typography>
+                    )}
+                  </Box>
+                </Collapse>
               </Card>
             </Grid>
           ))

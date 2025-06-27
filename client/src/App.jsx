@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Ion } from 'cesium';
 import './styles/App.css';
 import { ThemeProvider } from './context/ThemeContext';
 import { VehicleProvider } from './context/VehicleContext';
@@ -13,6 +14,17 @@ import Simulation from './pages/Simulation';
 import FlightDisplay from './pages/FlightDisplay';
 
 function App() {
+  // Initialize Cesium Ion token from localStorage
+  useEffect(() => {
+    const savedToken = localStorage.getItem('cesiumIonKey');
+    if (savedToken) {
+      Ion.defaultAccessToken = savedToken;
+      console.log('Cesium Ion token loaded from localStorage');
+    } else {
+      console.log('No Cesium Ion token found. You can add one in Settings to remove 401 errors.');
+    }
+  }, []);
+
   return (
     <ThemeProvider>
       <VehicleProvider>

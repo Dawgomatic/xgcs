@@ -2,19 +2,49 @@
 
 This directory is for storing 3D models used in the application.
 
+## Current Setup
+
+The application currently uses a **fallback system**:
+- **Primary**: Tries to load `/models/drone.glb` as a 3D model
+- **Fallback**: If the model fails to load, it shows a simple colored box primitive
+- **Icons**: Tries to load `/icons/active-vehicle.png` and `/icons/vehicle.png`
+- **Icon Fallback**: If icons fail, shows colored circles instead
+
+## Adding a Proper 3D Drone Model
+
+To replace the placeholder with a real 3D drone model:
+
+1. **Download a drone model** in glTF (.gltf) or Binary glTF (.glb) format
+2. **Rename it to `drone.glb`** and place it in this directory
+3. **Restart the application** - it will automatically use the new model
+
 ## Supported Formats
 
 - glTF (.gltf)
-- Binary glTF (.glb)
+- Binary glTF (.glb) - **Recommended**
 - COLLADA (.dae)
 - OBJ (.obj)
 
 ## Free 3D Model Resources
 
-- [Sketchfab](https://sketchfab.com/3d-models?features=downloadable&sort_by=-likeCount)
-- [TurboSquid](https://www.turbosquid.com/Search/3D-Models/free)
-- [CGTrader](https://www.cgtrader.com/free-3d-models)
-- [Poly Pizza](https://poly.pizza/)
+- [Sketchfab](https://sketchfab.com/3d-models?features=downloadable&sort_by=-likeCount&q=drone)
+- [TurboSquid](https://www.turbosquid.com/Search/3D-Models/free/drone)
+- [CGTrader](https://www.cgtrader.com/free-3d-models?keywords=drone)
+- [Poly Pizza](https://poly.pizza/) - Search for "drone"
+
+## Model Requirements
+
+For best results, your drone model should:
+- Be in glTF (.glb) format
+- Have a reasonable size (not too large or small)
+- Be oriented correctly (upward-facing)
+- Have proper materials/textures
+
+## Current Status
+
+✅ **Fallback system working** - No more 404 errors  
+⏳ **Waiting for 3D model** - Currently using box primitives  
+⏳ **Waiting for icons** - Currently using colored circles
 
 ## Adding Models
 

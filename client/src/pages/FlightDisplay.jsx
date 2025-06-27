@@ -16,7 +16,9 @@ import {
   Chip,
   Card,
   CardContent,
-  LinearProgress
+  LinearProgress,
+  Tabs,
+  Tab
 } from '@mui/material';
 import {
   Flight,
@@ -39,6 +41,7 @@ import FlightMap from '../components/FlightMap';
 import InstrumentPanel from '../components/InstrumentPanel';
 import FlightModeSelector from '../components/FlightModeSelector';
 import VideoPanel from '../components/VideoPanel';
+import MavlinkInspector from '../components/MavlinkInspector/MavlinkInspector';
 
 // @hallucinated - React component structure for flight display
 // Maps from QGC FlyView.qml but uses modern React patterns
@@ -48,6 +51,7 @@ const FlightDisplay = () => {
   const [videoVisible, setVideoVisible] = useState(false);
   const [instrumentPanelVisible, setInstrumentPanelVisible] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [rightPanelTab, setRightPanelTab] = useState(0);
 
   // Flight control states - maps from QGC guided actions
   const [isFlying, setIsFlying] = useState(false);
@@ -116,13 +120,22 @@ const FlightDisplay = () => {
           borderLeft: 1,
           borderColor: 'divider'
         }}>
-          {/* Instrument Panel - maps from QGC FlyViewInstrumentPanel */}
-          {instrumentPanelVisible && (
+          {/* Tabs for right panel */}
+          <Tabs value={rightPanelTab} onChange={(_, v) => setRightPanelTab(v)}>
+            <Tab label="Instruments" />
+            {activeVehicle && <Tab label="MAVLink Inspector" />}
+          </Tabs>
+          {/* Tab panels */}
+          {rightPanelTab === 0 && instrumentPanelVisible && (
             <Box sx={{ flex: 1, p: 2 }}>
               <InstrumentPanel vehicle={activeVehicle} />
             </Box>
           )}
-
+          {rightPanelTab === 1 && activeVehicle && (
+            <Box sx={{ flex: 1, p: 2, overflow: 'auto' }}>
+              <MavlinkInspector vehicleId={activeVehicle.id} />
+            </Box>
+          )}
           {/* Video Panel - maps from QGC FlyViewVideo */}
           {videoVisible && (
             <Box sx={{ height: 240, p: 1 }}>

@@ -111,10 +111,22 @@ const FlightMap = ({ vehicle, vehicles = [] }) => {
       if (v.coordinate && v.coordinate.lat && v.coordinate.lon) {
         const entity = entities.add({
           position: Cesium.Cartesian3.fromDegrees(v.coordinate.lon, v.coordinate.lat, v.altitude || 0),
+          // Try 3D model first, fall back to box primitive if model fails
           model: {
-            uri: '/models/drone.glb', // @hallucinated - 3D model path
+            uri: '/models/drone.glb',
             minimumPixelSize: 64,
             maximumScale: 20000,
+            // Fallback to box if model fails to load
+            failSilently: true
+          },
+          // Fallback box primitive (will only show if model fails)
+          box: {
+            dimensions: new Cesium.Cartesian3(2.0, 2.0, 0.5),
+            material: v.id === vehicle?.id ? Cesium.Color.YELLOW : Cesium.Color.BLUE,
+            outline: true,
+            outlineColor: Cesium.Color.WHITE,
+            // Only show box if model is not available
+            show: false
           },
           label: {
             text: v.id || 'Vehicle',
@@ -126,11 +138,53 @@ const FlightMap = ({ vehicle, vehicles = [] }) => {
             fillColor: v.id === vehicle?.id ? Cesium.Color.YELLOW : Cesium.Color.WHITE
           },
           billboard: {
+            // Use a simple colored circle as fallback if icon fails
             image: v.id === vehicle?.id ? '/icons/active-vehicle.png' : '/icons/vehicle.png',
             scale: 0.5,
-            verticalOrigin: Cesium.VerticalOrigin.BOTTOM
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+            // Fallback to colored circle if image fails
+            failSilently: true
           }
         });
+
+        // Handle model loading failure by showing the box primitive
+        if (entity.model && entity.model.readyPromise) {
+          entity.model.readyPromise.catch(() => {
+            if (entity.box) {
+              entity.box.show = true;
+            }
+            if (entity.model) {
+              entity.model.show = false;
+            }
+          });
+        } else {
+          // If model failed to load immediately, show box instead
+          if (entity.box) {
+            entity.box.show = true;
+          }
+          if (entity.model) {
+            entity.model.show = false;
+          }
+        }
+
+        // Handle billboard image loading failure
+        if (entity.billboard && entity.billboard.readyPromise) {
+          entity.billboard.readyPromise.catch(() => {
+            // Replace with a simple colored circle
+            if (entity.billboard) {
+              entity.billboard.image = undefined;
+              entity.billboard.color = v.id === vehicle?.id ? Cesium.Color.YELLOW : Cesium.Color.BLUE;
+              entity.billboard.scale = 0.3;
+            }
+          });
+        } else {
+          // If billboard failed to load immediately, use colored circle
+          if (entity.billboard) {
+            entity.billboard.image = undefined;
+            entity.billboard.color = v.id === vehicle?.id ? Cesium.Color.YELLOW : Cesium.Color.BLUE;
+            entity.billboard.scale = 0.3;
+          }
+        }
 
         newVehicleEntities.set(v.id, entity);
       }
