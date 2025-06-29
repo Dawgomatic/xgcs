@@ -1,9 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import MavlinkMessageRow from './MavlinkMessageRow';
+import { Box, Grid, TextField, Typography } from '@mui/material';
+
+const ARDUPILOT_MEGA_MESSAGES = [
+  'ADAP_TUNING', 'AHRS', 'AHRS2', 'AHRS3', 'AIRSPEED_AUTOCAL', 'AOA_SSA', 'AP_ADC', 'AUTOPILOT_VERSION_REQUEST', 'BATTERY2', 'CAMERA_FEEDBACK', 'CAMERA_STATUS', 'COMPASSMOT_STATUS', 'DATA16', 'DATA32', 'DATA64', 'DATA96', 'DEEPSTALL', 'DEVICE_OP_READ', 'DEVICE_OP_READ_REPLY', 'DEVICE_OP_WRITE', 'DEVICE_OP_WRITE_REPLY', 'DIGICAM_CONFIGURE', 'DIGICAM_CONTROL', 'EKF_STATUS_REPORT', 'ESC_TELEMETRY_1_TO_4', 'ESC_TELEMETRY_5_TO_8', 'ESC_TELEMETRY_9_TO_12', 'FENCE_FETCH_POINT', 'FENCE_POINT', 'GIMBAL_CONTROL', 'GIMBAL_REPORT', 'GIMBAL_TORQUE_CMD_REPORT', 'GOPRO_GET_REQUEST', 'GOPRO_GET_RESPONSE', 'GOPRO_HEARTBEAT', 'GOPRO_SET_REQUEST', 'GOPRO_SET_RESPONSE', 'HWSTATUS', 'LED_CONTROL', 'LIMITS_STATUS', 'MAG_CAL_PROGRESS', 'MCU_STATUS', 'MEMINFO', 'MOUNT_CONFIGURE', 'MOUNT_CONTROL', 'MOUNT_STATUS', 'OBSTACLE_DISTANCE_3D', 'OSD_PARAM_CONFIG', 'OSD_PARAM_CONFIG_REPLY', 'OSD_PARAM_SHOW_CONFIG', 'OSD_PARAM_SHOW_CONFIG_REPLY', 'PID_TUNING', 'RADIO', 'RALLY_FETCH_POINT', 'RALLY_POINT', 'RANGEFINDER', 'REMOTE_LOG_BLOCK_STATUS', 'REMOTE_LOG_DATA_BLOCK', 'RPM', 'SENSOR_OFFSETS', 'SET_MAG_OFFSETS', 'SIMSTATE', 'VISION_POSITION_DELTA', 'WATER_DEPTH', 'WIND'
+];
+const ALL_MAVLINK_MESSAGES = Array.from(new Set([
+  ...[
+    'ACTUATOR_CONTROL_TARGET', 'ACTUATOR_OUTPUT_STATUS', 'ADSB_VEHICLE', 'AIS_VESSEL', 'ALTITUDE', 'ATTITUDE', 'ATTITUDE_QUATERNION', 'ATTITUDE_QUATERNION_COV', 'ATTITUDE_TARGET', 'ATT_POS_MOCAP', 'AUTH_KEY', 'AUTOPILOT_STATE_FOR_GIMBAL_DEVICE', 'AUTOPILOT_VERSION', 'BATTERY_INFO', 'BATTERY_STATUS', 'BUTTON_CHANGE', 'CAMERA_CAPTURE_STATUS', 'CAMERA_FOV_STATUS', 'CAMERA_IMAGE_CAPTURED', 'CAMERA_INFORMATION', 'CAMERA_SETTINGS', 'CAMERA_TRACKING_GEO_STATUS', 'CAMERA_TRACKING_IMAGE_STATUS', 'CAMERA_TRIGGER', 'CANFD_FRAME', 'CAN_FILTER_MODIFY', 'CAN_FRAME', 'CELLULAR_CONFIG', 'CELLULAR_STATUS', 'CHANGE_OPERATOR_CONTROL', 'CHANGE_OPERATOR_CONTROL_ACK', 'COLLISION', 'COMMAND_ACK', 'COMMAND_CANCEL', 'COMMAND_INT', 'COMMAND_LONG', 'COMPONENT_INFORMATION', 'COMPONENT_INFORMATION_BASIC', 'COMPONENT_METADATA', 'CONTROL_SYSTEM_STATE', 'CURRENT_EVENT_SEQUENCE', 'DATA_STREAM', 'DATA_TRANSMISSION_HANDSHAKE', 'DEBUG', 'DEBUG_FLOAT_ARRAY', 'DEBUG_VECT', 'DISTANCE_SENSOR', 'EFI_STATUS', 'ENCAPSULATED_DATA', 'ESC_INFO', 'ESC_STATUS', 'ESTIMATOR_STATUS', 'EVENT', 'EXTENDED_SYS_STATE', 'FENCE_STATUS', 'FILE_TRANSFER_PROTOCOL', 'FLIGHT_INFORMATION', 'FOLLOW_TARGET', 'GENERATOR_STATUS', 'GIMBAL_DEVICE_ATTITUDE_STATUS', 'GIMBAL_DEVICE_INFORMATION', 'GIMBAL_DEVICE_SET_ATTITUDE', 'GIMBAL_MANAGER_INFORMATION', 'GIMBAL_MANAGER_SET_ATTITUDE', 'GIMBAL_MANAGER_SET_MANUAL_CONTROL', 'GIMBAL_MANAGER_SET_PITCHYAW', 'GIMBAL_MANAGER_STATUS', 'GLOBAL_POSITION_INT', 'GLOBAL_POSITION_INT_COV', 'GLOBAL_VISION_POSITION_ESTIMATE', 'GPS2_RAW', 'GPS2_RTK', 'GPS_GLOBAL_ORIGIN', 'GPS_INJECT_DATA', 'GPS_INPUT', 'GPS_RAW_INT', 'GPS_RTCM_DATA', 'GPS_RTK', 'GPS_STATUS', 'HIGH_LATENCY', 'HIGH_LATENCY2', 'HIGHRES_IMU', 'HIL_ACTUATOR_CONTROLS', 'HIL_CONTROLS', 'HIL_GPS', 'HIL_OPTICAL_FLOW', 'HIL_RC_INPUTS_RAW', 'HIL_SENSOR', 'HIL_STATE', 'HIL_STATE_QUATERNION', 'HOME_POSITION', 'HYGROMETER_SENSOR', 'ILLUMINATOR_STATUS', 'ISBD_LINK_STATUS', 'LANDING_TARGET', 'LINK_NODE_STATUS', 'LOCAL_POSITION_NED', 'LOCAL_POSITION_NED_COV', 'LOCAL_POSITION_NED_SYSTEM_GLOBAL_OFFSET', 'LOG_DATA', 'LOG_ENTRY', 'LOG_ERASE', 'LOGGING_ACK', 'LOGGING_DATA', 'LOGGING_DATA_ACKED', 'LOG_REQUEST_DATA', 'LOG_REQUEST_END', 'LOG_REQUEST_LIST', 'MAG_CAL_REPORT', 'MANUAL_CONTROL', 'MANUAL_SETPOINT', 'MEMORY_VECT', 'MESSAGE_INTERVAL', 'MISSION_ACK', 'MISSION_CLEAR_ALL', 'MISSION_COUNT', 'MISSION_CURRENT', 'MISSION_ITEM', 'MISSION_ITEM_INT', 'MISSION_ITEM_REACHED', 'MISSION_REQUEST', 'MISSION_REQUEST_INT', 'MISSION_REQUEST_LIST', 'MISSION_REQUEST_PARTIAL_LIST', 'MISSION_SET_CURRENT', 'MISSION_WRITE_PARTIAL_LIST', 'MOUNT_ORIENTATION', 'NAMED_VALUE_FLOAT', 'NAMED_VALUE_INT', 'NAV_CONTROLLER_OUTPUT', 'OBSTACLE_DISTANCE', 'ODOMETRY', 'ONBOARD_COMPUTER_STATUS', 'OPEN_DRONE_ID_ARM_STATUS', 'OPEN_DRONE_ID_AUTHENTICATION', 'OPEN_DRONE_ID_BASIC_ID', 'OPEN_DRONE_ID_LOCATION', 'OPEN_DRONE_ID_MESSAGE_PACK', 'OPEN_DRONE_ID_OPERATOR_ID', 'OPEN_DRONE_ID_SELF_ID', 'OPEN_DRONE_ID_SYSTEM', 'OPEN_DRONE_ID_SYSTEM_UPDATE', 'OPTICAL_FLOW', 'OPTICAL_FLOW_RAD', 'ORBIT_EXECUTION_STATUS', 'PARAM_EXT_ACK', 'PARAM_EXT_REQUEST_LIST', 'PARAM_EXT_REQUEST_READ', 'PARAM_EXT_SET', 'PARAM_EXT_VALUE', 'PARAM_MAP_RC', 'PARAM_REQUEST_LIST', 'PARAM_REQUEST_READ', 'PARAM_SET', 'PARAM_VALUE', 'PING', 'PLAY_TUNE', 'PLAY_TUNE_V2', 'POSITION_TARGET_GLOBAL_INT', 'POSITION_TARGET_LOCAL_NED', 'POWER_STATUS', 'RADIO_STATUS', 'RAW_IMU', 'RAW_PRESSURE', 'RAW_RPM', 'RC_CHANNELS', 'RC_CHANNELS_OVERRIDE', 'RC_CHANNELS_RAW', 'RC_CHANNELS_SCALED', 'REQUEST_DATA_STREAM', 'REQUEST_EVENT', 'RESOURCE_REQUEST', 'RESPONSE_EVENT_ERROR', 'SAFETY_ALLOWED_AREA', 'SAFETY_SET_ALLOWED_AREA', 'SCALED_IMU', 'SCALED_IMU2', 'SCALED_IMU3', 'SCALED_PRESSURE', 'SCALED_PRESSURE2', 'SCALED_PRESSURE3', 'SERIAL_CONTROL', 'SERVO_OUTPUT_RAW', 'SET_ACTUATOR_CONTROL_TARGET', 'SET_ATTITUDE_TARGET', 'SET_GPS_GLOBAL_ORIGIN', 'SET_HOME_POSITION', 'SET_MODE', 'SET_POSITION_TARGET_GLOBAL_INT', 'SET_POSITION_TARGET_LOCAL_NED', 'SETUP_SIGNING', 'SIM_STATE', 'STATUSTEXT', 'STORAGE_INFORMATION', 'SUPPORTED_TUNES', 'SYS_STATUS', 'SYSTEM_TIME', 'TERRAIN_CHECK', 'TERRAIN_DATA', 'TERRAIN_REPORT', 'TERRAIN_REQUEST', 'TIME_ESTIMATE_TO_TARGET', 'TIMESYNC', 'TRAJECTORY_REPRESENTATION_BEZIER', 'TRAJECTORY_REPRESENTATION_WAYPOINTS', 'TUNNEL', 'UAVCAN_NODE_INFO', 'UAVCAN_NODE_STATUS', 'UTM_GLOBAL_POSITION', 'V2_EXTENSION', 'VFR_HUD', 'VIBRATION', 'VICON_POSITION_ESTIMATE', 'VIDEO_STREAM_INFORMATION', 'VIDEO_STREAM_STATUS', 'VISION_POSITION_ESTIMATE', 'VISION_SPEED_ESTIMATE', 'WHEEL_DISTANCE', 'WIFI_CONFIG_AP', 'WINCH_STATUS', 'WIND_COV'
+  ],
+  ...ARDUPILOT_MEGA_MESSAGES
+]));
 
 export default function MavlinkInspector({ vehicleId }) {
   const [messages, setMessages] = useState({});
   const [filter, setFilter] = useState('');
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     if (!vehicleId) return;
@@ -18,41 +30,44 @@ export default function MavlinkInspector({ vehicleId }) {
         [msg.msgName]: {
           lastFields: msg.fields,
           lastTimestamp: msg.timestamp,
-          count: (prev[msg.msgName]?.count || 0) + 1
+          count: (prev[msg.msgName]?.count || 0) + 1,
+          system_id: msg.system_id,
+          component_id: msg.component_id
         }
       }));
     };
     return () => ws.close();
   }, [vehicleId]);
 
-  const filtered = Object.entries(messages).filter(([msgName]) =>
-    msgName.toLowerCase().includes(filter.toLowerCase())
-  );
+  const filtered = showAll
+    ? ALL_MAVLINK_MESSAGES.filter(msgName => msgName.toLowerCase().includes(filter.toLowerCase())).map(msgName => [msgName, messages[msgName]])
+    : Object.entries(messages).filter(([msgName]) => msgName.toLowerCase().includes(filter.toLowerCase()));
 
   return (
-    <div>
-      <h2>MAVLink Inspector for {vehicleId}</h2>
-      <input
-        type="text"
-        placeholder="Filter by message name"
-        value={filter}
-        onChange={e => setFilter(e.target.value)}
-      />
-      <table>
-        <thead>
-          <tr>
-            <th>Message</th>
-            <th>Last Value</th>
-            <th>Last Received</th>
-            <th>Count</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filtered.map(([msgName, data]) => (
-            <MavlinkMessageRow key={msgName} msgName={msgName} data={data} />
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Box>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 2 }}>
+        <Typography variant="h6">
+          MAVLink Inspector for {vehicleId}
+        </Typography>
+        <TextField
+          fullWidth
+          size="small"
+          label="Filter by message name"
+          value={filter}
+          onChange={e => setFilter(e.target.value)}
+          sx={{ maxWidth: 300 }}
+        />
+        <button onClick={() => setShowAll(v => !v)} style={{ marginLeft: 8 }}>
+          {showAll ? 'Show Received Only' : 'Show All Messages'}
+        </button>
+      </Box>
+      <Grid container spacing={2}>
+        {filtered.map(([msgName, data]) => (
+          <Grid item xs={12} key={msgName}>
+            <MavlinkMessageRow msgName={msgName} data={data} missing={!data} />
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
   );
 } 

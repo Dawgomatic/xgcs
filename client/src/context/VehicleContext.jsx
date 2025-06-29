@@ -404,12 +404,15 @@ export function VehicleProvider({ children }) {
       id: v.id,
       name: v.name,
       connected: v.connected,
-      connectionStatus: v.connected ? 'connected' : 'disconnected',
+      connectionStatus: telemetry?.connectionStatus || (v.connected ? 'connected' : 'disconnected'),
       flightMode: telemetry?.flight_mode || 'UNKNOWN',
       batteryLevel: telemetry?.battery?.remaining || 0,
       airspeed: telemetry?.velocity?.airspeed || 0,
+      groundspeed: telemetry?.velocity?.groundspeed || 0,
+      heading: telemetry?.velocity?.heading || 0,
       altitude: telemetry?.position?.alt || 0,
       gpsSatellites: telemetry?.gps?.satellites || 0,
+      gpsFixType: telemetry?.gps?.fix_type || 0,
       coordinate: telemetry?.position ? {
         lat: telemetry.position.lat,
         lon: telemetry.position.lng

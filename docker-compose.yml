@@ -44,8 +44,8 @@ services:
     container_name: sitl-arducopter
     ports:
       - "5760:5760"  # MAVLink
-      - "5761:5761"  # MAVLink2
-      - "5762:5762"  # MAVLink3
+      - "5761:5761"  # MAVLink Serial1
+      - "5762:5762"  # MAVLink Serial2
       - "5763:5763"  # MAVLink4
       - "5501:5501"  # SITL
       - "5502:5502"  # SITL2
@@ -73,7 +73,8 @@ services:
     container_name: sitl-arduplane
     ports:
       - "5770:5760"  # MAVLink
-      - "5771:5761"  # MAVLink2
+      - "5771:5761"  # MAVLink Serial1
+      - "5772:5762"  # MAVLink Serial2
       - "5505:5501"  # SITL
       - "5506:5502"  # SITL2
     environment:
@@ -97,7 +98,8 @@ services:
     container_name: sitl-ardurover
     ports:
       - "5780:5760"  # MAVLink
-      - "5781:5761"  # MAVLink2
+      - "5781:5761"  # MAVLink Serial1
+      - "5782:5762"  # MAVLink Serial2
       - "5507:5501"  # SITL
       - "5508:5502"  # SITL2
     environment:

@@ -42,7 +42,8 @@ services:
     ports:
       - "11345:11345"  # Gazebo server
       - "5760:5760"    # MAVLink
-      - "5761:5761"    # MAVLink2
+      - "5761:5761"    # MAVLink Serial1
+      - "5762:5762"    # MAVLink Serial2
     environment:
       - DISPLAY=${DISPLAY}
       - GAZEBO_MODEL_PATH=/opt/ros/noetic/share/gazebo_models

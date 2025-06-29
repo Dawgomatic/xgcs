@@ -100,6 +100,10 @@ std::string ConnectionManager::get_telemetry_data_json(const std::string& vehicl
         auto battery = telemetry->battery();
         auto flight_mode = telemetry->flight_mode();
         auto armed = telemetry->armed();
+        auto velocity = telemetry->velocity_ned();
+        auto gps_info = telemetry->gps_info();
+        auto system = _systems.at(vehicle_id);
+        bool connected = system->is_connected();
 
         json telemetry_json = {
             {"success", true},
@@ -118,7 +122,17 @@ std::string ConnectionManager::get_telemetry_data_json(const std::string& vehicl
                 {"remaining", battery.remaining_percent}
             }},
             {"flight_mode", flight_mode_to_string(flight_mode)},
-            {"armed", armed}
+            {"armed", armed},
+            {"velocity", {
+                {"airspeed", velocity.north_m_s},
+                {"groundspeed", velocity.east_m_s},
+                {"heading", velocity.down_m_s}
+            }},
+            {"gps", {
+                {"satellites", gps_info.num_satellites},
+                {"fix_type", static_cast<int>(gps_info.fix_type)}
+            }},
+            {"connectionStatus", connected ? "connected" : "disconnected"}
         };
         return telemetry_json.dump();
     } catch (const std::exception& e) {
@@ -180,7 +194,11 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
     // Subscribe to attitude messages
     auto telemetry = _telemetry_plugins[vehicle_id];
     if (telemetry) {
-        telemetry->subscribe_attitude_euler([this, vehicle_id](mavsdk::Telemetry::EulerAngle attitude) {
+        auto system = _systems[vehicle_id];
+        uint8_t system_id = system->get_system_id();
+        auto component_ids = system->component_ids();
+        uint8_t component_id = component_ids.empty() ? 1 : component_ids[0];
+        telemetry->subscribe_attitude_euler([this, vehicle_id, system_id, component_id](mavsdk::Telemetry::EulerAngle attitude) {
             if (_streaming_active[vehicle_id]) {
                 json msg = {
                     {"msgName", "ATTITUDE"},
@@ -190,7 +208,9 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
                         {"roll_deg", attitude.roll_deg},
                         {"pitch_deg", attitude.pitch_deg},
                         {"yaw_deg", attitude.yaw_deg}
-                    }}
+                    }},
+                    {"system_id", system_id},
+                    {"component_id", component_id}
                 };
                 
                 std::lock_guard<std::mutex> lock(_mutex);
@@ -203,7 +223,7 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
         });
         
         // Subscribe to position messages
-        telemetry->subscribe_position([this, vehicle_id](mavsdk::Telemetry::Position position) {
+        telemetry->subscribe_position([this, vehicle_id, system_id, component_id](mavsdk::Telemetry::Position position) {
             if (_streaming_active[vehicle_id]) {
                 json msg = {
                     {"msgName", "GPS_RAW_INT"},
@@ -213,7 +233,9 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
                         {"lat", position.latitude_deg},
                         {"lon", position.longitude_deg},
                         {"alt", position.relative_altitude_m}
-                    }}
+                    }},
+                    {"system_id", system_id},
+                    {"component_id", component_id}
                 };
                 
                 std::lock_guard<std::mutex> lock(_mutex);
@@ -226,7 +248,7 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
         });
         
         // Subscribe to battery messages
-        telemetry->subscribe_battery([this, vehicle_id](mavsdk::Telemetry::Battery battery) {
+        telemetry->subscribe_battery([this, vehicle_id, system_id, component_id](mavsdk::Telemetry::Battery battery) {
             if (_streaming_active[vehicle_id]) {
                 json msg = {
                     {"msgName", "SYS_STATUS"},
@@ -235,7 +257,9 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
                     {"fields", {
                         {"voltage_battery", battery.voltage_v},
                         {"battery_remaining", battery.remaining_percent}
-                    }}
+                    }},
+                    {"system_id", system_id},
+                    {"component_id", component_id}
                 };
                 
                 std::lock_guard<std::mutex> lock(_mutex);
@@ -248,7 +272,7 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
         });
 
         // Subscribe to velocity messages
-        telemetry->subscribe_velocity_ned([this, vehicle_id](mavsdk::Telemetry::VelocityNed velocity) {
+        telemetry->subscribe_velocity_ned([this, vehicle_id, system_id, component_id](mavsdk::Telemetry::VelocityNed velocity) {
             if (_streaming_active[vehicle_id]) {
                 json msg = {
                     {"msgName", "VFR_HUD"},
@@ -258,7 +282,9 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
                         {"airspeed", velocity.north_m_s},
                         {"groundspeed", velocity.east_m_s},
                         {"heading", velocity.down_m_s}
-                    }}
+                    }},
+                    {"system_id", system_id},
+                    {"component_id", component_id}
                 };
                 
                 std::lock_guard<std::mutex> lock(_mutex);
@@ -271,7 +297,7 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
         });
 
         // Subscribe to GPS info
-        telemetry->subscribe_gps_info([this, vehicle_id](mavsdk::Telemetry::GpsInfo gps_info) {
+        telemetry->subscribe_gps_info([this, vehicle_id, system_id, component_id](mavsdk::Telemetry::GpsInfo gps_info) {
             if (_streaming_active[vehicle_id]) {
                 json msg = {
                     {"msgName", "GPS_STATUS"},
@@ -280,7 +306,9 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
                     {"fields", {
                         {"satellites_visible", gps_info.num_satellites},
                         {"fix_type", static_cast<int>(gps_info.fix_type)}
-                    }}
+                    }},
+                    {"system_id", system_id},
+                    {"component_id", component_id}
                 };
                 
                 std::lock_guard<std::mutex> lock(_mutex);
@@ -293,7 +321,7 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
         });
 
         // Subscribe to flight mode
-        telemetry->subscribe_flight_mode([this, vehicle_id](mavsdk::Telemetry::FlightMode flight_mode) {
+        telemetry->subscribe_flight_mode([this, vehicle_id, system_id, component_id](mavsdk::Telemetry::FlightMode flight_mode) {
             if (_streaming_active[vehicle_id]) {
                 json msg = {
                     {"msgName", "HEARTBEAT"},
@@ -303,7 +331,9 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
                         {"custom_mode", static_cast<int>(flight_mode)},
                         {"type", 2}, // MAV_TYPE_QUADROTOR
                         {"autopilot", 12}, // MAV_AUTOPILOT_PX4
-                        {"base_mode", 81} // MAV_MODE_FLAG_SAFETY_ARMED | MAV_MODE_FLAG_STABILIZATION_ENABLED
+                        {"base_mode", 81}, // MAV_MODE_FLAG_SAFETY_ARMED | MAV_MODE_FLAG_STABILIZATION_ENABLED
+                        {"system_id", system_id},
+                        {"component_id", component_id}
                     }}
                 };
                 
@@ -317,7 +347,7 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
         });
 
         // Subscribe to armed status
-        telemetry->subscribe_armed([this, vehicle_id](bool armed) {
+        telemetry->subscribe_armed([this, vehicle_id, system_id, component_id](bool armed) {
             if (_streaming_active[vehicle_id]) {
                 json msg = {
                     {"msgName", "HEARTBEAT"},
@@ -327,7 +357,9 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
                         {"base_mode", armed ? 81 : 80}, // MAV_MODE_FLAG_SAFETY_ARMED when armed
                         {"custom_mode", 0},
                         {"type", 2}, // MAV_TYPE_QUADROTOR
-                        {"autopilot", 12} // MAV_AUTOPILOT_PX4
+                        {"autopilot", 12}, // MAV_AUTOPILOT_PX4
+                        {"system_id", system_id},
+                        {"component_id", component_id}
                     }}
                 };
                 
@@ -341,7 +373,7 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
         });
 
         // Subscribe to RC channels
-        telemetry->subscribe_rc_status([this, vehicle_id](mavsdk::Telemetry::RcStatus rc_status) {
+        telemetry->subscribe_rc_status([this, vehicle_id, system_id, component_id](mavsdk::Telemetry::RcStatus rc_status) {
             if (_streaming_active[vehicle_id]) {
                 json msg = {
                     {"msgName", "RC_CHANNELS"},
@@ -350,7 +382,9 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
                     {"fields", {
                         {"available", rc_status.is_available},
                         {"rssi", rc_status.signal_strength_percent}
-                    }}
+                    }},
+                    {"system_id", system_id},
+                    {"component_id", component_id}
                 };
                 
                 std::lock_guard<std::mutex> lock(_mutex);
@@ -363,7 +397,7 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
         });
 
         // Subscribe to attitude quaternion
-        telemetry->subscribe_attitude_quaternion([this, vehicle_id](mavsdk::Telemetry::Quaternion quaternion) {
+        telemetry->subscribe_attitude_quaternion([this, vehicle_id, system_id, component_id](mavsdk::Telemetry::Quaternion quaternion) {
             if (_streaming_active[vehicle_id]) {
                 json msg = {
                     {"msgName", "ATTITUDE_QUATERNION"},
@@ -374,7 +408,9 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
                         {"q2", quaternion.x},
                         {"q3", quaternion.y},
                         {"q4", quaternion.z}
-                    }}
+                    }},
+                    {"system_id", system_id},
+                    {"component_id", component_id}
                 };
                 
                 std::lock_guard<std::mutex> lock(_mutex);
@@ -387,7 +423,7 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
         });
 
         // Subscribe to global position
-        telemetry->subscribe_raw_gps([this, vehicle_id](mavsdk::Telemetry::RawGps raw_gps) {
+        telemetry->subscribe_raw_gps([this, vehicle_id, system_id, component_id](mavsdk::Telemetry::RawGps raw_gps) {
             if (_streaming_active[vehicle_id]) {
                 json msg = {
                     {"msgName", "GPS_RAW_INT"},
@@ -401,7 +437,9 @@ void ConnectionManager::start_mavlink_streaming(const std::string& vehicle_id) {
                         {"epv", raw_gps.vdop * 100},
                         {"vel", raw_gps.velocity_m_s * 100},
                         {"cog", raw_gps.cog_deg * 100}
-                    }}
+                    }},
+                    {"system_id", system_id},
+                    {"component_id", component_id}
                 };
                 
                 std::lock_guard<std::mutex> lock(_mutex);
