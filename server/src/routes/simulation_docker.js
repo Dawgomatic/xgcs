@@ -231,19 +231,19 @@ class DockerManager {
     switch (simulation.vehicleType.toLowerCase()) {
       case 'arducopter':
         image = 'custom-ardupilot-sitl:latest';
-        command = `python3 Tools/autotest/sim_vehicle.py -v ArduCopter -f ${simulation.frameType || 'quad'} --sysid ${simulation.systemId || 1}`;
+        command = `python3 Tools/autotest/sim_vehicle.py -v ArduCopter -f ${simulation.frameType || 'X'} --sysid ${simulation.systemId || 1} --add-param-file=/tmp/frame_params.parm -A SERIAL0_PROTOCOL=2 -A STREAMRATE=10 -A SR0_POSITION=10 -A SR0_ATTITUDE=10 -A SR0_VFR_HUD=10 -A SR0_EXTENDED_STATUS=10`;
         break;
       case 'arduplane':
         image = 'custom-ardupilot-sitl:latest';
-        command = `python3 Tools/autotest/sim_vehicle.py -v ArduPlane -f plane --sysid ${simulation.systemId || 1}`;
+        command = `python3 Tools/autotest/sim_vehicle.py -v ArduPlane -f plane --sysid ${simulation.systemId || 1} -A SERIAL0_PROTOCOL=2 -A STREAMRATE=10 -A SR0_POSITION=10 -A SR0_ATTITUDE=10 -A SR0_VFR_HUD=10 -A SR0_EXTENDED_STATUS=10`;
         break;
       case 'ardurover':
         image = 'custom-ardupilot-sitl:latest';
-        command = `python3 Tools/autotest/sim_vehicle.py -v ArduRover -f rover --sysid ${simulation.systemId || 1}`;
+        command = `python3 Tools/autotest/sim_vehicle.py -v ArduRover -f rover --sysid ${simulation.systemId || 1} -A SERIAL0_PROTOCOL=2 -A STREAMRATE=10 -A SR0_POSITION=10 -A SR0_ATTITUDE=10 -A SR0_VFR_HUD=10 -A SR0_EXTENDED_STATUS=10`;
         break;
       case 'ardusub':
         image = 'custom-ardupilot-sitl:latest';
-        command = `python3 Tools/autotest/sim_vehicle.py -v ArduSub -f sub --sysid ${simulation.systemId || 1}`;
+        command = `python3 Tools/autotest/sim_vehicle.py -v ArduSub -f sub --sysid ${simulation.systemId || 1} -A SERIAL0_PROTOCOL=2 -A STREAMRATE=10 -A SR0_POSITION=10 -A SR0_ATTITUDE=10 -A SR0_VFR_HUD=10 -A SR0_EXTENDED_STATUS=10`;
         break;
       default:
         // Fallback to PX4 SITL if ArduPilot image not available
@@ -270,6 +270,29 @@ class DockerManager {
         log('Will try to use existing image or fallback to mock simulation');
       }
 
+      // Create frame parameter file content for ArduCopter
+      let paramFileContent = '';
+      if (simulation.vehicleType.toLowerCase() === 'arducopter') {
+        paramFileContent = `# Frame parameters for ${simulation.frameType || 'X'}
+FRAME_CLASS 1
+FRAME_TYPE 1
+SERIAL0_PROTOCOL 2
+STREAMRATE 10
+SR0_POSITION 10
+SR0_ATTITUDE 10
+SR0_VFR_HUD 10
+SR0_EXTENDED_STATUS 10
+`;
+      }
+
+      // Create temporary parameter file
+      const paramFilePath = `/tmp/frame_params_${simulation.id}.parm`;
+      if (paramFileContent) {
+        const fs = require('fs');
+        fs.writeFileSync(paramFilePath, paramFileContent);
+        log(`Created parameter file: ${paramFilePath}`);
+      }
+
       // Create and start the container with all three serial ports mapped to unique host ports
       const dockerArgs = [
         'run',
@@ -282,12 +305,17 @@ class DockerManager {
         '-p', `${basePort + 2}:5763`,  // SERIAL2 (5763) -> host port (e.g., 2222)
         '-e', `SITL_INSTANCE=0`,
         '-e', `VEHICLE_TYPE=${simulation.vehicleType}`,
-        '-e', `FRAME_TYPE=${simulation.frameType || 'quad'}`,
+        '-e', `FRAME_TYPE=${simulation.frameType || 'X'}`,
         '-e', `SPEEDUP=${simulation.speedFactor || 1.0}`,
         '-e', `HOME_LOCATION=${simulation.homeLocation.lat},${simulation.homeLocation.lng},${simulation.homeLocation.alt},0`,
-        image,
-        ...command.split(' ')
       ];
+
+      // Add parameter file mount if we created one
+      if (paramFileContent) {
+        dockerArgs.push('-v', `${paramFilePath}:/tmp/frame_params.parm:ro`);
+      }
+
+      dockerArgs.push(image, ...command.split(' '));
 
       log(`Starting container with: docker ${dockerArgs.join(' ')}`);
       const containerId = await this.runDockerCommand(dockerArgs);

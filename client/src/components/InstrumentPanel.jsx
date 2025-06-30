@@ -37,8 +37,9 @@ const InstrumentPanel = ({ vehicle }) => {
 
   // Artificial horizon component - maps from QGC QGCArtificialHorizon
   const ArtificialHorizon = () => {
-    const roll = vehicle.roll || 0;
-    const pitch = vehicle.pitch || 0;
+    // Map attitude data from vehicle telemetry - maps from QGC attitude structure
+    const roll = vehicle.attitude?.roll || vehicle.roll || 0;
+    const pitch = vehicle.attitude?.pitch || vehicle.pitch || 0;
     
     return (
       <Card sx={{ mb: 2 }}>
@@ -89,7 +90,8 @@ const InstrumentPanel = ({ vehicle }) => {
 
   // Compass component - maps from QGC QGCCompassWidget
   const Compass = () => {
-    const heading = vehicle.heading || 0;
+    // Map heading data from vehicle telemetry - maps from QGC heading structure
+    const heading = vehicle.attitude?.yaw || vehicle.heading || vehicle.velocity?.heading || 0;
     
     return (
       <Card sx={{ mb: 2 }}>
@@ -184,28 +186,28 @@ const InstrumentPanel = ({ vehicle }) => {
     const telemetryData = [
       {
         label: 'Altitude',
-        value: vehicle.altitude || 0,
+        value: vehicle.position?.alt || vehicle.altitude || 0,
         unit: 'm',
         icon: <Height />,
         color: 'primary'
       },
       {
         label: 'Speed',
-        value: vehicle.airspeed || 0,
+        value: vehicle.velocity?.airspeed || vehicle.airspeed || 0,
         unit: 'm/s',
         icon: <Speed />,
         color: 'secondary'
       },
       {
         label: 'Battery',
-        value: vehicle.batteryLevel || 0,
+        value: vehicle.battery?.remaining || vehicle.batteryLevel || 0,
         unit: '%',
         icon: <Battery90 />,
-        color: vehicle.batteryLevel < 20 ? 'error' : 'success'
+        color: (vehicle.battery?.remaining || vehicle.batteryLevel || 0) < 20 ? 'error' : 'success'
       },
       {
         label: 'GPS',
-        value: vehicle.gpsSatellites || 0,
+        value: vehicle.gps?.satellites || vehicle.gpsSatellites || 0,
         unit: 'sats',
         icon: <GpsFixed />,
         color: 'info'
@@ -251,7 +253,7 @@ const InstrumentPanel = ({ vehicle }) => {
           </Typography>
         </Box>
         <Typography variant="h4" color="primary" gutterBottom>
-          {vehicle.flightMode || 'UNKNOWN'}
+          {vehicle.flight_mode || vehicle.flightMode || 'UNKNOWN'}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {vehicle.flightModeDescription || 'No description available'}
@@ -275,13 +277,13 @@ const InstrumentPanel = ({ vehicle }) => {
             width: 12,
             height: 12,
             borderRadius: '50%',
-            bgcolor: vehicle.connectionStatus === 'connected' ? 'success.main' : 'error.main'
+            bgcolor: (vehicle.connectionStatus || vehicle.connected) ? 'success.main' : 'error.main'
           }} />
           <Typography variant="body2">
-            {vehicle.connectionStatus || 'disconnected'}
+            {vehicle.connectionStatus || (vehicle.connected ? 'connected' : 'disconnected')}
           </Typography>
         </Box>
-        {vehicle.connectionStatus === 'connected' && (
+        {(vehicle.connectionStatus === 'connected' || vehicle.connected) && (
           <Typography variant="caption" color="text.secondary">
             Signal strength: {vehicle.signalStrength || 'N/A'}
           </Typography>
@@ -293,13 +295,14 @@ const InstrumentPanel = ({ vehicle }) => {
   // Altitude chart - maps from QGC altitude tracking
   const AltitudeChart = () => {
     // @hallucinated - Sample altitude data
+    const currentAltitude = vehicle.position?.alt || vehicle.altitude || 0;
     const altitudeData = [
       { time: '0s', altitude: 0 },
       { time: '10s', altitude: 25 },
       { time: '20s', altitude: 50 },
       { time: '30s', altitude: 75 },
       { time: '40s', altitude: 100 },
-      { time: '50s', altitude: vehicle.altitude || 100 }
+      { time: '50s', altitude: currentAltitude }
     ];
 
     return (

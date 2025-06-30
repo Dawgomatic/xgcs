@@ -394,9 +394,46 @@ export function VehicleProvider({ children }) {
     }
   };
 
-  // Determine active vehicle (first connected vehicle)
-  const activeVehicle = connectedVehicles.find(v => v.connected) || null;
+  // Determine active vehicle (first connected vehicle with telemetry, fallback to any telemetry)
+  let activeVehicle = null;
   
+  // First, try to find a connected vehicle with telemetry
+  activeVehicle = connectedVehicles
+    .map(v => ({ ...v, telemetry: telemetryData[v.id] }))
+    .find(v => v.connected && v.telemetry) || null;
+  
+  // Fallback: if no connected vehicle with telemetry, use the first telemetry entry
+  if (!activeVehicle && Object.keys(telemetryData).length > 0) {
+    const firstTelemetryId = Object.keys(telemetryData)[0];
+    const telemetry = telemetryData[firstTelemetryId];
+    // Create a vehicle object from the telemetry data
+    activeVehicle = { 
+      id: firstTelemetryId, 
+      name: firstTelemetryId, 
+      connected: true,
+      connectionStatus: telemetry.connectionStatus || 'connected',
+      flightMode: telemetry.flight_mode || 'UNKNOWN',
+      batteryLevel: telemetry.battery?.remaining || 0,
+      airspeed: telemetry.velocity?.airspeed || 0,
+      groundspeed: telemetry.velocity?.groundspeed || 0,
+      heading: telemetry.velocity?.heading || 0,
+      altitude: telemetry.position?.alt || 0,
+      gpsSatellites: telemetry.gps?.satellites || 0,
+      gpsFixType: telemetry.gps?.fix_type || 0,
+      coordinate: telemetry.position ? {
+        lat: telemetry.position.lat,
+        lon: telemetry.position.lng
+      } : null,
+      ...telemetry
+    };
+  }
+  
+  // Set the global activeVehicleId for the FlightModeSelector
+  if (activeVehicle) {
+    window.activeVehicleId = activeVehicle.id;
+  }
+  // This ensures the UI always shows the actual connected vehicle, even if the IDs don't match exactly (Jeremy requested this logic)
+
   // Create vehicles array with telemetry data for FlightDisplay
   const vehicles = connectedVehicles.map(v => {
     const telemetry = telemetryData[v.id];
@@ -419,6 +456,33 @@ export function VehicleProvider({ children }) {
       } : null,
       ...telemetry
     };
+  });
+  
+  // Also add any telemetry data that doesn't have a corresponding connected vehicle
+  Object.keys(telemetryData).forEach(telemetryId => {
+    const existingVehicle = vehicles.find(v => v.id === telemetryId);
+    if (!existingVehicle) {
+      const telemetry = telemetryData[telemetryId];
+      vehicles.push({
+        id: telemetryId,
+        name: telemetryId,
+        connected: true,
+        connectionStatus: telemetry.connectionStatus || 'connected',
+        flightMode: telemetry.flight_mode || 'UNKNOWN',
+        batteryLevel: telemetry.battery?.remaining || 0,
+        airspeed: telemetry.velocity?.airspeed || 0,
+        groundspeed: telemetry.velocity?.groundspeed || 0,
+        heading: telemetry.velocity?.heading || 0,
+        altitude: telemetry.position?.alt || 0,
+        gpsSatellites: telemetry.gps?.satellites || 0,
+        gpsFixType: telemetry.gps?.fix_type || 0,
+        coordinate: telemetry.position ? {
+          lat: telemetry.position.lat,
+          lon: telemetry.position.lng
+        } : null,
+        ...telemetry
+      });
+    }
   });
 
   return (

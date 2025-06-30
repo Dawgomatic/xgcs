@@ -25,7 +25,8 @@ import {
   SignalCellular4Bar,
   GpsFixed,
   Replay,
-  Memory
+  Memory,
+  Code
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useVehicles } from '../context/VehicleContext';
@@ -69,29 +70,85 @@ const TopBar = () => {
   };
 
   // Flight control functions
-  const handleTakeoff = () => {
+  const handleTakeoff = async () => {
     if (activeVehicle) {
-      console.log('Takeoff command sent');
-      setIsFlying(true);
+      try {
+        const response = await fetch(`/api/command/takeoff`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ vehicleId: activeVehicle.id })
+        });
+        const data = await response.json();
+        if (data.success) {
+          alert('Takeoff command sent successfully!');
+          setIsFlying(true);
+        } else {
+          alert('Takeoff command failed: ' + data.message);
+        }
+      } catch (error) {
+        alert('Takeoff command error: ' + error.message);
+      }
     }
   };
 
-  const handleLand = () => {
+  const handleLand = async () => {
     if (activeVehicle) {
-      console.log('Land command sent');
-      setIsFlying(false);
+      try {
+        const response = await fetch(`/api/command/land`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ vehicleId: activeVehicle.id })
+        });
+        const data = await response.json();
+        if (data.success) {
+          alert('Land command sent successfully!');
+          setIsFlying(false);
+        } else {
+          alert('Land command failed: ' + data.message);
+        }
+      } catch (error) {
+        alert('Land command error: ' + error.message);
+      }
     }
   };
 
-  const handleRTL = () => {
+  const handleRTL = async () => {
     if (activeVehicle) {
-      console.log('Return to launch command sent');
+      try {
+        const response = await fetch(`/api/command/rtl`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ vehicleId: activeVehicle.id })
+        });
+        const data = await response.json();
+        if (data.success) {
+          alert('RTL command sent successfully!');
+        } else {
+          alert('RTL command failed: ' + data.message);
+        }
+      } catch (error) {
+        alert('RTL command error: ' + error.message);
+      }
     }
   };
 
-  const handlePause = () => {
+  const handlePause = async () => {
     if (activeVehicle) {
-      console.log('Pause command sent');
+      try {
+        const response = await fetch(`/api/command/pause`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ vehicleId: activeVehicle.id })
+        });
+        const data = await response.json();
+        if (data.success) {
+          alert('Pause command sent successfully!');
+        } else {
+          alert('Pause command failed: ' + data.message);
+        }
+      } catch (error) {
+        alert('Pause command error: ' + error.message);
+      }
     }
   };
 
@@ -103,6 +160,8 @@ const TopBar = () => {
     { text: 'Vehicle Connections', icon: <GpsFixed />, path: '/vehicle-connections' },
     { text: 'Mission Planning', icon: <Map />, path: '/mission-planning' },
     { text: 'Simulation', icon: <Memory />, path: '/simulation' },
+    { text: 'Parameters', icon: <Settings />, path: '/parameters' },
+    { text: 'MAVLink Sender', icon: <Code />, path: '/mavlink-sender' },
     { text: 'Settings', icon: <Settings />, path: '/settings' },
   ];
 

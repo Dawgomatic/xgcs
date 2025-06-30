@@ -287,6 +287,95 @@ int main() {
         return crow::response(200, json{{"success", true}}.dump());
     });
 
+    // --- Jeremy: Add command endpoints for flight control ---
+    CROW_ROUTE(app, "/api/command/takeoff").methods("POST"_method)
+    ([](const crow::request& req) {
+        auto params = json::parse(req.body);
+        std::string vehicleId = params["vehicleId"].get<std::string>();
+        bool success = ConnectionManager::instance().send_takeoff_command(vehicleId);
+        return crow::response(200, json{{"success", success}}.dump());
+    });
+
+    CROW_ROUTE(app, "/api/command/land").methods("POST"_method)
+    ([](const crow::request& req) {
+        auto params = json::parse(req.body);
+        std::string vehicleId = params["vehicleId"].get<std::string>();
+        bool success = ConnectionManager::instance().send_land_command(vehicleId);
+        return crow::response(200, json{{"success", success}}.dump());
+    });
+
+    CROW_ROUTE(app, "/api/command/rtl").methods("POST"_method)
+    ([](const crow::request& req) {
+        auto params = json::parse(req.body);
+        std::string vehicleId = params["vehicleId"].get<std::string>();
+        bool success = ConnectionManager::instance().send_rtl_command(vehicleId);
+        return crow::response(200, json{{"success", success}}.dump());
+    });
+
+    CROW_ROUTE(app, "/api/command/pause").methods("POST"_method)
+    ([](const crow::request& req) {
+        auto params = json::parse(req.body);
+        std::string vehicleId = params["vehicleId"].get<std::string>();
+        bool success = ConnectionManager::instance().send_pause_command(vehicleId);
+        return crow::response(200, json{{"success", success}}.dump());
+    });
+
+    CROW_ROUTE(app, "/api/command/set_mode").methods("POST"_method)
+    ([](const crow::request& req) {
+        // --- DEBUG LOGGING ---
+        std::cout << "[DEBUG] /api/command/set_mode called" << std::endl;
+        std::cout << "[DEBUG] Method code: " << static_cast<int>(req.method) << std::endl;
+        std::cout << "[DEBUG] Headers:" << std::endl;
+        for (const auto& h : req.headers) {
+            std::cout << "    " << h.first << ": " << h.second << std::endl;
+        }
+        std::cout << "[DEBUG] Body: " << req.body << std::endl;
+        // --- END DEBUG LOGGING ---
+        auto params = json::parse(req.body);
+        std::string vehicleId = params["vehicleId"].get<std::string>();
+        std::string mode = params["mode"].get<std::string>();
+        bool success = ConnectionManager::instance().send_set_mode_command(vehicleId, mode);
+        return crow::response(200, json{{"success", success}}.dump());
+    });
+    // --- End Jeremy patch for command endpoints ---
+
+    // --- Jeremy: Add parameter endpoints ---
+    CROW_ROUTE(app, "/api/parameters").methods("GET"_method)
+    ([](const crow::request& req) {
+        std::string vehicleId = req.url_params.get("vehicleId");
+        if (vehicleId.empty()) {
+            return crow::response(400, json{{"success", false}, {"error", "vehicleId required"}}.dump());
+        }
+        
+        auto result = ConnectionManager::instance().get_all_parameters(vehicleId);
+        return crow::response(200, result);
+    });
+
+    CROW_ROUTE(app, "/api/parameters/set").methods("POST"_method)
+    ([](const crow::request& req) {
+        auto params = json::parse(req.body);
+        std::string vehicleId = params["vehicleId"].get<std::string>();
+        std::string name = params["name"].get<std::string>();
+        double value = params["value"].get<double>();
+        
+        bool success = ConnectionManager::instance().set_parameter(vehicleId, name, value);
+        return crow::response(200, json{{"success", success}}.dump());
+    });
+    // --- End Jeremy patch for parameter endpoints ---
+
+    // --- Jeremy: Add MAVLink message sending endpoint ---
+    CROW_ROUTE(app, "/api/mavlink/send").methods("POST"_method)
+    ([](const crow::request& req) {
+        auto params = json::parse(req.body);
+        std::string vehicleId = params["vehicleId"].get<std::string>();
+        std::string messageType = params["messageType"].get<std::string>();
+        json parameters = params["parameters"];
+        
+        bool success = ConnectionManager::instance().send_mavlink_message(vehicleId, messageType, parameters);
+        return crow::response(200, json{{"success", success}}.dump());
+    });
+    // --- End Jeremy patch for MAVLink message sending endpoint ---
+
     // MAVLink Streaming WebSocket endpoint
     CROW_WEBSOCKET_ROUTE(app, "/api/mavlink/stream")
     .onopen([&](crow::websocket::connection& conn) {

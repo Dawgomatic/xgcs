@@ -80,19 +80,22 @@ app.use('/api/simulation', createProxyMiddleware({
 app.use('/api', createProxyMiddleware({
   target: 'http://localhost:8081',
   changeOrigin: true,
-  pathRewrite: {
-    '^/api': '' // Remove /api prefix when forwarding to C++ backend
-  },
   ws: true,
   timeout: 60000,
   proxyTimeout: 60000,
   logLevel: 'debug',
   onProxyReq: function(proxyReq, req, res) {
+    writeLog(`[onProxyReq] method=${req.method} url=${req.url}`);
     writeLog(`Proxying API request: ${req.method} ${req.url} -> http://localhost:8081${proxyReq.path}`);
-    
-    // Log headers and body for debugging POST requests
+    // Log headers for debugging
+    writeLog(`ProxyReq headers: ${JSON.stringify(proxyReq.getHeaders())}`);
+    // For POST, set Content-Length and remove Transfer-Encoding
     if (req.method === 'POST') {
-      writeLog(`Request headers: ${JSON.stringify(req.headers)}`);
+      if (req.headers['content-length']) {
+        proxyReq.setHeader('Content-Length', req.headers['content-length']);
+      }
+      proxyReq.removeHeader('Transfer-Encoding');
+      writeLog('Patched Content-Length and removed Transfer-Encoding for POST');
     }
   },
   onProxyRes: function(proxyRes, req, res) {
@@ -120,4 +123,10 @@ app.listen(PORT, () => {
   writeLog(`CORS proxy server running on http://localhost:${PORT}`);
   writeLog(`Proxying simulation requests to Node.js backend at http://localhost:5000`);
   writeLog(`Proxying other API requests to C++ backend at http://localhost:8081`);
+});
+
+// Catch-all logger for unhandled requests
+app.use((req, res, next) => {
+  writeLog(`[UNHANDLED] ${req.method} ${req.url}`);
+  res.status(404).send('Not found');
 }); 

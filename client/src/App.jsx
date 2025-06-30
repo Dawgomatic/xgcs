@@ -12,6 +12,8 @@ import TemplatePage from './pages/TemplatePage';
 import MissionPlanning from './pages/MissionPlanning';
 import Simulation from './pages/Simulation';
 import FlightDisplay from './pages/FlightDisplay';
+import Parameters from './pages/Parameters';
+import MavlinkSender from './pages/MavlinkSender';
 
 function App() {
   // Initialize Cesium Ion token from localStorage
@@ -40,6 +42,8 @@ function App() {
                 <Route path="/template" element={<TemplatePage />} />
                 <Route path="/mission-planning" element={<MissionPlanning />} />
                 <Route path="/simulation" element={<Simulation />} />
+                <Route path="/parameters" element={<Parameters />} />
+                <Route path="/mavlink-sender" element={<MavlinkSender />} />
               </Routes>
             </div>
           </div>

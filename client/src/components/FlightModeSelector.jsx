@@ -34,10 +34,31 @@ const FlightModeSelector = ({
     setAnchorEl(null);
   };
 
-  const handleModeSelect = (mode) => {
-    onFlightModeChange(mode);
+  const handleModeSelect = async (mode) => {
+    if (typeof onFlightModeChange === 'function') {
+      onFlightModeChange(mode);
+    }
+    // --- Jeremy: Send real API request to backend to set mode ---
+    if (window.activeVehicleId) {
+      try {
+        const response = await fetch(`/api/command/set_mode`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ vehicleId: window.activeVehicleId, mode })
+        });
+        const data = await response.json();
+        if (data.success) {
+          alert('Flight mode change command sent successfully!');
+        } else {
+          alert('Flight mode change failed: ' + data.message);
+        }
+      } catch (error) {
+        alert('Flight mode change error: ' + error.message);
+      }
+    }
     handleClose();
   };
+  // --- End Jeremy patch for real backend mode change ---
 
   // Default flight modes if none provided - maps from common QGC modes
   const defaultModes = [

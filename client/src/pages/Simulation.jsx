@@ -66,7 +66,7 @@ const Simulation = () => {
   const [newSimulation, setNewSimulation] = useState({
     name: '',
     vehicleType: 'arducopter',
-    frameType: 'quad',
+    frameType: 'X',
     ipAddress: 'localhost',
     port: 5760,
     systemId: 1,
@@ -101,7 +101,7 @@ const Simulation = () => {
 
   // Frame type options for ArduCopter
   const frameTypes = [
-    { value: 'quad', label: 'Quadcopter (X)' },
+    { value: 'X', label: 'Quadcopter (X)' },
     { value: 'hexa', label: 'Hexacopter' },
     { value: 'octa', label: 'Octocopter' },
     { value: 'tri', label: 'Tricopter' },
@@ -327,7 +327,7 @@ const Simulation = () => {
     setNewSimulation({
       name: '',
       vehicleType: 'arducopter',
-      frameType: 'quad',
+      frameType: 'X',
       ipAddress: 'localhost',
       port: 5760,
       systemId: 1,
