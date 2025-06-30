@@ -8,27 +8,30 @@ const docker = new Docker();
 
 // In-memory storage for simulations (in production, use a database)
 let simulations = new Map();
-let nextPort = 5760;
+let nextPort = 2220; // Start from 2220 for the first simulation
 
-// Get next available port
-function getNextPort() {
-  const usedPorts = Array.from(simulations.values()).map(sim => sim.port);
-  let port = 5760;
-  while (usedPorts.includes(port)) {
-    port++;
-  }
-  return port;
+// Get next available port range (3 ports per simulation)
+function getNextPortRange() {
+  const basePort = nextPort;
+  nextPort += 3; // Increment by 3 for next simulation
+  return basePort;
 }
+
+let port = 2220;
 
 // Get Docker image for vehicle type
 function getDockerImage(vehicleType) {
-  const images = {
-    'arducopter': 'ardupilot/ardupilot-sitl:latest',
-    'arduplane': 'ardupilot/ardupilot-sitl:latest',
-    'ardurover': 'ardupilot/ardupilot-sitl:latest',
-    'sub': 'ardupilot/ardupilot-sitl:latest'
-  };
-  return images[vehicleType] || 'ardupilot/ardupilot-sitl:latest';
+  switch (vehicleType.toLowerCase()) {
+    case 'arducopter':
+    case 'arduplane':
+    case 'ardurover':
+    case 'ardusub':
+      return 'custom-ardupilot-sitl:latest';
+    case 'px4':
+      return 'px4io/px4-dev-simulation-focal:latest';
+    default:
+      return 'custom-ardupilot-sitl:latest';
+  }
 }
 
 // Build SITL command for vehicle type
@@ -57,8 +60,7 @@ function buildSITLCommand(config) {
   // Add common parameters
   command.push(
     '--home', `${homeLocation.lat},${homeLocation.lng},${homeLocation.alt},0`,
-    '--speedup', speedFactor.toString(),
-    '--instance', '0'
+    '--speedup', speedFactor.toString()
   );
   
   // Add custom parameters
@@ -80,7 +82,7 @@ router.post('/create', async (req, res) => {
   try {
     const config = req.body;
     const simulationId = uuidv4();
-    const port = config.port || getNextPort();
+    const port = config.port || getNextPortRange();
     
     const simulation = {
       id: simulationId,
@@ -188,7 +190,9 @@ router.post('/:id/start', async (req, res) => {
       Cmd: command,
       HostConfig: {
         PortBindings: {
-          '5760/tcp': [{ HostPort: simulation.port.toString() }]
+          '5760/tcp': [{ HostPort: simulation.port.toString() }],      // SERIAL0 -> host port (e.g., 2220)
+          '5762/tcp': [{ HostPort: (simulation.port + 1).toString() }], // SERIAL1 -> host port (e.g., 2221)
+          '5763/tcp': [{ HostPort: (simulation.port + 2).toString() }]  // SERIAL2 -> host port (e.g., 2222)
         },
         Memory: 512 * 1024 * 1024, // 512MB
         MemorySwap: 0,
@@ -202,7 +206,9 @@ router.post('/:id/start', async (req, res) => {
         `HOME_LOCATION=${simulation.homeLocation.lat},${simulation.homeLocation.lng},${simulation.homeLocation.alt},0`
       ],
       ExposedPorts: {
-        '5760/tcp': {}
+        '5760/tcp': {},
+        '5762/tcp': {},
+        '5763/tcp': {}
       }
     };
     

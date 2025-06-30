@@ -318,7 +318,13 @@ function VehicleConnections() {
                 <div>
                   <strong>{sim.name || `${sim.vehicleType} ${sim.id}`}</strong>
                   <div style={{ fontSize: '12px', color: '#666', marginTop: '5px' }}>
-                    Port: {sim.port} • Type: {sim.vehicleType} • Status: {sim.status}
+                    <div><strong>ArduPilot SITL Serial Ports:</strong></div>
+                    <div>• Serial0 (MAVLink): {sim.port}</div>
+                    <div>• Serial1 (GPS): {sim.port + 1}</div>
+                    <div>• Serial2 (Telemetry): {sim.port + 2}</div>
+                    <div style={{ marginTop: '5px', fontSize: '11px' }}>
+                      Type: {sim.vehicleType} • Status: {sim.status}
+                    </div>
                   </div>
                 </div>
               </div>

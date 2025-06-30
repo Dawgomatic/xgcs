@@ -33,7 +33,12 @@ WORKDIR /ardupilot
 USER ardupilot
 
 # Install Python dependencies
-RUN pip3 install future lxml pymavlink pyserial MAVProxy geocoder empy==3.3.4 ptyprocess dronecan flake8 junitparser wsproto tabulate pygame intelhex pexpect
+RUN pip3 install --user MAVProxy
+RUN pip3 install future lxml pymavlink pyserial geocoder empy==3.3.4 ptyprocess dronecan flake8 junitparser wsproto tabulate pygame intelhex pexpect
+
+# Ensure MAVProxy is in the PATH for all shells
+ENV PATH="/home/ardupilot/.local/bin:${PATH}"
+RUN ln -s /home/ardupilot/.local/bin/mavproxy.py /usr/local/bin/mavproxy.py || true
 
 # Configure and build ArduPilot
 RUN ./waf configure --board sitl && \
@@ -41,15 +46,12 @@ RUN ./waf configure --board sitl && \
     ./waf plane && \
     ./waf rover && \
     ./waf sub && \
-    ./waf blimp 
+    ./waf blimp
     
 # Expose default SITL port
 EXPOSE 5760
 EXPOSE 5761
 EXPOSE 5762
-
-# Entrypoint: run arducopter SITL
-ENTRYPOINT ["./build/sitl/bin/arducopter", "--model", "quad", "--home", "37.7749,-122.4194,0,0", "--speedup", "1", "--defaults", "/ardupilot/Tools/autotest/default_params/copter.parm", "-I0"]
 
 # Set the default command to run SITL
 CMD ["/bin/bash"]

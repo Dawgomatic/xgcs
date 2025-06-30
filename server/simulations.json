@@ -1,11 +1,11 @@
 [
   {
-    "id": "20cb54bb-95da-48ae-96a4-9af49d70be79",
-    "name": "arducopter 20cb54bb",
+    "id": "2f1160b0-e6c9-4065-a5dd-50b90bba18d0",
+    "name": "Test Agent 1",
     "vehicleType": "arducopter",
     "frameType": "quad",
     "ipAddress": "localhost",
-    "port": 5760,
+    "port": 5762,
     "systemId": 1,
     "speedFactor": 1,
     "enableLogging": true,
@@ -16,12 +16,35 @@
       "lng": -122.4194,
       "alt": 0
     },
-    "status": "running",
-    "createdAt": "2025-06-27T03:47:01.160Z",
+    "status": "created",
+    "createdAt": "2025-06-29T21:22:11.075Z",
     "processId": null,
     "stats": null,
-    "containerId": "2269385d4ee0",
-    "mockData": null,
-    "startedAt": "2025-06-29T15:50:43.659Z"
+    "containerId": null,
+    "mockData": null
+  },
+  {
+    "id": "877fec65-cd50-446a-8d55-e4f459c392eb",
+    "name": "Agent 1",
+    "vehicleType": "arducopter",
+    "frameType": "quad",
+    "ipAddress": "localhost",
+    "port": 5772,
+    "systemId": 1,
+    "speedFactor": 1,
+    "enableLogging": true,
+    "enableVideo": false,
+    "customParams": "",
+    "homeLocation": {
+      "lat": 37.7749,
+      "lng": -122.4194,
+      "alt": 0
+    },
+    "status": "created",
+    "createdAt": "2025-06-29T21:23:25.573Z",
+    "processId": null,
+    "stats": null,
+    "containerId": null,
+    "mockData": null
   }
 ]

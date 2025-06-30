@@ -66,8 +66,8 @@ router.post('/connect', async (req, res) => {
       // For TCP connections (most common for SITL and real vehicles)
       connectionUrl = `tcp://${ip}:${port}`;
       
-      // Special case for default ArduPilot SITL
-      if (port === '5760' || port === 5760) {
+      // Special case for ArduPilot SITL (SERIAL0=5760, SERIAL1=5762, SERIAL2=5763)
+      if (port === '5760' || port === 5760 || port === '5762' || port === 5762 || port === '5763' || port === 5763) {
         connectionUrl = `tcp://${ip}:${port}`;
       }
       // For UDP connections (QGroundControl style)

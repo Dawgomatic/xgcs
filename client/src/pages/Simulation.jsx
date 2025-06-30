@@ -513,7 +513,16 @@ const Simulation = () => {
                       </Typography>
                     )}
                     <Typography variant="body2" color="text.secondary">
-                      <strong>Connection:</strong> {simulation.ipAddress}:{simulation.port}
+                      <strong>ArduPilot SITL Serial Ports:</strong>
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
+                      • Serial0 (MAVLink): {simulation.ipAddress}:{simulation.port}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
+                      • Serial1 (GPS): {simulation.ipAddress}:{simulation.port + 1}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
+                      • Serial2 (Telemetry): {simulation.ipAddress}:{simulation.port + 2}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       <strong>Speed:</strong> {simulation.speedFactor}x

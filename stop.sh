@@ -12,6 +12,41 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+# Help function
+show_help() {
+    echo -e "${BLUE}XGCS Stop Script${NC}"
+    echo ""
+    echo "Usage: $0 [OPTIONS]"
+    echo ""
+    echo "Options:"
+    echo "  -h, --help           Show this help message"
+    echo "  --docker_clear       Remove all Docker containers with 'sitl' in the image name"
+    echo ""
+    echo "Examples:"
+    echo "  $0                   Stop all XGCS services normally"
+    echo "  $0 --docker_clear    Stop services and remove SITL Docker containers"
+    echo ""
+    exit 0
+}
+
+# Parse arguments
+DOCKER_CLEAR=false
+for arg in "$@"; do
+  case $arg in
+    -h|--help)
+      show_help
+      ;;
+    --docker_clear)
+      DOCKER_CLEAR=true
+      ;;
+    *)
+      echo -e "${RED}Unknown option: $arg${NC}"
+      echo "Use -h or --help for usage information"
+      exit 1
+      ;;
+  esac
+done
+
 echo -e "${BLUE}Stopping XGCS services...${NC}"
 
 # Function to check if a command exists
@@ -43,6 +78,12 @@ if command_exists docker; then
             docker-compose down
         fi
         echo -e "${GREEN}✓ Docker containers stopped${NC}"
+    fi
+    # Docker clear for SITL containers
+    if [ "$DOCKER_CLEAR" = true ]; then
+        echo -e "${YELLOW}Removing all Docker containers with 'sitl' in the image name...${NC}"
+        docker ps -a --format '{{.ID}} {{.Image}}' | awk '$2 ~ /sitl/ {print $1}' | xargs -r docker rm -f
+        echo -e "${GREEN}✓ SITL Docker containers removed${NC}"
     fi
 fi
 

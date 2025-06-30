@@ -7,17 +7,14 @@ const router = express.Router();
 
 // In-memory storage for simulations
 let simulations = new Map();
-let nextPort = 5760;
+let nextPort = 5761;
 
 // Get next available port
 function getNextPort() {
-  const usedPorts = Array.from(simulations.values()).map(sim => sim.port);
-  let port = 5760;
-  while (usedPorts.includes(port)) {
-    port++;
-  }
-  return port;
+  return nextPort++;
 }
+
+let port = 5761;
 
 // Find ArduPilot SITL executable
 function findSITLExecutable(vehicleType) {

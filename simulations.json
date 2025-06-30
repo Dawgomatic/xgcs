@@ -1,0 +1,27 @@
+[
+  {
+    "id": "e67ffd7a-2b6f-4f3f-b508-cea9dec8e987",
+    "name": "new",
+    "vehicleType": "arducopter",
+    "frameType": "quad",
+    "ipAddress": "localhost",
+    "port": 2220,
+    "systemId": 1,
+    "speedFactor": 1,
+    "enableLogging": true,
+    "enableVideo": false,
+    "customParams": "",
+    "homeLocation": {
+      "lat": 37.7749,
+      "lng": -122.4194,
+      "alt": 0
+    },
+    "status": "running",
+    "createdAt": "2025-06-30T01:54:40.909Z",
+    "processId": null,
+    "stats": null,
+    "containerId": "c452e3d66b7b27598c2a63667463440ea7348d5d0dcfb900b227a2a81d5b77e2",
+    "mockData": null,
+    "startedAt": "2025-06-30T01:54:46.057Z"
+  }
+]

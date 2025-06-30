@@ -6,7 +6,7 @@ const path = require('path');
 const router = express.Router();
 
 // File path for persistence
-const SIMULATIONS_FILE = path.join(__dirname, '../../simulations.json');
+const SIMULATIONS_FILE = path.join(__dirname, '../../../simulations.json');
 
 // Enhanced logging function
 const log = (message, level = 'info') => {
@@ -18,40 +18,34 @@ const log = (message, level = 'info') => {
 
 // In-memory storage for simulations
 let simulations = new Map();
-let nextPort = 5760;
+let nextPort = 2220; // Start from 2220 for the first simulation
 
 // Save simulations to file
 async function saveSimulations() {
   try {
-    // Create clean copies without circular references
-    const simulationsArray = Array.from(simulations.values()).map(sim => {
-      const { mockDataInterval, ...cleanSim } = sim;
-      return cleanSim;
-    });
-    await fs.writeFile(SIMULATIONS_FILE, JSON.stringify(simulationsArray, null, 2));
-    log(`Saved ${simulationsArray.length} simulations to file`);
+    const data = JSON.stringify(Array.from(simulations.values()), null, 2);
+    await fs.writeFile(SIMULATIONS_FILE, data);
+    log(`Saved ${simulations.size} simulations to file`);
   } catch (error) {
-    log(`Error saving simulations to file: ${error.message}`, 'error');
+    log(`Error saving simulations: ${error.message}`, 'error');
   }
 }
 
 // Load simulations from file
 async function loadSimulations() {
   try {
-    const data = await fs.readFile(SIMULATIONS_FILE, 'utf8');
-    const simulationsArray = JSON.parse(data);
-    simulations.clear();
-    simulationsArray.forEach(sim => {
-      simulations.set(sim.id, sim);
-    });
-    log(`Loaded ${simulationsArray.length} simulations from file`);
-    return simulationsArray;
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      log('No simulations file found, starting fresh');
+    if (await fs.access(SIMULATIONS_FILE).then(() => true).catch(() => false)) {
+      const data = await fs.readFile(SIMULATIONS_FILE, 'utf8');
+      const simulationArray = JSON.parse(data);
+      simulations = new Map(simulationArray.map(sim => [sim.id, sim]));
+      log(`Loaded ${simulations.size} simulations from file`);
+      return simulationArray;
+    } else {
+      log('No simulation file found, starting with empty simulations');
       return [];
     }
-    log(`Error loading simulations from file: ${error.message}`, 'error');
+  } catch (error) {
+    log(`Error loading simulations: ${error.message}`, 'error');
     return [];
   }
 }
@@ -113,41 +107,48 @@ async function reconcileSimulations() {
   log('Reconciling simulations with Docker containers...');
   
   // Load saved simulations
-  const savedSimulations = await loadSimulations();
+  let savedSimulations = [];
+  try {
+    savedSimulations = await loadSimulations() || [];
+  } catch (error) {
+    log(`Error loading simulations during reconciliation: ${error.message}`, 'warn');
+    savedSimulations = [];
+  }
   
-  // Scan for Docker containers
   const dockerContainers = await scanDockerContainers();
   
   // Update simulation states based on container status
-  for (const sim of savedSimulations) {
-    const container = dockerContainers.find(c => 
-      sim.id.startsWith(c.simulationIdPrefix) || 
-      c.containerId === sim.containerId
-    );
-    
-    if (container) {
-      // Update simulation with current container state
-      sim.containerId = container.containerId;
-      sim.status = container.status;
-      if (container.port && sim.port !== container.port) {
-        log(`Port mismatch for ${sim.id}: saved=${sim.port}, container=${container.port}`);
-      }
-      simulations.set(sim.id, sim);
+  if (savedSimulations && Array.isArray(savedSimulations)) {
+    for (const sim of savedSimulations) {
+      const container = dockerContainers.find(c => 
+        sim.id.startsWith(c.simulationIdPrefix) || 
+        c.containerId === sim.containerId
+      );
       
-      // Update dockerManager's container map
-      dockerManager.containers.set(sim.id, {
-        id: container.containerId,
-        name: container.name,
-        port: sim.port,
-        image: 'xgcs-ardupilot-sitl:latest',
-        status: container.status
-      });
-    } else if (sim.status === 'running') {
-      // Simulation was running but container not found
-      log(`Container not found for running simulation ${sim.id}, marking as stopped`);
-      sim.status = 'stopped';
-      sim.containerId = null;
-      simulations.set(sim.id, sim);
+      if (container) {
+        // Update simulation with current container state
+        sim.containerId = container.containerId;
+        sim.status = container.status;
+        if (container.port && sim.port !== container.port) {
+          log(`Port mismatch for ${sim.id}: saved=${sim.port}, container=${container.port}`);
+        }
+        simulations.set(sim.id, sim);
+        
+        // Update dockerManager's container map
+        dockerManager.containers.set(sim.id, {
+          id: container.containerId,
+          name: container.name,
+          port: sim.port,
+          image: 'xgcs-ardupilot-sitl:latest',
+          status: container.status
+        });
+      } else if (sim.status === 'running') {
+        // Simulation was running but container not found
+        log(`Container not found for running simulation ${sim.id}, marking as stopped`);
+        sim.status = 'stopped';
+        sim.containerId = null;
+        simulations.set(sim.id, sim);
+      }
     }
   }
   
@@ -220,9 +221,9 @@ class DockerManager {
   // Create and start a SITL container
   async createSITLContainer(simulation) {
     const containerName = `sitl-${simulation.id.slice(0, 8)}`;
-    const port = simulation.port;
+    const basePort = simulation.port; // This is the base port (e.g., 2220)
     
-    log(`Creating SITL container: ${containerName} on port ${port}`);
+    log(`Creating SITL container: ${containerName} with base port ${basePort}`);
     log(`Simulation config: ${JSON.stringify(simulation, null, 2)}`);
     
     // Determine vehicle type and image
@@ -230,19 +231,19 @@ class DockerManager {
     switch (simulation.vehicleType.toLowerCase()) {
       case 'arducopter':
         image = 'custom-ardupilot-sitl:latest';
-        command = `./build/sitl/bin/arducopter --model ${simulation.frameType || 'quad'} --home ${simulation.homeLocation.lat},${simulation.homeLocation.lng},${simulation.homeLocation.alt},0 --sysid ${simulation.systemId || 1} --speedup ${simulation.speedFactor || 1.0} --defaults /ardupilot/Tools/autotest/default_params/copter.parm -I0`;
+        command = `python3 Tools/autotest/sim_vehicle.py -v ArduCopter -f ${simulation.frameType || 'quad'} --sysid ${simulation.systemId || 1}`;
         break;
       case 'arduplane':
         image = 'custom-ardupilot-sitl:latest';
-        command = `./build/sitl/bin/arduplane --model plane --home ${simulation.homeLocation.lat},${simulation.homeLocation.lng},${simulation.homeLocation.alt},0 --sysid ${simulation.systemId || 1} --speedup ${simulation.speedFactor || 1.0} --defaults /ardupilot/Tools/autotest/default_params/plane.parm -I0`;
+        command = `python3 Tools/autotest/sim_vehicle.py -v ArduPlane -f plane --sysid ${simulation.systemId || 1}`;
         break;
       case 'ardurover':
         image = 'custom-ardupilot-sitl:latest';
-        command = `./build/sitl/bin/ardurover --model rover --home ${simulation.homeLocation.lat},${simulation.homeLocation.lng},${simulation.homeLocation.alt},0 --sysid ${simulation.systemId || 1} --speedup ${simulation.speedFactor || 1.0} --defaults /ardupilot/Tools/autotest/default_params/rover.parm -I0`;
+        command = `python3 Tools/autotest/sim_vehicle.py -v ArduRover -f rover --sysid ${simulation.systemId || 1}`;
         break;
       case 'ardusub':
         image = 'custom-ardupilot-sitl:latest';
-        command = `./build/sitl/bin/ardusub --model sub --home ${simulation.homeLocation.lat},${simulation.homeLocation.lng},${simulation.homeLocation.alt},0 --sysid ${simulation.systemId || 1} --speedup ${simulation.speedFactor || 1.0} --defaults /ardupilot/Tools/autotest/default_params/sub.parm -I0`;
+        command = `python3 Tools/autotest/sim_vehicle.py -v ArduSub -f sub --sysid ${simulation.systemId || 1}`;
         break;
       default:
         // Fallback to PX4 SITL if ArduPilot image not available
@@ -269,13 +270,16 @@ class DockerManager {
         log('Will try to use existing image or fallback to mock simulation');
       }
 
-      // Create and start the container
+      // Create and start the container with all three serial ports mapped to unique host ports
       const dockerArgs = [
         'run',
         '-d',
+        '--tty',
         '--name', containerName,
-        '--rm',
-        '-p', `${port}:5760`,
+        // Map all three serial ports to unique host ports (ArduPilot SITL standard)
+        '-p', `${basePort}:5760`,      // SERIAL0 (5760) -> host port (e.g., 2220)
+        '-p', `${basePort + 1}:5762`,  // SERIAL1 (5762) -> host port (e.g., 2221)
+        '-p', `${basePort + 2}:5763`,  // SERIAL2 (5763) -> host port (e.g., 2222)
         '-e', `SITL_INSTANCE=0`,
         '-e', `VEHICLE_TYPE=${simulation.vehicleType}`,
         '-e', `FRAME_TYPE=${simulation.frameType || 'quad'}`,
@@ -290,16 +294,21 @@ class DockerManager {
       
       log(`Container started successfully: ${containerId.trim()}`);
       
-      // Store container info
+      // Store container info with all port mappings
       this.containers.set(simulation.id, {
         id: containerId.trim(),
         name: containerName,
-        port: port,
+        port: basePort,
+        ports: {
+          serial0: basePort,      // 5760 -> host port (e.g., 2220)
+          serial1: basePort + 1,  // 5762 -> host port (e.g., 2221)
+          serial2: basePort + 2   // 5763 -> host port (e.g., 2222)
+        },
         image: image,
         status: 'running'
       });
 
-      log(`Container info stored for simulation ${simulation.id}`);
+      log(`Container info stored for simulation ${simulation.id} with ports: ${basePort}, ${basePort + 1}, ${basePort + 2}`);
       return containerId.trim();
 
     } catch (error) {
@@ -429,33 +438,15 @@ router.post('/create', async (req, res) => {
     let port = config.port;
     if (!port) {
       // If no port specified, find next available
-      port = await getNextPort();
+      port = getNextPortRange();
     } else {
       // Validate user-specified port is not in use
       const usedPorts = Array.from(simulations.values()).map(sim => sim.port);
-      // Also check Docker containers
-      try {
-        const dockerManager = new DockerManager();
-        const containers = await dockerManager.runDockerCommand(['ps', '--format', '{{.Ports}}']);
-        const containerPorts = containers.split('\n')
-          .filter(line => line.trim())
-          .flatMap(line => {
-            const portSpecs = line.split(',').map(s => s.trim());
-            let ports = [];
-            for (const spec of portSpecs) {
-              const serial2Match = spec.match(/:(\d+):5762\/tcp/);
-              if (serial2Match) {
-                ports.push(parseInt(serial2Match[1]));
-              }
-            }
-            return ports;
-          });
-        usedPorts.push(...containerPorts);
-      } catch (error) {
-        log(`Warning: Could not check Docker container ports: ${error.message}`, 'warn');
-      }
-      if (usedPorts.includes(Number(port))) {
-        return res.status(400).json({ error: `Port ${port} is already in use.` });
+      if (usedPorts.includes(port)) {
+        return res.status(400).json({ 
+          error: 'Port already in use',
+          details: `Port ${port} is already assigned to another simulation` 
+        });
       }
     }
     
@@ -511,13 +502,27 @@ router.get('/list', (req, res) => {
     const simulationList = Array.from(simulations.values()).map(sim => {
       // Create a clean copy without circular references
       const { mockDataInterval, ...cleanSim } = sim;
+      
+      // Get container info for port mapping
+      const container = dockerManager.containers.get(sim.id);
+      const ports = container ? {
+        primary: container.port,
+        serial0: container.port,
+        serial1: container.port + 1,
+        serial2: container.port + 2
+      } : null;
+      
+      // Always use the host-mapped port for simulation.port
+      const hostPort = container ? container.port : cleanSim.port;
+      
       return {
         id: cleanSim.id,
         name: cleanSim.name,
         vehicleType: cleanSim.vehicleType,
         frameType: cleanSim.frameType,
         ipAddress: cleanSim.ipAddress,
-        port: cleanSim.port,
+        port: hostPort, // Use host-mapped port
+        ports: ports, // All available ports for this simulation
         systemId: cleanSim.systemId,
         speedFactor: cleanSim.speedFactor,
         enableLogging: cleanSim.enableLogging,
@@ -828,51 +833,69 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// Get next available port
-async function getNextPort() {
-  // Start at 5762, increment by 10 for each new sim
-  const usedPorts = Array.from(simulations.values()).map(sim => sim.port);
-
-  // Also check for ports used by Docker containers
-  try {
-    const dockerManager = new DockerManager();
-    const containers = await dockerManager.runDockerCommand(['ps', '--format', '{{.Ports}}']);
-    const containerPorts = containers.split('\n')
-      .filter(line => line.trim())
-      .flatMap(line => {
-        // Handle format: "<host_port>:5762/tcp"
-        const portSpecs = line.split(',').map(s => s.trim());
-        let ports = [];
-        for (const spec of portSpecs) {
-          const serial2Match = spec.match(/:(\d+):5762\/tcp/);
-          if (serial2Match) {
-            ports.push(parseInt(serial2Match[1]));
-          } else {
-            // Fallback to old range format for compatibility
-            const rangeMatch = spec.match(/:(\d+)(-(\d+))?/);
-            if (rangeMatch) {
-              const start = parseInt(rangeMatch[1]);
-              const end = rangeMatch[3] ? parseInt(rangeMatch[3]) : start;
-              for (let p = start; p <= end; p++) {
-                ports.push(p);
-              }
-            }
-          }
-        }
-        return ports;
-      });
-    log(`Detected Docker container ports: ${containerPorts.join(', ')}`);
-    usedPorts.push(...containerPorts);
-  } catch (error) {
-    log(`Warning: Could not check Docker container ports: ${error.message}`, 'warn');
-  }
-  log(`All used ports: ${usedPorts.join(', ')}`);
-  let port = 5762;
-  while (usedPorts.includes(port)) {
-    port += 10;
-  }
-  log(`Selected available port: ${port}`);
-  return port;
+// Get next available port range (3 ports per simulation)
+function getNextPortRange() {
+  const basePort = nextPort;
+  nextPort += 3; // Increment by 3 for next simulation
+  return basePort;
 }
+
+// Get simulation port information
+router.get('/:id/ports', (req, res) => {
+  try {
+    const simulationId = req.params.id;
+    const simulation = simulations.get(simulationId);
+    
+    if (!simulation) {
+      return res.status(404).json({ error: 'Simulation not found' });
+    }
+    
+    const container = dockerManager.containers.get(simulationId);
+    if (!container) {
+      return res.status(404).json({ error: 'Container not found' });
+    }
+    
+    res.json({
+      success: true,
+      simulationId: simulationId,
+      ports: {
+        primary: container.port,           // Main MAVLink port (SERIAL0)
+        serial0: container.port,           // SERIAL0 (MAVLink)
+        serial1: container.port + 1,       // SERIAL1 (GPS)
+        serial2: container.port + 2        // SERIAL2 (Telemetry)
+      },
+      connectionInfo: {
+        primary: `tcp://localhost:${container.port}`,
+        serial0: `tcp://localhost:${container.port}`,      // MAVLink
+        serial1: `tcp://localhost:${container.port + 1}`,  // GPS
+        serial2: `tcp://localhost:${container.port + 2}`   // Telemetry
+      },
+      ardupilotSitlPorts: {
+        serial0: {
+          port: container.port,
+          purpose: "MAVLink",
+          description: "Primary MAVLink communication port"
+        },
+        serial1: {
+          port: container.port + 1,
+          purpose: "GPS",
+          description: "GPS data port"
+        },
+        serial2: {
+          port: container.port + 2,
+          purpose: "Telemetry",
+          description: "Telemetry data port"
+        }
+      }
+    });
+    
+  } catch (error) {
+    console.error('Error getting simulation ports:', error);
+    res.status(500).json({ 
+      error: 'Failed to get simulation ports',
+      details: error.message 
+    });
+  }
+});
 
 module.exports = router; 
