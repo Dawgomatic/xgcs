@@ -57,10 +57,15 @@ function Settings() {
             <button onClick={saveKey}>Save Token</button>
           </div>
           <p className="help-text">
-            Don't have a token? Get one at{' '}
+            <strong>Why do I need a Cesium Ion token?</strong><br/>
+            A Cesium Ion token provides access to high-quality 3D terrain and satellite imagery. 
+            Without a token, you'll see a basic map with limited terrain detail.<br/><br/>
+            Don't have a token? Get a free one at{' '}
             <a href="https://cesium.com/ion/signup" target="_blank" rel="noopener noreferrer">
               cesium.com/ion/signup
             </a>
+            <br/><br/>
+            <strong>Note:</strong> The application will work without a token, but with reduced terrain quality.
           </p>
         </div>
       </div>

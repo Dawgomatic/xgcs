@@ -19,9 +19,10 @@ function App() {
   // Initialize Cesium Ion token from localStorage
   useEffect(() => {
     const savedToken = localStorage.getItem('cesiumIonKey');
+    console.log('App.jsx - Checking for Cesium Ion token:', !!savedToken);
     if (savedToken) {
       Ion.defaultAccessToken = savedToken;
-      console.log('Cesium Ion token loaded from localStorage');
+      console.log('Cesium Ion token loaded from localStorage and set as default');
     } else {
       console.log('No Cesium Ion token found. You can add one in Settings to remove 401 errors.');
     }
