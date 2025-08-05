@@ -16,6 +16,7 @@ import {
   ViewComfy
 } from '@mui/icons-material';
 import * as Cesium from 'cesium';
+import { useVehicles } from '../context/VehicleContext';
 
 const FlightMap = () => {
   const cesiumContainer = useRef(null);
@@ -30,6 +31,115 @@ const FlightMap = () => {
   const [showMoon, setShowMoon] = useState(true);
   const [showStars, setShowStars] = useState(true);
   const [sceneMode, setSceneMode] = useState('3D');
+  const [showDrones, setShowDrones] = useState(true);
+
+  // Get vehicle data from context
+  const { vehicles } = useVehicles();
+
+  // Create drone entity on the map
+  const createDroneEntity = (viewer, vehicle) => {
+    if (!vehicle.coordinate || !vehicle.coordinate.lat || !vehicle.coordinate.lon) {
+      return null;
+    }
+
+    const position = Cesium.Cartesian3.fromDegrees(
+      vehicle.coordinate.lon,
+      vehicle.coordinate.lat,
+      vehicle.altitude || 0
+    );
+
+    // Create a 3D model or simple shape for the drone
+    const entity = viewer.entities.add({
+      id: `drone-${vehicle.id}`,
+      position: position,
+      name: vehicle.name || `Drone ${vehicle.id}`,
+      // Use a simple ellipsoid for now - can be replaced with 3D model later
+      ellipsoid: {
+        radii: new Cesium.Cartesian3(10.0, 10.0, 5.0),
+        material: Cesium.Color.BLUE.withAlpha(0.8),
+        outline: true,
+        outlineColor: Cesium.Color.WHITE
+      },
+      // Add label with drone info
+      label: {
+        text: `${vehicle.name || 'Drone'}\n${vehicle.altitude?.toFixed(1) || 0}m`,
+        font: '12pt sans-serif',
+        fillColor: Cesium.Color.WHITE,
+        outlineColor: Cesium.Color.BLACK,
+        outlineWidth: 2,
+        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        pixelOffset: new Cesium.Cartesian2(0, -40),
+        showBackground: true,
+        backgroundColor: Cesium.Color.BLACK.withAlpha(0.7),
+        backgroundPadding: new Cesium.Cartesian2(7, 5)
+      },
+      // Add orientation indicator
+      billboard: {
+        image: 'data:image/svg+xml;base64,' + btoa(`
+          <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="14" fill="none" stroke="white" stroke-width="2"/>
+            <line x1="16" y1="2" x2="16" y2="30" stroke="white" stroke-width="2"/>
+            <line x1="2" y1="16" x2="30" y2="16" stroke="white" stroke-width="2"/>
+            <polygon points="16,4 12,12 20,12" fill="white"/>
+          </svg>
+        `),
+        alignedAxis: Cesium.Cartesian3.UNIT_Z,
+        scale: 0.5
+      }
+    });
+
+    return entity;
+  };
+
+  // Update drone position
+  const updateDronePosition = (viewer, vehicle) => {
+    if (!vehicle.coordinate || !vehicle.coordinate.lat || !vehicle.coordinate.lon) {
+      return;
+    }
+
+    const entityId = `drone-${vehicle.id}`;
+    const entity = viewer.entities.getById(entityId);
+
+    if (entity) {
+      const position = Cesium.Cartesian3.fromDegrees(
+        vehicle.coordinate.lon,
+        vehicle.coordinate.lat,
+        vehicle.altitude || 0
+      );
+
+      // Update position smoothly
+      entity.position = position;
+
+      // Update label text only if altitude changed significantly
+      if (entity.label) {
+        const currentText = entity.label.text;
+        const newText = `${vehicle.name || 'Drone'}\n${vehicle.altitude?.toFixed(1) || 0}m`;
+        if (currentText !== newText) {
+          entity.label.text = newText;
+        }
+      }
+
+      // Update orientation if heading is available and changed
+      if (vehicle.heading !== undefined && entity.billboard) {
+        const currentRotation = entity.billboard.rotation;
+        const newRotation = Cesium.Math.toRadians(vehicle.heading);
+        if (Math.abs(currentRotation - newRotation) > 0.01) { // Small threshold to prevent jitter
+          entity.billboard.rotation = newRotation;
+        }
+      }
+    }
+  };
+
+  // Remove drone entity
+  const removeDroneEntity = (viewer, vehicleId) => {
+    const entityId = `drone-${vehicleId}`;
+    const entity = viewer.entities.getById(entityId);
+    if (entity) {
+      viewer.entities.remove(entity);
+    }
+  };
+
+
 
   useEffect(() => {
     if (!cesiumContainer.current) return;
@@ -359,6 +469,71 @@ const FlightMap = () => {
     }
   }, [sceneMode]);
 
+  // Update drones when vehicle data changes
+  useEffect(() => {
+    // Only update if we have a viewer and drones should be shown
+    if (!viewerRef.current || !showDrones) return;
+    
+    const viewer = viewerRef.current;
+    const currentDroneIds = new Set();
+    const connectedVehicles = vehicles.filter(v => v.connected && v.coordinate);
+
+    // Update or create drone entities
+    connectedVehicles.forEach(vehicle => {
+      currentDroneIds.add(vehicle.id);
+      
+      const entityId = `drone-${vehicle.id}`;
+      const existingEntity = viewer.entities.getById(entityId);
+
+      if (existingEntity) {
+        // Only update position if coordinates actually changed
+        const currentPos = existingEntity.position.getValue(Cesium.JulianDate.now());
+        const newPos = Cesium.Cartesian3.fromDegrees(
+          vehicle.coordinate.lon,
+          vehicle.coordinate.lat,
+          vehicle.altitude || 0
+        );
+        
+        // Check if position actually changed (with some tolerance)
+        if (!currentPos || Cesium.Cartesian3.distance(currentPos, newPos) > 1.0) {
+          updateDronePosition(viewer, vehicle);
+        }
+      } else {
+        createDroneEntity(viewer, vehicle);
+      }
+    });
+
+    // Remove entities for disconnected drones
+    viewer.entities.values.forEach(entity => {
+      if (entity.id && entity.id.startsWith('drone-')) {
+        const droneId = entity.id.replace('drone-', '');
+        if (!currentDroneIds.has(droneId)) {
+          viewer.entities.remove(entity);
+        }
+      }
+    });
+  }, [vehicles, showDrones]);
+
+  // Center camera on first connected drone
+  const centerOnDrone = () => {
+    if (viewerRef.current && vehicles.length > 0) {
+      const connectedVehicle = vehicles.find(v => v.connected && v.coordinate);
+      if (connectedVehicle) {
+        const position = Cesium.Cartesian3.fromDegrees(
+          connectedVehicle.coordinate.lon,
+          connectedVehicle.coordinate.lat,
+          connectedVehicle.altitude || 0
+        );
+        
+        viewerRef.current.camera.flyTo({
+          destination: position,
+          duration: 2.0,
+          offset: new Cesium.HeadingPitchRange(0, -Math.PI / 4, 1000)
+        });
+      }
+    }
+  };
+
   // Camera controls
   const centerOnGlobe = () => {
     if (viewerRef.current) {
@@ -428,6 +603,13 @@ const FlightMap = () => {
             title="Center on Globe"
           >
             <MyLocation />
+          </IconButton>
+          <IconButton 
+            size="small" 
+            onClick={centerOnDrone}
+            title="Center on Drone"
+          >
+            <CenterFocusStrong />
           </IconButton>
           <IconButton 
             size="small" 
@@ -502,6 +684,34 @@ const FlightMap = () => {
           }
           label={<Typography variant="caption">3D Terrain</Typography>}
         />
+      </Paper>
+
+      {/* Drone Controls */}
+      <Paper elevation={3} sx={{ p: 1 }}>
+        <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+          Drones ({vehicles.filter(v => v.connected).length} connected)
+        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+          <FormControlLabel
+            control={
+              <Switch
+                size="small"
+                checked={showDrones}
+                onChange={(e) => setShowDrones(e.target.checked)}
+              />
+            }
+            label={<Typography variant="caption">Show Drones</Typography>}
+          />
+          {vehicles.filter(v => v.connected).map(vehicle => (
+            <Chip
+              key={vehicle.id}
+              label={`${vehicle.name || vehicle.id} - ${vehicle.altitude?.toFixed(1) || 0}m`}
+              size="small"
+              color={vehicle.coordinate ? "primary" : "default"}
+              variant={vehicle.coordinate ? "filled" : "outlined"}
+            />
+          ))}
+        </Box>
       </Paper>
 
       {/* Globe Settings */}
