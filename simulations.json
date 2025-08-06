@@ -19,9 +19,40 @@
     "status": "running",
     "createdAt": "2025-08-06T21:02:03.293Z",
     "processId": null,
-    "stats": null,
+    "stats": {
+      "uptime": 2,
+      "cpuUsage": 16.38866744658168,
+      "memoryUsage": 7.977408530906089,
+      "containerStatus": "running",
+      "mockData": null
+    },
     "containerId": "51bc5738c731a1b9305e212db4416b3789d7b51e1c6c9d6da46ff4d066dd60b9",
     "mockData": null,
     "startedAt": "2025-08-06T21:02:06.086Z"
+  },
+  {
+    "id": "c6670d76-8d38-49e0-8986-9cebeb578a9a",
+    "name": "new",
+    "vehicleType": "arducopter",
+    "frameType": "X",
+    "ipAddress": "localhost",
+    "port": 5770,
+    "systemId": 1,
+    "speedFactor": 1,
+    "enableLogging": true,
+    "enableVideo": false,
+    "customParams": "",
+    "homeLocation": {
+      "lat": 37.7749,
+      "lng": -122.4194,
+      "alt": 0
+    },
+    "status": "running",
+    "createdAt": "2025-08-06T21:43:51.121Z",
+    "processId": null,
+    "stats": null,
+    "containerId": "a340a95afcc69aa8fbe2e637004153381d984d1bc66c398ef80608a3821119f7",
+    "mockData": null,
+    "startedAt": "2025-08-06T21:43:53.344Z"
   }
 ]

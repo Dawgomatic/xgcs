@@ -61,14 +61,62 @@ const VehicleInstrumentCard = ({ vehicle, onNameChange }) => {
     setIsEditing(false);
   };
 
+  // @hallucinated - Arm/Disarm handler function
+  const handleArmDisarm = async (vehicleId) => {
+    try {
+      const response = await fetch(`/api/command/${vehicle.armed ? 'disarm' : 'arm'}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ vehicleId: vehicleId })
+      });
+      
+      if (response.ok) {
+        console.log(`${vehicle.armed ? 'Disarm' : 'Arm'} command sent successfully`);
+      } else {
+        console.error(`${vehicle.armed ? 'Disarm' : 'Arm'} command failed`);
+      }
+    } catch (error) {
+      console.error('Error sending arm/disarm command:', error);
+    }
+  };
+
+  // @hallucinated - Flight mode handler function
+  const handleFlightMode = async (vehicleId) => {
+    // This would typically open a flight mode selector dialog
+    // For now, we'll cycle through common flight modes
+    const flightModes = ['MANUAL', 'STABILIZED', 'AUTO', 'RTL', 'LOITER'];
+    const currentIndex = flightModes.indexOf(vehicle.flightMode || 'MANUAL');
+    const nextMode = flightModes[(currentIndex + 1) % flightModes.length];
+    
+    try {
+      const response = await fetch('/api/command/flight-mode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          vehicleId: vehicleId,
+          flightMode: nextMode 
+        })
+      });
+      
+      if (response.ok) {
+        console.log(`Flight mode changed to ${nextMode}`);
+      } else {
+        console.error('Flight mode change failed');
+      }
+    } catch (error) {
+      console.error('Error changing flight mode:', error);
+    }
+  };
+
   return (
-    <Card sx={{ 
-      minHeight: 300,
-      backgroundColor: '#000000',
-      border: vehicle.connected ? '2px solid #4caf50' : '2px solid #666666',
-      position: 'relative',
-      overflow: 'hidden'
-    }}>
+    <Box>
+      <Card sx={{ 
+        minHeight: 300,
+        backgroundColor: '#000000',
+        border: vehicle.connected ? '2px solid #4caf50' : '2px solid #666666',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
       <CardHeader
         sx={{
           backgroundColor: '#1a1a1a',
@@ -638,6 +686,92 @@ const VehicleInstrumentCard = ({ vehicle, onNameChange }) => {
         </Box>
       </CardContent>
     </Card>
+
+      {/* Flight Control Buttons - Separate from the instrument card */}
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: '8px 16px',
+        backgroundColor: '#000000',
+        borderRadius: '4px',
+        marginTop: '8px',
+        gap: 1,
+        minHeight: '60px'
+      }}>
+        
+        {/* Arm/Disarm Button */}
+        <Box sx={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 0.5
+        }}>
+          <Typography sx={{ color: '#ffffff', fontSize: '10px' }}>ARM</Typography>
+          <Box sx={{
+            width: '100%',
+            height: '32px',
+            backgroundColor: (vehicle.armed || false) ? '#ff4444' : '#4caf50',
+            borderRadius: '4px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            border: '1px solid #333333',
+            '&:hover': {
+              backgroundColor: (vehicle.armed || false) ? '#ff6666' : '#66bb6a',
+            }
+          }}
+          onClick={() => handleArmDisarm(vehicle.id)}
+          >
+            <Typography sx={{ 
+              color: '#ffffff', 
+              fontSize: '12px', 
+              fontWeight: 'bold',
+              textTransform: 'uppercase'
+            }}>
+              {(vehicle.armed || false) ? 'DISARM' : 'ARM'}
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* Flight Mode Button */}
+        <Box sx={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 0.5
+        }}>
+          <Typography sx={{ color: '#ffffff', fontSize: '10px' }}>MODE</Typography>
+          <Box sx={{
+            width: '100%',
+            height: '32px',
+            backgroundColor: '#2196f3',
+            borderRadius: '4px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            border: '1px solid #333333',
+            '&:hover': {
+              backgroundColor: '#42a5f5',
+            }
+          }}
+          onClick={() => handleFlightMode(vehicle.id)}
+          >
+            <Typography sx={{ 
+              color: '#ffffff', 
+              fontSize: '12px', 
+              fontWeight: 'bold',
+              textTransform: 'uppercase'
+            }}>
+              {vehicle.flightMode || 'MANUAL'}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
