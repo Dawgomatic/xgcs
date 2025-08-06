@@ -64,6 +64,7 @@ import * as Cesium from 'cesium';
 import { useVehicles } from '../context/VehicleContext';
 
 const FlightMap = () => {
+  const { setViewer } = useVehicles();
   const cesiumContainer = useRef(null);
   const viewerRef = useRef(null);
   const buttonRef = useRef(null);
@@ -500,7 +501,10 @@ const FlightMap = () => {
     console.log('Comprehensive viewer created');
 
     // Store viewer reference
-      viewerRef.current = viewer;
+    viewerRef.current = viewer;
+    
+    // Register viewer with VehicleContext for telemetry updates
+    setViewer(viewer);
 
     // Set up initial imagery
     setupImagery(viewer, mapType);

@@ -1,8 +1,8 @@
 [
   {
-    "id": "19fca33c-fdee-48e9-af08-8d4f86c947d9",
+    "id": "0d3651d9-962d-4c9b-8efc-789078717189",
     "name": "new",
-    "vehicleType": "arducopter",
+    "vehicleType": "arduplane",
     "frameType": "X",
     "ipAddress": "localhost",
     "port": 5760,
@@ -17,11 +17,11 @@
       "alt": 0
     },
     "status": "running",
-    "createdAt": "2025-08-06T22:02:09.792Z",
+    "createdAt": "2025-08-06T23:03:36.598Z",
     "processId": null,
     "stats": null,
-    "containerId": "f76bc0ef3661ba08ffc459a9ef03b174ff490dae14b63b7f85f08db82eb72623",
+    "containerId": "b8290229d44d4c45f1a98b52df89031a9218a866da45b6479fc71dc1cf45777d",
     "mockData": null,
-    "startedAt": "2025-08-06T22:02:12.688Z"
+    "startedAt": "2025-08-06T23:03:38.941Z"
   }
 ]

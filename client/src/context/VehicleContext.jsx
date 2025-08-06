@@ -131,6 +131,7 @@ export function VehicleProvider({ children }) {
             const response = await fetch(`/api/telemetry?vehicleId=${encodeURIComponent(id)}`);
             if (response.ok) {
               const data = await response.json();
+              console.log(`Raw telemetry response for ${id}:`, data);
               if (data.success && data.position) {
                 telemetryData = data;
                 break;
@@ -142,13 +143,58 @@ export function VehicleProvider({ children }) {
         }
         
         if (telemetryData) {
+          console.log(`Received telemetry for ${vehicleId}:`, telemetryData.position);
+          console.log(`Full telemetry data:`, {
+            armed: telemetryData.armed,
+            flight_mode: telemetryData.flight_mode,
+            battery: telemetryData.battery,
+            gps: telemetryData.gps,
+            in_air: telemetryData.in_air
+          });
+          
+          // Store telemetry data even if position is invalid (for other UI components)
           setTelemetryData(prev => ({
             ...prev,
             [vehicleId]: telemetryData
           }));
           
-          if (viewerRef.current) {
-            updateVehicleEntity(vehicleId, telemetryData);
+          // Only update position if we have valid position data
+          if (telemetryData.position && 
+              telemetryData.position.lat !== null && 
+              telemetryData.position.lng !== null && 
+              telemetryData.position.alt !== null) {
+            
+            if (viewerRef.current) {
+              updateVehicleEntity(vehicleId, telemetryData);
+            }
+          } else {
+            console.warn(`Skipping position update for ${vehicleId} - invalid position data:`, telemetryData.position);
+            
+            // Create a placeholder entity if we don't have one yet
+            if (viewerRef.current && !viewerRef.current.entities.getById(vehicleId)) {
+              console.log(`Creating placeholder entity for ${vehicleId} (waiting for GPS)`);
+              const placeholderEntity = viewerRef.current.entities.add({
+                id: vehicleId,
+                position: Cartesian3.fromDegrees(0, 0, 0), // Position at origin for now
+                label: {
+                  text: `${vehicleId} (Waiting for GPS)`,
+                  font: '12pt sans-serif',
+                  style: 1,
+                  outlineWidth: 2,
+                  verticalOrigin: 0,
+                  horizontalOrigin: 0,
+                  pixelOffset: { x: 0, y: -50 }
+                },
+                point: {
+                  pixelSize: 10,
+                  color: CesiumColor.YELLOW,
+                  outlineColor: CesiumColor.ORANGE,
+                  outlineWidth: 2
+                }
+              });
+              setVehicleEntities(prev => ({ ...prev, [vehicleId]: placeholderEntity }));
+              console.log(`Placeholder entity created for ${vehicleId}`);
+            }
           }
         }
       } catch (error) {
@@ -189,9 +235,48 @@ export function VehicleProvider({ children }) {
       console.warn(`Creating NEW Cesium entity for vehicleId: ${vehicleId}`);
       const vehicleConfig = connectedVehicles.find(v => v.id === vehicleId || v.name === vehicleId);
       
+      // If vehicle config not found in connectedVehicles, create a default config
       if (!vehicleConfig) {
-        console.warn(`Vehicle config not found for ${vehicleId}`);
-        return;
+        console.warn(`Vehicle config not found for ${vehicleId}, creating default config`);
+        // Create a default vehicle config for telemetry-only vehicles
+        const defaultConfig = {
+          id: vehicleId,
+          name: vehicleId,
+          modelUrl: '',
+          modelScale: 1.0
+        };
+        
+                 // Create a new entity with default properties
+         const entityProperties = {
+           id: vehicleId,
+           // Position will be set when we have telemetry data
+           orientation: undefined, 
+           label: {
+             text: vehicleId,
+             font: '14pt sans-serif',
+             style: 1, // LabelStyle.FILL_AND_OUTLINE
+             outlineWidth: 2,
+             verticalOrigin: 0, // VerticalOrigin.CENTER
+             horizontalOrigin: 0, // HorizontalOrigin.CENTER
+             pixelOffset: {
+               x: 0,
+               y: -50
+             }
+           },
+           point: {
+             pixelSize: 15,
+             color: CesiumColor.RED,
+             outlineColor: CesiumColor.WHITE,
+             outlineWidth: 2
+           }
+         };
+
+        entity = viewer.entities.add(entityProperties);
+        setVehicleEntities(prev => ({ ...prev, [vehicleId]: entity }));
+        pathInitializedRef.current[vehicleId] = false;
+        delete previousPositionRef.current[vehicleId];
+        console.log(`[${new Date().toISOString()}] Created default entity for ${vehicleId}`);
+        return; // Exit early since we've created the entity
       }
       
       // Create a new entity
@@ -243,6 +328,12 @@ export function VehicleProvider({ children }) {
     
     // --- Handle position and path updates ---
     if (entity && data && data.position) {
+      // Check if position data is valid (not null)
+      if (data.position.lat === null || data.position.lng === null || data.position.alt === null) {
+        console.warn(`Invalid position data for ${vehicleId}:`, data.position);
+        return; // Skip this update if position data is invalid
+      }
+      
       const positionCartesian = Cartesian3.fromDegrees(
         data.position.lng,
         data.position.lat,
