@@ -13,7 +13,6 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
-  Chip,
   Card,
   CardContent,
   LinearProgress,
@@ -27,11 +26,7 @@ import {
   Map,
   Settings,
   Videocam,
-  Speed,
-  Height,
-  Battery90,
   SignalCellular4Bar,
-  GpsFixed,
   CompassCalibration,
   PlayArrow,
   Pause,
@@ -252,54 +247,7 @@ const FlightDisplay = () => {
         </Grid>
       </Grid>
 
-      {/* Floating Status Bar */}
-      <Box sx={{ 
-        position: 'absolute',
-        bottom: 16,
-        left: 16,
-        right: 16,
-        zIndex: 10,
-        bgcolor: 'background.paper',
-        borderRadius: 2,
-        boxShadow: 3,
-        border: 1,
-        borderColor: 'divider',
-        p: 1,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 2,
-        flexWrap: 'wrap'
-      }}>
-        <Typography variant="caption" color="text.secondary">
-          {activeVehicle ? `Vehicle: ${activeVehicle.id}` : 'No vehicle connected'}
-        </Typography>
-        
-        {activeVehicle && (
-          <>
-            <Chip 
-              icon={<Battery90 />}
-              label={`${activeVehicle.battery?.remaining || activeVehicle.batteryLevel || 0}%`}
-              size="small"
-              color={(activeVehicle.battery?.remaining || activeVehicle.batteryLevel || 0) < 20 ? 'error' : 'default'}
-            />
-            <Chip 
-              icon={<GpsFixed />}
-              label={`${activeVehicle.gps?.satellites || activeVehicle.gpsSatellites || 0} sats`}
-              size="small"
-            />
-            <Chip 
-              icon={<Speed />}
-              label={`${activeVehicle.velocity?.airspeed || activeVehicle.airspeed || 0} m/s`}
-              size="small"
-            />
-            <Chip 
-              icon={<Height />}
-              label={`${activeVehicle.position?.alt || activeVehicle.altitude || 0} m`}
-              size="small"
-            />
-          </>
-        )}
-      </Box>
+
 
       {/* Notification Snackbar */}
       <Snackbar
