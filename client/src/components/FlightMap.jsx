@@ -572,7 +572,7 @@ const FlightMap = () => {
         style={{
           position: 'absolute',
           top: 16,
-          right: 16,
+          left: 16, // Move to top-left
           zIndex: 10001,
           backgroundColor: buttonPressed ? 'rgba(200, 200, 200, 0.95)' : 'rgba(255, 255, 255, 0.95)',
           borderRadius: '8px',
@@ -623,7 +623,7 @@ const FlightMap = () => {
         <Box sx={{ 
           position: 'absolute', 
           top: 16, 
-          right: 80, // Position to the left of the toggle button
+          left: 80, // Position to the right of the toggle button
           zIndex: 9998,
           maxHeight: 'calc(100vh - 32px)',
           overflow: 'hidden',
@@ -877,9 +877,9 @@ const FlightMap = () => {
             <Box sx={{
               position: 'absolute',
               top: 0,
-              right: 0,
+              left: 0, // Move to top-left instead of top-right
               pointerEvents: 'auto',
-              zIndex: 10000,
+              zIndex: 100000, // Higher than instrument panel (10) and status bar (10)
             }}>
               <MapControls />
             </Box>

@@ -36,7 +36,8 @@ import {
   PlayArrow,
   Pause,
   Stop,
-  Home
+  Home,
+  Close
 } from '@mui/icons-material';
 import { useVehicles } from '../context/VehicleContext';
 import FlightMap from '../components/FlightMap';
@@ -167,122 +168,109 @@ const FlightDisplay = () => {
 
   // Main content layout - maps from QGC FlyView layout
   return (
-    <Box sx={{ height: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'column' }}>
-      {/* Debug Info - Remove this in production */}
-      {process.env.NODE_ENV === 'development' && (
-        <Box sx={{ p: 1, bgcolor: 'grey.100', borderBottom: 1, borderColor: 'divider' }}>
-          <Typography variant="caption" color="text.secondary">
-            Debug: Active Vehicle: {activeVehicle?.id || 'None'} | 
-            Connected: {activeVehicle?.connected ? 'Yes' : 'No'} | 
-            Telemetry: {activeVehicle ? 'Available' : 'None'} | 
-            Flight Mode: {activeVehicle?.flight_mode || activeVehicle?.flightMode || 'Unknown'} |
-            Altitude: {activeVehicle?.position?.alt || activeVehicle?.altitude || 0}m |
-            Battery: {activeVehicle?.battery?.remaining || activeVehicle?.batteryLevel || 0}%
-          </Typography>
-          
-          {/* Flight Control Buttons for Testing */}
-          {activeVehicle && (
-            <Box sx={{ mt: 1, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-              <Typography variant="caption" color="text.secondary" sx={{ mr: 1 }}>
-                Flight Controls:
-              </Typography>
-              <IconButton 
-                size="small" 
-                onClick={handleTakeoff}
-                disabled={!activeVehicle || isFlying}
-                title="Takeoff"
-                sx={{ bgcolor: 'success.light', color: 'white', '&:hover': { bgcolor: 'success.main' } }}
-              >
-                <PlayArrow />
-              </IconButton>
-              <IconButton 
-                size="small" 
-                onClick={handlePause}
-                disabled={!activeVehicle}
-                title="Pause"
-                sx={{ bgcolor: 'warning.light', color: 'white', '&:hover': { bgcolor: 'warning.main' } }}
-              >
-                <Pause />
-              </IconButton>
-              <IconButton 
-                size="small" 
-                onClick={handleRTL}
-                disabled={!activeVehicle}
-                title="Return to Launch"
-                sx={{ bgcolor: 'info.light', color: 'white', '&:hover': { bgcolor: 'info.main' } }}
-              >
-                <Home />
-              </IconButton>
-              <IconButton 
-                size="small" 
-                onClick={handleLand}
-                disabled={!activeVehicle || !isFlying}
-                title="Land"
-                sx={{ bgcolor: 'error.light', color: 'white', '&:hover': { bgcolor: 'error.main' } }}
-              >
-                <Stop />
-              </IconButton>
-            </Box>
-          )}
-        </Box>
-      )}
-      
-      <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-        {/* Main Map Area - maps from QGC FlyViewMap */}
-        <Box sx={{ 
-          flex: 1, 
-          position: 'relative',
-          display: mapVisible ? 'block' : 'none'
-        }}>
-          <FlightMap 
-            vehicle={activeVehicle}
-            vehicles={vehicles}
-          />
-        </Box>
-
-        {/* Right Panel - maps from QGC FlyViewWidgetLayer */}
-        <Box sx={{ 
-          width: 320, 
-          display: 'flex', 
-          flexDirection: 'column',
-          borderLeft: 1,
-          borderColor: 'divider'
-        }}>
-          {/* Tabs for right panel */}
-          <Tabs value={rightPanelTab} onChange={(_, v) => setRightPanelTab(v)}>
-            <Tab label="Instruments" />
-            {activeVehicle && <Tab label="MAVLink Inspector" />}
-          </Tabs>
-          {/* Tab panels */}
-          {rightPanelTab === 0 && instrumentPanelVisible && (
-            <Box sx={{ flex: 1, p: 2 }}>
-              <InstrumentPanel vehicle={activeVehicle} />
-            </Box>
-          )}
-          {rightPanelTab === 1 && activeVehicle && (
-            <Box sx={{ flex: 1, p: 2, overflow: 'auto' }}>
-              <MavlinkInspector vehicleId={activeVehicle.id} />
-            </Box>
-          )}
-          {/* Video Panel - maps from QGC FlyViewVideo */}
-          {videoVisible && (
-            <Box sx={{ height: 240, p: 1 }}>
-              <VideoPanel vehicle={activeVehicle} />
-            </Box>
-          )}
-        </Box>
+    <Box sx={{ height: '100vh', width: '100vw', position: 'relative', overflow: 'hidden' }}>
+      {/* Full-screen Map */}
+      <Box sx={{ 
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1
+      }}>
+        <FlightMap 
+          vehicle={activeVehicle}
+          vehicles={vehicles}
+        />
       </Box>
 
-      {/* Status Bar - maps from QGC status indicators */}
+      {/* Floating Right Panel - Collapsible */}
       <Box sx={{ 
-        height: 40, 
+        position: 'absolute',
+        top: 16,
+        right: 16,
+        width: 320,
+        maxHeight: 'calc(100vh - 80px)', // Account for status bar height
+        zIndex: 10,
         bgcolor: 'background.paper',
-        borderTop: 1,
+        borderRadius: 2,
+        boxShadow: 3,
+        border: 1,
         borderColor: 'divider',
         display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden'
+      }}>
+        {/* Panel Header with Collapse Toggle */}
+        <Box sx={{ 
+          p: 1, 
+          borderBottom: 1, 
+          borderColor: 'divider',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          bgcolor: 'background.default'
+        }}>
+          <Typography variant="subtitle2">Flight Instruments</Typography>
+          <IconButton 
+            size="small" 
+            onClick={() => setInstrumentPanelVisible(!instrumentPanelVisible)}
+            title={instrumentPanelVisible ? "Hide Panel" : "Show Panel"}
+          >
+            {instrumentPanelVisible ? <Close /> : <Settings />}
+          </IconButton>
+        </Box>
+
+        {/* Panel Content */}
+        {instrumentPanelVisible && (
+          <>
+            {/* Tabs for right panel */}
+            <Tabs value={rightPanelTab} onChange={(_, v) => setRightPanelTab(v)} size="small">
+              <Tab label="Instruments" />
+              {activeVehicle && <Tab label="MAVLink Inspector" />}
+            </Tabs>
+            
+            {/* Tab panels */}
+            <Box sx={{ flex: 1, overflow: 'hidden' }}>
+              {rightPanelTab === 0 && (
+                <Box sx={{ height: '100%', overflow: 'auto' }}>
+                  <InstrumentPanel vehicle={activeVehicle} />
+                </Box>
+              )}
+              {rightPanelTab === 1 && activeVehicle && (
+                <Box sx={{ height: '100%', overflow: 'auto' }}>
+                  <MavlinkInspector vehicleId={activeVehicle.id} />
+                </Box>
+              )}
+            </Box>
+
+            {/* Video Panel - maps from QGC FlyViewVideo */}
+            {videoVisible && (
+              <Box sx={{ height: 240, p: 1, borderTop: 1, borderColor: 'divider' }}>
+                <VideoPanel vehicle={activeVehicle} />
+              </Box>
+            )}
+          </>
+        )}
+      </Box>
+
+      {/* Floating Status Bar */}
+      <Box sx={{ 
+        position: 'absolute',
+        bottom: 16,
+        left: 16,
+        right: 352, // Leave space for the instrument panel (320px + 16px margin + 16px gap)
+        zIndex: 10,
+        bgcolor: 'background.paper',
+        borderRadius: 2,
+        boxShadow: 3,
+        border: 1,
+        borderColor: 'divider',
+        p: 1,
+        display: 'flex',
         alignItems: 'center',
-        px: 2,
-        gap: 2
+        gap: 2,
+        flexWrap: 'wrap'
       }}>
         <Typography variant="caption" color="text.secondary">
           {activeVehicle ? `Vehicle: ${activeVehicle.id}` : 'No vehicle connected'}

@@ -14,15 +14,15 @@ const FlightInstruments = () => {
 
   // Default values for demonstration
   const instrumentData = {
-    heading: currentVehicle?.heading || 0,
+    heading: currentVehicle?.heading || 358,
     pitch: currentVehicle?.pitch || 0,
     roll: currentVehicle?.roll || 0,
-    altitude: currentVehicle?.altitude || 7250,
-    airspeed: currentVehicle?.airspeed || 64,
+    altitude: currentVehicle?.altitude || 0,
+    airspeed: currentVehicle?.airspeed || 3.9,
     busVoltage: 12.2,
     baroPressure: 29.92,
     gLimit: currentVehicle?.gLimit || false, // Warning indicator
-    verticalSpeed: currentVehicle?.verticalSpeed || 0,
+    verticalSpeed: currentVehicle?.verticalSpeed || 0.0,
     groundSpeed: currentVehicle?.groundSpeed || 0
   };
 
@@ -58,14 +58,17 @@ const FlightInstruments = () => {
         border: '2px solid #333333',
         overflow: 'hidden',
         position: 'relative',
-        minHeight: '400px'
+        minHeight: '600px',
+        width: '100%',
+        maxWidth: '400px',
+        margin: '0 auto'
       }}>
         {/* Instrument Bezel */}
         <Box sx={{
           position: 'relative',
           width: '100%',
           height: '100%',
-          minHeight: '400px',
+          minHeight: '600px',
           backgroundColor: '#000000',
           display: 'flex',
           flexDirection: 'column',
@@ -117,8 +120,8 @@ const FlightInstruments = () => {
 
           {/* Main Display Area */}
           <Box sx={{
-            width: '300px',
-            height: '300px',
+            width: '280px',
+            height: '280px',
             borderRadius: '50%',
             backgroundColor: '#000000',
             border: '3px solid #333333',
@@ -128,16 +131,16 @@ const FlightInstruments = () => {
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-            {/* Horizon Display */}
-                         <Box sx={{
-               width: '280px',
-               height: '280px',
-               borderRadius: '50%',
-               position: 'relative',
-               overflow: 'hidden',
-               transform: `rotate(${instrumentData.roll}deg)`,
-               transition: 'transform 0.1s ease-out'
-             }}>
+                        {/* Horizon Display */}
+            <Box sx={{
+              width: '260px',
+              height: '260px',
+              borderRadius: '50%',
+              position: 'relative',
+              overflow: 'hidden',
+              transform: `rotate(${instrumentData.roll}deg)`,
+              transition: 'transform 0.1s ease-out'
+            }}>
               {/* Sky */}
               <Box sx={{
                 position: 'absolute',
@@ -369,8 +372,8 @@ const FlightInstruments = () => {
             top: '20px',
             left: '50%',
             transform: 'translateX(-50%)',
-            width: '200px',
-            height: '30px',
+            width: '220px',
+            height: '35px',
             backgroundColor: '#000000',
             border: '1px solid #333333',
             borderRadius: '4px',
@@ -470,11 +473,11 @@ const FlightInstruments = () => {
               {/* Compass text */}
               <Typography sx={{
                 color: '#ffffff',
-                fontSize: '14px',
+                fontSize: '16px',
                 fontWeight: 'bold',
                 zIndex: 1
               }}>
-                {getCardinalDirection(instrumentData.heading)} {formatHeading(instrumentData.heading)}°
+                N {formatHeading(instrumentData.heading)}°
               </Typography>
             </Box>
           </Box>
@@ -493,15 +496,15 @@ const FlightInstruments = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Typography sx={{ color: '#ffffff', fontSize: '12px' }}>IAS</Typography>
-                <Typography sx={{ color: '#ffffff', fontSize: '18px', fontWeight: 'bold' }}>
-                  {instrumentData.airspeed}
+                <Typography sx={{ color: '#ffffff', fontSize: '16px', fontWeight: 'bold' }}>
+                  {instrumentData.airspeed.toFixed(1)}
                 </Typography>
                 <Typography sx={{ color: '#ffffff', fontSize: '10px' }}>kts</Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Typography sx={{ color: '#ffffff', fontSize: '12px' }}>BUSV</Typography>
                 <Typography sx={{ color: '#00ff00', fontSize: '14px' }}>
-                  {instrumentData.busVoltage}
+                  {instrumentData.busVoltage.toFixed(1)}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -510,7 +513,7 @@ const FlightInstruments = () => {
                   color: instrumentData.verticalSpeed > 0 ? '#00ff00' : instrumentData.verticalSpeed < 0 ? '#ff0000' : '#ffffff', 
                   fontSize: '12px' 
                 }}>
-                  {instrumentData.verticalSpeed > 0 ? '+' : ''}{instrumentData.verticalSpeed.toFixed(1)}
+                  {instrumentData.verticalSpeed.toFixed(1)}
                 </Typography>
               </Box>
               <Typography sx={{ color: '#ffffff', fontSize: '10px' }}>MENU</Typography>
@@ -520,14 +523,14 @@ const FlightInstruments = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'flex-end' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Typography sx={{ color: '#ffffff', fontSize: '12px' }}>ALT</Typography>
-                <Typography sx={{ color: '#ffffff', fontSize: '18px', fontWeight: 'bold' }}>
-                  {instrumentData.altitude}
+                <Typography sx={{ color: '#ffffff', fontSize: '16px', fontWeight: 'bold' }}>
+                  {Math.round(instrumentData.altitude)}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Typography sx={{ color: '#ffffff', fontSize: '12px' }}>BARO</Typography>
                 <Typography sx={{ color: '#00ff00', fontSize: '14px' }}>
-                  {instrumentData.baroPressure}
+                  {instrumentData.baroPressure.toFixed(2)}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
