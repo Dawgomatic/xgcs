@@ -63,7 +63,6 @@ const TopBar = () => {
   const menuItems = [
     { text: 'Flight Display', icon: <Flight />, path: '/' },
     { text: 'Vehicle Connections', icon: <GpsFixed />, path: '/vehicle-connections' },
-    { text: 'Mission Planning', icon: <Map />, path: '/mission-planning' },
     { text: 'Simulation', icon: <Memory />, path: '/simulation' },
     { text: 'Parameters', icon: <Settings />, path: '/parameters' },
     { text: 'MAVLink Sender', icon: <Code />, path: '/mavlink-sender' },
