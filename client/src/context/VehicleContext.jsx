@@ -19,6 +19,7 @@ export function VehicleProvider({ children }) {
   const [connectedVehicles, setConnectedVehicles] = useState([]);
   const [vehicleEntities, setVehicleEntities] = useState({});
   const [telemetryData, setTelemetryData] = useState({});
+  const [connectionStates, setConnectionStates] = useState({}); // @hallucinated - Track connection states
   const telemetryIntervals = useRef({});
   const viewerRef = useRef(null);
   const pathInitializedRef = useRef({});
@@ -331,6 +332,60 @@ export function VehicleProvider({ children }) {
     }
   };
 
+  // @hallucinated - Update connection state
+  const updateConnectionState = (vehicleId, isConnected) => {
+    console.log(`Updating connection state for ${vehicleId}: ${isConnected}`);
+    setConnectionStates(prev => {
+      const newState = {
+        ...prev,
+        [vehicleId]: isConnected
+      };
+      console.log('New connection states:', newState);
+      return newState;
+    });
+  };
+
+  // @hallucinated - Get connection state for a vehicle
+  const getConnectionState = (vehicleId) => {
+    return connectionStates[vehicleId] || false;
+  };
+
+  // @hallucinated - Connect a vehicle
+  const connectVehicle = async (vehicleConfig) => {
+    try {
+      const response = await fetch('/api/connect', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          ip: vehicleConfig.connectionDetails.ip,
+          port: parseInt(vehicleConfig.connectionDetails.port, 10),
+          name: vehicleConfig.name,
+          type: vehicleConfig.connectionDetails.vehicleType || 'unknown',
+          modelUrl: vehicleConfig.modelUrl || '',
+          modelScale: vehicleConfig.modelScale || 1.0
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        console.log(`Connection successful for ${vehicleConfig.name}`);
+        updateConnectionState(vehicleConfig.name, true);
+        startTelemetryPolling(vehicleConfig.name);
+        return true;
+      } else {
+        console.error('Connection failed:', data.message);
+        return false;
+      }
+    } catch (error) {
+      console.error('Error connecting vehicle:', error);
+      return false;
+    }
+  };
+
   // Disconnect a vehicle
   const disconnectVehicle = async (vehicleId) => {
     try {
@@ -348,6 +403,9 @@ export function VehicleProvider({ children }) {
       const data = await response.json();
       
       if (data.success) {
+        // Update connection state
+        updateConnectionState(vehicleId, false);
+        
         // Stop polling for this vehicle
         stopTelemetryPolling(vehicleId);
         const pathEntityId = `${vehicleId}_path`; // Ensure ID is defined
@@ -492,10 +550,14 @@ export function VehicleProvider({ children }) {
       telemetryData,
       activeVehicle,
       vehicles,
+      connectionStates,
       setViewer,
       startTelemetryPolling,
       stopTelemetryPolling,
-      disconnectVehicle
+      connectVehicle,
+      disconnectVehicle,
+      updateConnectionState,
+      getConnectionState
     }}>
       {children}
     </VehicleContext.Provider>

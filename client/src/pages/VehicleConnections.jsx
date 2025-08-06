@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/VehicleConnections.css';
 import VehicleModal from '../components/VehicleModal';
+import { useVehicles } from '../context/VehicleContext';
 import axios from 'axios'; // Make sure axios is installed
 
 function VehicleConnections() {
+  const { connectionStates, connectVehicle, disconnectVehicle, getConnectionState } = useVehicles();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [items, setItems] = useState([]);
@@ -12,7 +14,6 @@ function VehicleConnections() {
   const [connectionStatus, setConnectionStatus] = useState('');
   const [isConnecting, setIsConnecting] = useState(false);
   const [statusTimeout, setStatusTimeout] = useState(null);
-  const [activeConnections, setActiveConnections] = useState({});
   const [position, setPosition] = useState(null);
   const [formData, setFormData] = useState({});
   const [simulations, setSimulations] = useState([]);
@@ -27,7 +28,36 @@ function VehicleConnections() {
     
     // Load running simulations
     loadSimulations();
+    
+    // Check for existing active connections
+    checkActiveConnections();
   }, []);
+
+  // @hallucinated - Debug connection states
+  useEffect(() => {
+    console.log('Connection states changed:', connectionStates);
+  }, [connectionStates]);
+
+  // @hallucinated - Check for existing active connections
+  const checkActiveConnections = async () => {
+    try {
+      const response = await fetch('/api/vehicles');
+      if (response.ok) {
+        const data = await response.json();
+        const activeVehicles = data.vehicles || [];
+        
+        // Update connection states based on backend response
+        activeVehicles.forEach(vehicle => {
+          if (vehicle.connected) {
+            // This will be handled by the VehicleContext
+            console.log(`Found active vehicle: ${vehicle.name}`);
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error checking active connections:', error);
+    }
+  };
 
   useEffect(() => {
     // Save items to localStorage whenever they change, but only if items is not empty
@@ -112,40 +142,15 @@ function VehicleConnections() {
     }
   };
 
+  // @hallucinated - Telemetry functions now handled by VehicleContext
   const startTelemetry = (vehicleId) => {
-    const intervalId = setInterval(async () => {
-      try {
-        const response = await fetch(`/api/telemetry?vehicleId=${vehicleId}`);
-        const data = await response.json();
-        
-        if (data.success && data.position) {
-          setPosition(data.position);
-        } else if (!data.success) {
-          console.error(`Telemetry error for ${vehicleId}:`, data.message);
-          // Stop telemetry if we can't get data
-          stopTelemetry(vehicleId);
-          setTemporaryStatus(`Lost telemetry for ${vehicleId}`, true);
-        }
-      } catch (error) {
-        console.error('Telemetry fetch error:', error);
-      }
-    }, 100);
-    
-    setActiveConnections(prev => ({
-      ...prev,
-      [vehicleId]: intervalId
-    }));
+    // This is now handled by the VehicleContext
+    console.log(`Telemetry started for ${vehicleId} via VehicleContext`);
   };
   
   const stopTelemetry = (vehicleId) => {
-    if (activeConnections[vehicleId]) {
-      clearInterval(activeConnections[vehicleId]);
-      setActiveConnections(prev => {
-        const newConnections = {...prev};
-        delete newConnections[vehicleId];
-        return newConnections;
-      });
-    }
+    // This is now handled by the VehicleContext
+    console.log(`Telemetry stopped for ${vehicleId} via VehicleContext`);
   };
 
   const handleConnect = async () => {
@@ -155,38 +160,22 @@ function VehicleConnections() {
     }
 
     const selectedConnection = items[selectedItem];
+    console.log('Attempting to connect to:', selectedConnection);
     setIsConnecting(true);
     setTemporaryStatus('Connecting to vehicle...');
 
     try {
-      const response = await fetch('/api/connect', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          ip: selectedConnection.connectionDetails.ip,
-          port: parseInt(selectedConnection.connectionDetails.port, 10),
-          name: selectedConnection.name,
-          type: selectedConnection.connectionDetails.vehicleType || 'unknown',
-          modelUrl: selectedConnection.modelUrl || '',
-          modelScale: selectedConnection.modelScale || 1.0
-        })
-      });
-
-      const data = await response.json();
+      const success = await connectVehicle(selectedConnection);
+      console.log('Connect result:', success);
       
-      if (data.success) {
+      if (success) {
         setTemporaryStatus('Connected successfully!');
-        startTelemetry(selectedConnection.name);
+        console.log('Connection states after connect:', connectionStates);
       } else {
-        setTemporaryStatus(`Connection failed: ${data.message}`, true);
-        if (data.message.includes('C++ backend')) {
-          setTemporaryStatus('Please ensure the C++ backend is running (./start.sh or ./build_cpp_backend.sh)', true);
-        }
+        setTemporaryStatus('Connection failed. Please check the backend.', true);
       }
     } catch (error) {
+      console.error('Connect error:', error);
       setTemporaryStatus(`Connection error: ${error.message}`, true);
     } finally {
       setIsConnecting(false);
@@ -201,38 +190,24 @@ function VehicleConnections() {
 
     const selectedConnection = items[selectedItem];
     const vehicleId = selectedConnection.name;
+    console.log('Attempting to disconnect:', vehicleId);
     
     try {
       setIsConnecting(true);
       setTemporaryStatus('Disconnecting from vehicle...');
       
-      const response = await fetch('/api/disconnect', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          name: vehicleId
-        })
-      });
-
-      const data = await response.json();
+      const success = await disconnectVehicle(vehicleId);
+      console.log('Disconnect result:', success);
       
-      if (data.success) {
+      if (success) {
         setTemporaryStatus('Disconnected successfully!');
-        
-        stopTelemetry(vehicleId);
-        
-        if (Object.keys(activeConnections).length === 0) {
-          setPosition(null);
-        }
+        console.log('Connection states after disconnect:', connectionStates);
       } else {
-        setTemporaryStatus(`Disconnection failed: ${data.message}`, true);
+        setTemporaryStatus('Disconnection failed. Please check the backend.', true);
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message;
-      setTemporaryStatus(`Disconnection error: ${errorMessage}`, true);
+      console.error('Disconnect error:', error);
+      setTemporaryStatus(`Disconnection error: ${error.message}`, true);
     } finally {
       setIsConnecting(false);
     }
@@ -258,15 +233,31 @@ function VehicleConnections() {
             <button onClick={handleEditClick}>Edit</button>
             <button 
               onClick={handleConnect}
-              disabled={isConnecting || selectedItem === null}
+              disabled={isConnecting || selectedItem === null || connectionStates[items[selectedItem]?.name]}
+              style={{
+                backgroundColor: connectionStates[items[selectedItem]?.name] ? '#ccc' : '#4caf50',
+                color: 'white',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                cursor: connectionStates[items[selectedItem]?.name] ? 'not-allowed' : 'pointer'
+              }}
             >
-              {isConnecting ? 'Connecting...' : 'Connect'}
+              {isConnecting ? 'Connecting...' : connectionStates[items[selectedItem]?.name] ? 'Connected' : 'Connect'}
             </button>
             <button 
               onClick={handleDisconnect}
-              disabled={isConnecting || selectedItem === null || !activeConnections[items[selectedItem]?.name]}
+              disabled={isConnecting || selectedItem === null || !connectionStates[items[selectedItem]?.name]}
+              style={{
+                backgroundColor: connectionStates[items[selectedItem]?.name] ? '#ff4444' : '#ccc',
+                color: 'white',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                cursor: connectionStates[items[selectedItem]?.name] ? 'pointer' : 'not-allowed'
+              }}
             >
-              Disconnect
+              {isConnecting ? 'Disconnecting...' : 'Disconnect'}
             </button>
           </div>
         </div>
@@ -342,15 +333,48 @@ function VehicleConnections() {
       <div className="settings-section">
         <h2>Saved Connections</h2>
         <div className="items-container">
-          {items.map((item, index) => (
-            <div
-              key={index}
-              className={`item-card ${selectedItem === index ? 'selected' : ''}`}
-              onClick={() => handleSelectItem(index)}
-            >
-              {item.name}
-            </div>
-          ))}
+          {items.map((item, index) => {
+            const isActive = connectionStates[item.name];
+            return (
+              <div
+                key={index}
+                className={`item-card ${selectedItem === index ? 'selected' : ''}`}
+                onClick={() => handleSelectItem(index)}
+                style={{
+                  border: '1px solid #ddd',
+                  backgroundColor: '#fff',
+                  position: 'relative',
+                  padding: '12px',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px'
+                }}
+              >
+                {/* Status Light */}
+                <div style={{
+                  width: '12px',
+                  height: '12px',
+                  borderRadius: '50%',
+                  backgroundColor: isActive ? '#4caf50' : '#ff4444',
+                  border: '2px solid #fff',
+                  boxShadow: '0 0 0 2px #ddd',
+                  flexShrink: 0
+                }} />
+                
+                {/* Connection Info */}
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>
+                    {item.name}
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#666' }}>
+                    {item.connectionDetails.ip}:{item.connectionDetails.port} • {item.connectionDetails.vehicleType}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

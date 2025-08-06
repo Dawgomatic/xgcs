@@ -1,7 +1,7 @@
 [
   {
-    "id": "72f566e8-02f3-40c6-aefe-db09b7a34dba",
-    "name": "arducopter 72f566e8",
+    "id": "19fca33c-fdee-48e9-af08-8d4f86c947d9",
+    "name": "new",
     "vehicleType": "arducopter",
     "frameType": "X",
     "ipAddress": "localhost",
@@ -17,42 +17,11 @@
       "alt": 0
     },
     "status": "running",
-    "createdAt": "2025-08-06T21:02:03.293Z",
-    "processId": null,
-    "stats": {
-      "uptime": 2,
-      "cpuUsage": 16.38866744658168,
-      "memoryUsage": 7.977408530906089,
-      "containerStatus": "running",
-      "mockData": null
-    },
-    "containerId": "51bc5738c731a1b9305e212db4416b3789d7b51e1c6c9d6da46ff4d066dd60b9",
-    "mockData": null,
-    "startedAt": "2025-08-06T21:02:06.086Z"
-  },
-  {
-    "id": "c6670d76-8d38-49e0-8986-9cebeb578a9a",
-    "name": "new",
-    "vehicleType": "arducopter",
-    "frameType": "X",
-    "ipAddress": "localhost",
-    "port": 5770,
-    "systemId": 1,
-    "speedFactor": 1,
-    "enableLogging": true,
-    "enableVideo": false,
-    "customParams": "",
-    "homeLocation": {
-      "lat": 37.7749,
-      "lng": -122.4194,
-      "alt": 0
-    },
-    "status": "running",
-    "createdAt": "2025-08-06T21:43:51.121Z",
+    "createdAt": "2025-08-06T22:02:09.792Z",
     "processId": null,
     "stats": null,
-    "containerId": "a340a95afcc69aa8fbe2e637004153381d984d1bc66c398ef80608a3821119f7",
+    "containerId": "f76bc0ef3661ba08ffc459a9ef03b174ff490dae14b63b7f85f08db82eb72623",
     "mockData": null,
-    "startedAt": "2025-08-06T21:43:53.344Z"
+    "startedAt": "2025-08-06T22:02:12.688Z"
   }
 ]
