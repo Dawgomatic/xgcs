@@ -168,7 +168,15 @@ const FlightDisplay = () => {
 
   // Main content layout - maps from QGC FlyView layout
   return (
-    <Box sx={{ height: '100vh', width: '100vw', position: 'relative', overflow: 'hidden' }}>
+    <Box sx={{ 
+      position: 'fixed',
+      top: 60, // Account for top bar height
+      left: 0,
+      right: 0,
+      bottom: 0,
+      overflow: 'hidden',
+      zIndex: 1
+    }}>
       {/* Full-screen Map */}
       <Box sx={{ 
         position: 'absolute',
