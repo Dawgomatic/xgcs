@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Paper, Typography, Chip } from '@mui/material';
 import { useVehicles } from '../context/VehicleContext';
+import FlightModeSelector from './FlightModeSelector';
 
 const FlightInstruments = () => {
   const { vehicles } = useVehicles();
   const [currentVehicle, setCurrentVehicle] = useState(null);
+  const [flightMode, setFlightMode] = useState('MANUAL');
 
   // Get the first connected vehicle for instrument data
   useEffect(() => {
@@ -366,10 +368,25 @@ const FlightInstruments = () => {
             </Box>
           </Box>
 
-          {/* Compass Band */}
+          {/* Flight Mode Selector */}
           <Box sx={{
             position: 'absolute',
             top: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 10
+          }}>
+            <FlightModeSelector 
+              flightMode={flightMode}
+              onFlightModeChange={setFlightMode}
+              availableModes={currentVehicle?.flightModes || []}
+            />
+          </Box>
+
+          {/* Compass Band */}
+          <Box sx={{
+            position: 'absolute',
+            top: '70px',
             left: '50%',
             transform: 'translateX(-50%)',
             width: '220px',

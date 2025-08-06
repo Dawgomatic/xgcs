@@ -177,97 +177,87 @@ const FlightDisplay = () => {
       overflow: 'hidden',
       zIndex: 1
     }}>
-      {/* Full-screen Map */}
-      <Box sx={{ 
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 1
-      }}>
-        <FlightMap 
-          vehicle={activeVehicle}
-          vehicles={vehicles}
-        />
-      </Box>
+      {/* Side-by-side layout with Grid */}
+      <Grid container sx={{ height: '100%' }}>
+        {/* Map on the left */}
+        <Grid item xs={12} md={8} sx={{ height: '100%', position: 'relative' }}>
+          <FlightMap 
+            vehicle={activeVehicle}
+            vehicles={vehicles}
+          />
+        </Grid>
 
-      {/* Floating Right Panel - Collapsible */}
-      <Box sx={{ 
-        position: 'absolute',
-        top: 16,
-        right: 16,
-        width: 320,
-        maxHeight: 'calc(100vh - 80px)', // Account for status bar height
-        zIndex: 10,
-        bgcolor: 'background.paper',
-        borderRadius: 2,
-        boxShadow: 3,
-        border: 1,
-        borderColor: 'divider',
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden'
-      }}>
-        {/* Panel Header with Collapse Toggle */}
-        <Box sx={{ 
-          p: 1, 
-          borderBottom: 1, 
-          borderColor: 'divider',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          bgcolor: 'background.default'
-        }}>
-          <Typography variant="subtitle2">Flight Instruments</Typography>
-          <IconButton 
-            size="small" 
-            onClick={() => setInstrumentPanelVisible(!instrumentPanelVisible)}
-            title={instrumentPanelVisible ? "Hide Panel" : "Show Panel"}
-          >
-            {instrumentPanelVisible ? <Close /> : <Settings />}
-          </IconButton>
-        </Box>
-
-        {/* Panel Content */}
-        {instrumentPanelVisible && (
-          <>
-            {/* Tabs for right panel */}
-            <Tabs value={rightPanelTab} onChange={(_, v) => setRightPanelTab(v)} size="small">
-              <Tab label="Instruments" />
-              {activeVehicle && <Tab label="MAVLink Inspector" />}
-            </Tabs>
-            
-            {/* Tab panels */}
-            <Box sx={{ flex: 1, overflow: 'hidden' }}>
-              {rightPanelTab === 0 && (
-                <Box sx={{ height: '100%', overflow: 'auto' }}>
-                  <InstrumentPanel vehicle={activeVehicle} />
-                </Box>
-              )}
-              {rightPanelTab === 1 && activeVehicle && (
-                <Box sx={{ height: '100%', overflow: 'auto' }}>
-                  <MavlinkInspector vehicleId={activeVehicle.id} />
-                </Box>
-              )}
+        {/* Instruments on the right */}
+        <Grid item xs={12} md={4} sx={{ height: '100%', overflow: 'hidden' }}>
+          <Box sx={{ 
+            height: '100%',
+            bgcolor: 'background.paper',
+            borderLeft: 1,
+            borderColor: 'divider',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            {/* Panel Header */}
+            <Box sx={{ 
+              p: 1, 
+              borderBottom: 1, 
+              borderColor: 'divider',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              bgcolor: 'background.default'
+            }}>
+              <Typography variant="subtitle2">Flight Instruments</Typography>
+              <IconButton 
+                size="small" 
+                onClick={() => setInstrumentPanelVisible(!instrumentPanelVisible)}
+                title={instrumentPanelVisible ? "Hide Panel" : "Show Panel"}
+              >
+                {instrumentPanelVisible ? <Close /> : <Settings />}
+              </IconButton>
             </Box>
 
-            {/* Video Panel - maps from QGC FlyViewVideo */}
-            {videoVisible && (
-              <Box sx={{ height: 240, p: 1, borderTop: 1, borderColor: 'divider' }}>
-                <VideoPanel vehicle={activeVehicle} />
-              </Box>
+            {/* Panel Content */}
+            {instrumentPanelVisible && (
+              <>
+                {/* Tabs for right panel */}
+                <Tabs value={rightPanelTab} onChange={(_, v) => setRightPanelTab(v)} size="small">
+                  <Tab label="Instruments" />
+                  {activeVehicle && <Tab label="MAVLink Inspector" />}
+                </Tabs>
+                
+                {/* Tab panels */}
+                <Box sx={{ flex: 1, overflow: 'hidden' }}>
+                  {rightPanelTab === 0 && (
+                    <Box sx={{ height: '100%', overflow: 'auto' }}>
+                      <InstrumentPanel vehicle={activeVehicle} />
+                    </Box>
+                  )}
+                  {rightPanelTab === 1 && activeVehicle && (
+                    <Box sx={{ height: '100%', overflow: 'auto' }}>
+                      <MavlinkInspector vehicleId={activeVehicle.id} />
+                    </Box>
+                  )}
+                </Box>
+
+                {/* Video Panel - maps from QGC FlyViewVideo */}
+                {videoVisible && (
+                  <Box sx={{ height: 240, p: 1, borderTop: 1, borderColor: 'divider' }}>
+                    <VideoPanel vehicle={activeVehicle} />
+                  </Box>
+                )}
+              </>
             )}
-          </>
-        )}
-      </Box>
+          </Box>
+        </Grid>
+      </Grid>
 
       {/* Floating Status Bar */}
       <Box sx={{ 
         position: 'absolute',
         bottom: 16,
         left: 16,
-        right: 352, // Leave space for the instrument panel (320px + 16px margin + 16px gap)
+        right: 16,
         zIndex: 10,
         bgcolor: 'background.paper',
         borderRadius: 2,

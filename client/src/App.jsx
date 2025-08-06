@@ -6,7 +6,6 @@ import { ThemeProvider } from './context/ThemeContext';
 import { VehicleProvider } from './context/VehicleContext';
 import TopBar from './components/TopBar';
 import Settings from './pages/Settings';
-import HomePage from './pages/HomePage';
 import VehicleConnections from './pages/VehicleConnections';
 import TemplatePage from './pages/TemplatePage';
 import MissionPlanning from './pages/MissionPlanning';
@@ -37,7 +36,7 @@ function App() {
             <div className="content">
               <Routes>
                 <Route path="/settings" element={<Settings />} />
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<FlightDisplay />} />
                 <Route path="/flight-display" element={<FlightDisplay />} />
                 <Route path="/vehicle-connections" element={<VehicleConnections />} />
                 <Route path="/template" element={<TemplatePage />} />
