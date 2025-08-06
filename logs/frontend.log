@@ -548,3 +548,1105 @@ src/components/FlightMap.jsx
   Line 464:7:   Expected a default case                                                                                                                            default-case
 
 webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/FlightInstruments.jsx
+  Line 28:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 1:29:   'useState' is defined but never used            no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 11:3:   'ToggleButton' is defined but never used        no-unused-vars
+  Line 12:3:   'ToggleButtonGroup' is defined but never used   no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 23:3:   'Dashboard' is defined but never used           no-unused-vars
+  Line 24:3:   'ViewInAr' is defined but never used            no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+  Line 28:8:   'FlightInstruments' is defined but never used   no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 28:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 1:29:   'useState' is defined but never used            no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 11:3:   'ToggleButton' is defined but never used        no-unused-vars
+  Line 12:3:   'ToggleButtonGroup' is defined but never used   no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 23:3:   'Dashboard' is defined but never used           no-unused-vars
+  Line 24:3:   'ViewInAr' is defined but never used            no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+  Line 28:8:   'FlightInstruments' is defined but never used   no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/FlightInstruments.jsx
+  Line 28:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used                  no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used              no-unused-vars
+  Line 9:3:    'Paper' is defined but never used                       no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                        no-unused-vars
+  Line 11:3:   'ToggleButton' is defined but never used                no-unused-vars
+  Line 12:3:   'ToggleButtonGroup' is defined but never used           no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used          no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used                no-unused-vars
+  Line 23:3:   'Dashboard' is defined but never used                   no-unused-vars
+  Line 24:3:   'ViewInAr' is defined but never used                    no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used              no-unused-vars
+  Line 28:8:   'FlightInstruments' is defined but never used           no-unused-vars
+  Line 33:10:  'instrumentView' is assigned a value but never used     no-unused-vars
+  Line 33:26:  'setInstrumentView' is assigned a value but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 28:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used                  no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used              no-unused-vars
+  Line 9:3:    'Paper' is defined but never used                       no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                        no-unused-vars
+  Line 11:3:   'ToggleButton' is defined but never used                no-unused-vars
+  Line 12:3:   'ToggleButtonGroup' is defined but never used           no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used          no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used                no-unused-vars
+  Line 23:3:   'Dashboard' is defined but never used                   no-unused-vars
+  Line 24:3:   'ViewInAr' is defined but never used                    no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used              no-unused-vars
+  Line 28:8:   'FlightInstruments' is defined but never used           no-unused-vars
+  Line 33:10:  'instrumentView' is assigned a value but never used     no-unused-vars
+  Line 33:26:  'setInstrumentView' is assigned a value but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/FlightInstruments.jsx
+  Line 28:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 28:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 19:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 22:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 27:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/components/InstrumentPanel.jsx
+  Line 29:47:   'useState' is not defined           no-undef
+  Line 346:12:  'ToggleButtonGroup' is not defined  react/jsx-no-undef
+  Line 353:14:  'ToggleButton' is not defined       react/jsx-no-undef
+  Line 354:16:  'Dashboard' is not defined          react/jsx-no-undef
+  Line 357:14:  'ToggleButton' is not defined       react/jsx-no-undef
+  Line 358:16:  'ViewInAr' is not defined           react/jsx-no-undef
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 17:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 20:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 23:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+ERROR in [eslint] 
+src/components/InstrumentPanel.jsx
+  Line 29:47:   'useState' is not defined           no-undef
+  Line 346:12:  'ToggleButtonGroup' is not defined  react/jsx-no-undef
+  Line 353:14:  'ToggleButton' is not defined       react/jsx-no-undef
+  Line 354:16:  'Dashboard' is not defined          react/jsx-no-undef
+  Line 357:14:  'ToggleButton' is not defined       react/jsx-no-undef
+  Line 358:16:  'ViewInAr' is not defined           react/jsx-no-undef
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/components/InstrumentPanel.jsx
+  Line 344:12:  'ToggleButtonGroup' is not defined  react/jsx-no-undef
+  Line 345:20:  'instrumentView' is not defined     no-undef
+  Line 347:50:  'setInstrumentView' is not defined  no-undef
+  Line 351:14:  'ToggleButton' is not defined       react/jsx-no-undef
+  Line 352:16:  'Dashboard' is not defined          react/jsx-no-undef
+  Line 355:14:  'ToggleButton' is not defined       react/jsx-no-undef
+  Line 356:16:  'ViewInAr' is not defined           react/jsx-no-undef
+  Line 364:8:   'instrumentView' is not defined     no-undef
+  Line 371:8:   'instrumentView' is not defined     no-undef
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used          no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used      no-unused-vars
+  Line 9:3:    'Paper' is defined but never used               no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                no-unused-vars
+  Line 17:3:   'CompassCalibration' is defined but never used  no-unused-vars
+  Line 20:3:   'SatelliteAlt' is defined but never used        no-unused-vars
+  Line 23:10:  'VehicleContext' is defined but never used      no-unused-vars
+
+ERROR in [eslint] 
+src/components/InstrumentPanel.jsx
+  Line 344:12:  'ToggleButtonGroup' is not defined  react/jsx-no-undef
+  Line 345:20:  'instrumentView' is not defined     no-undef
+  Line 347:50:  'setInstrumentView' is not defined  no-undef
+  Line 351:14:  'ToggleButton' is not defined       react/jsx-no-undef
+  Line 352:16:  'Dashboard' is not defined          react/jsx-no-undef
+  Line 355:14:  'ToggleButton' is not defined       react/jsx-no-undef
+  Line 356:16:  'ViewInAr' is not defined           react/jsx-no-undef
+  Line 364:8:   'instrumentView' is not defined     no-undef
+  Line 371:8:   'instrumentView' is not defined     no-undef
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used                  no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used              no-unused-vars
+  Line 9:3:    'Paper' is defined but never used                       no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                        no-unused-vars
+  Line 17:3:   'CompassCalibration' is defined but never used          no-unused-vars
+  Line 20:3:   'SatelliteAlt' is defined but never used                no-unused-vars
+  Line 23:10:  'VehicleContext' is defined but never used              no-unused-vars
+  Line 40:9:   'ArtificialHorizon' is assigned a value but never used  no-unused-vars
+  Line 93:9:   'Compass' is assigned a value but never used            no-unused-vars
+  Line 186:9:  'TelemetryValues' is assigned a value but never used    no-unused-vars
+  Line 247:9:  'FlightModeDisplay' is assigned a value but never used  no-unused-vars
+  Line 267:9:  'ConnectionStatus' is assigned a value but never used   no-unused-vars
+  Line 297:9:  'AltitudeChart' is assigned a value but never used      no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used                  no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used              no-unused-vars
+  Line 9:3:    'Paper' is defined but never used                       no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                        no-unused-vars
+  Line 17:3:   'CompassCalibration' is defined but never used          no-unused-vars
+  Line 20:3:   'SatelliteAlt' is defined but never used                no-unused-vars
+  Line 23:10:  'VehicleContext' is defined but never used              no-unused-vars
+  Line 40:9:   'ArtificialHorizon' is assigned a value but never used  no-unused-vars
+  Line 93:9:   'Compass' is assigned a value but never used            no-unused-vars
+  Line 186:9:  'TelemetryValues' is assigned a value but never used    no-unused-vars
+  Line 247:9:  'FlightModeDisplay' is assigned a value but never used  no-unused-vars
+  Line 267:9:  'ConnectionStatus' is assigned a value but never used   no-unused-vars
+  Line 297:9:  'AltitudeChart' is assigned a value but never used      no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used                  no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used              no-unused-vars
+  Line 9:3:    'Paper' is defined but never used                       no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                        no-unused-vars
+  Line 17:3:   'CompassCalibration' is defined but never used          no-unused-vars
+  Line 20:3:   'SatelliteAlt' is defined but never used                no-unused-vars
+  Line 23:10:  'VehicleContext' is defined but never used              no-unused-vars
+  Line 40:9:   'ArtificialHorizon' is assigned a value but never used  no-unused-vars
+  Line 93:9:   'Compass' is assigned a value but never used            no-unused-vars
+  Line 186:9:  'TelemetryValues' is assigned a value but never used    no-unused-vars
+  Line 247:9:  'FlightModeDisplay' is assigned a value but never used  no-unused-vars
+  Line 267:9:  'ConnectionStatus' is assigned a value but never used   no-unused-vars
+  Line 297:9:  'AltitudeChart' is assigned a value but never used      no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 1:17:   'useContext' is defined but never used                  no-unused-vars
+  Line 7:3:    'LinearProgress' is defined but never used              no-unused-vars
+  Line 9:3:    'Paper' is defined but never used                       no-unused-vars
+  Line 10:3:   'Chip' is defined but never used                        no-unused-vars
+  Line 17:3:   'CompassCalibration' is defined but never used          no-unused-vars
+  Line 20:3:   'SatelliteAlt' is defined but never used                no-unused-vars
+  Line 23:10:  'VehicleContext' is defined but never used              no-unused-vars
+  Line 40:9:   'ArtificialHorizon' is assigned a value but never used  no-unused-vars
+  Line 93:9:   'Compass' is assigned a value but never used            no-unused-vars
+  Line 186:9:  'TelemetryValues' is assigned a value but never used    no-unused-vars
+  Line 247:9:  'FlightModeDisplay' is assigned a value but never used  no-unused-vars
+  Line 267:9:  'ConnectionStatus' is assigned a value but never used   no-unused-vars
+  Line 297:9:  'AltitudeChart' is assigned a value but never used      no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/components/InstrumentPanel.jsx
+  Line 28:8:    'Card' is not defined                 react/jsx-no-undef
+  Line 29:10:   'CardContent' is not defined          react/jsx-no-undef
+  Line 80:8:    'Card' is not defined                 react/jsx-no-undef
+  Line 81:10:   'CardContent' is not defined          react/jsx-no-undef
+  Line 174:16:  'Height' is not defined               react/jsx-no-undef
+  Line 181:16:  'Speed' is not defined                react/jsx-no-undef
+  Line 188:16:  'Battery90' is not defined            react/jsx-no-undef
+  Line 195:16:  'GpsFixed' is not defined             react/jsx-no-undef
+  Line 201:8:   'Card' is not defined                 react/jsx-no-undef
+  Line 202:10:  'CardContent' is not defined          react/jsx-no-undef
+  Line 206:12:  'Grid' is not defined                 react/jsx-no-undef
+  Line 208:16:  'Grid' is not defined                 react/jsx-no-undef
+  Line 230:6:   'Card' is not defined                 react/jsx-no-undef
+  Line 231:8:   'CardContent' is not defined          react/jsx-no-undef
+  Line 233:12:  'Flight' is not defined               react/jsx-no-undef
+  Line 250:6:   'Card' is not defined                 react/jsx-no-undef
+  Line 251:8:   'CardContent' is not defined          react/jsx-no-undef
+  Line 253:12:  'SignalCellular4Bar' is not defined   react/jsx-no-undef
+  Line 292:8:   'Card' is not defined                 react/jsx-no-undef
+  Line 293:10:  'CardContent' is not defined          react/jsx-no-undef
+  Line 298:14:  'ResponsiveContainer' is not defined  react/jsx-no-undef
+  Line 299:16:  'LineChart' is not defined            react/jsx-no-undef
+  Line 300:18:  'CartesianGrid' is not defined        react/jsx-no-undef
+  Line 301:18:  'XAxis' is not defined                react/jsx-no-undef
+  Line 302:18:  'YAxis' is not defined                react/jsx-no-undef
+  Line 303:18:  'Tooltip' is not defined              react/jsx-no-undef
+  Line 304:18:  'Line' is not defined                 react/jsx-no-undef
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+src/components/InstrumentPanel.jsx
+  Line 22:9:   'ArtificialHorizon' is assigned a value but never used  no-unused-vars
+  Line 75:9:   'Compass' is assigned a value but never used            no-unused-vars
+  Line 168:9:  'TelemetryValues' is assigned a value but never used    no-unused-vars
+  Line 229:9:  'FlightModeDisplay' is assigned a value but never used  no-unused-vars
+  Line 249:9:  'ConnectionStatus' is assigned a value but never used   no-unused-vars
+  Line 279:9:  'AltitudeChart' is assigned a value but never used      no-unused-vars
+
+ERROR in [eslint] 
+src/components/InstrumentPanel.jsx
+  Line 28:8:    'Card' is not defined                 react/jsx-no-undef
+  Line 29:10:   'CardContent' is not defined          react/jsx-no-undef
+  Line 80:8:    'Card' is not defined                 react/jsx-no-undef
+  Line 81:10:   'CardContent' is not defined          react/jsx-no-undef
+  Line 174:16:  'Height' is not defined               react/jsx-no-undef
+  Line 181:16:  'Speed' is not defined                react/jsx-no-undef
+  Line 188:16:  'Battery90' is not defined            react/jsx-no-undef
+  Line 195:16:  'GpsFixed' is not defined             react/jsx-no-undef
+  Line 201:8:   'Card' is not defined                 react/jsx-no-undef
+  Line 202:10:  'CardContent' is not defined          react/jsx-no-undef
+  Line 206:12:  'Grid' is not defined                 react/jsx-no-undef
+  Line 208:16:  'Grid' is not defined                 react/jsx-no-undef
+  Line 230:6:   'Card' is not defined                 react/jsx-no-undef
+  Line 231:8:   'CardContent' is not defined          react/jsx-no-undef
+  Line 233:12:  'Flight' is not defined               react/jsx-no-undef
+  Line 250:6:   'Card' is not defined                 react/jsx-no-undef
+  Line 251:8:   'CardContent' is not defined          react/jsx-no-undef
+  Line 253:12:  'SignalCellular4Bar' is not defined   react/jsx-no-undef
+  Line 292:8:   'Card' is not defined                 react/jsx-no-undef
+  Line 293:10:  'CardContent' is not defined          react/jsx-no-undef
+  Line 298:14:  'ResponsiveContainer' is not defined  react/jsx-no-undef
+  Line 299:16:  'LineChart' is not defined            react/jsx-no-undef
+  Line 300:18:  'CartesianGrid' is not defined        react/jsx-no-undef
+  Line 301:18:  'XAxis' is not defined                react/jsx-no-undef
+  Line 302:18:  'YAxis' is not defined                react/jsx-no-undef
+  Line 303:18:  'Tooltip' is not defined              react/jsx-no-undef
+  Line 304:18:  'Line' is not defined                 react/jsx-no-undef
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/FlightInstruments.jsx
+  Line 30:9:  'degToRad' is assigned a value but never used  no-unused-vars
+
+src/components/FlightMap.jsx
+  Line 2:52:    'Button' is defined but never used                                                                                                                 no-unused-vars
+  Line 11:3:    'Visibility' is defined but never used                                                                                                             no-unused-vars
+  Line 12:3:    'VisibilityOff' is defined but never used                                                                                                          no-unused-vars
+  Line 13:3:    'Settings' is defined but never used                                                                                                               no-unused-vars
+  Line 34:19:   'setShowSun' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 35:20:   'setShowMoon' is assigned a value but never used                                                                                                   no-unused-vars
+  Line 36:21:   'setShowStars' is assigned a value but never used                                                                                                  no-unused-vars
+  Line 141:9:   'removeDroneEntity' is assigned a value but never used                                                                                             no-unused-vars
+  Line 204:6:   React Hook useEffect has missing dependencies: 'configureGlobe', 'mapType', and 'showTerrain'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 438:17:  'testSphere' is assigned a value but never used                                                                                                    no-unused-vars
+  Line 451:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 458:6:   React Hook useEffect has a missing dependency: 'configureGlobe'. Either include it or remove the dependency array                                  react-hooks/exhaustive-deps
+  Line 464:7:   Expected a default case                                                                                                                            default-case
+
+webpack compiled with 1 warning
