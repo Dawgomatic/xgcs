@@ -13,7 +13,9 @@ import {
   Settings,
   ViewInAr,
   ViewModule,
-  ViewComfy
+  ViewComfy,
+  Menu,
+  Close
 } from '@mui/icons-material';
 import * as Cesium from 'cesium';
 import { useVehicles } from '../context/VehicleContext';
@@ -21,7 +23,9 @@ import { useVehicles } from '../context/VehicleContext';
 const FlightMap = () => {
   const cesiumContainer = useRef(null);
   const viewerRef = useRef(null);
+  const buttonRef = useRef(null);
   const [mapType, setMapType] = useState('osm');
+  const [buttonPressed, setButtonPressed] = useState(false);
   const [showTerrain, setShowTerrain] = useState(false);
   const [showGlobe, setShowGlobe] = useState(true);
   const [showAtmosphere, setShowAtmosphere] = useState(true);
@@ -32,9 +36,12 @@ const FlightMap = () => {
   const [showStars, setShowStars] = useState(true);
   const [sceneMode, setSceneMode] = useState('3D');
   const [showDrones, setShowDrones] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Get vehicle data from context
   const { vehicles } = useVehicles();
+
+
 
   // Create drone entity on the map
   const createDroneEntity = (viewer, vehicle) => {
@@ -556,213 +563,297 @@ const FlightMap = () => {
     }
   };
 
-  // Map controls overlay
+    // Map controls overlay
   const MapControls = () => (
-    <Box sx={{ 
-      position: 'absolute', 
-      top: 16, 
-      right: 16, 
-      zIndex: 1000,
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 1
-    }}>
-      {/* Scene Mode Controls */}
-      <Paper elevation={3} sx={{ p: 1 }}>
-        <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-          View Mode
-        </Typography>
-        <ToggleButtonGroup
-          value={sceneMode}
-          exclusive
-          onChange={(e, newMode) => newMode && setSceneMode(newMode)}
-          size="small"
-          orientation="vertical"
-        >
-          <ToggleButton value="2D" aria-label="2D">
-            <ViewComfy />
-          </ToggleButton>
-          <ToggleButton value="2.5D" aria-label="2.5D">
-            <ViewModule />
-          </ToggleButton>
-          <ToggleButton value="3D" aria-label="3D">
-            <ViewInAr />
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </Paper>
-
-      {/* Camera Controls */}
-      <Paper elevation={3} sx={{ p: 1 }}>
-        <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-          Camera
-        </Typography>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-          <IconButton 
-            size="small" 
-            onClick={centerOnGlobe}
-            title="Center on Globe"
-          >
-            <MyLocation />
-          </IconButton>
-          <IconButton 
-            size="small" 
-            onClick={centerOnDrone}
-            title="Center on Drone"
-          >
-            <CenterFocusStrong />
-          </IconButton>
-          <IconButton 
-            size="small" 
-            onClick={zoomIn}
-            title="Zoom In"
-          >
-            <ZoomIn />
-          </IconButton>
-          <IconButton 
-            size="small" 
-            onClick={zoomOut}
-            title="Zoom Out"
-          >
-            <ZoomOut />
-          </IconButton>
-        </Box>
-      </Paper>
-
-      {/* Map Type Controls */}
-      <Paper elevation={3} sx={{ p: 1 }}>
-        <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-          Map Type (Current: {mapType})
-        </Typography>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-          <Chip
-            icon={<Layers />}
-            label="OpenStreetMap"
-            size="small"
-            onClick={() => setMapType('osm')}
-            clickable
-            color={mapType === 'osm' ? 'primary' : 'default'}
-          />
-          <Chip
-            icon={<Satellite />}
-            label="Satellite"
-            size="small"
-            onClick={() => setMapType('satellite')}
-            clickable
-            color={mapType === 'satellite' ? 'primary' : 'default'}
-          />
-          <Chip
-            icon={<Layers />}
-            label="Bing Maps"
-            size="small"
-            onClick={() => setMapType('bing')}
-            clickable
-            color={mapType === 'bing' ? 'primary' : 'default'}
-          />
-          <Chip
-            icon={<Terrain />}
-            label="Terrain"
-            size="small"
-            onClick={() => setMapType('terrain')}
-            clickable
-            color={mapType === 'terrain' ? 'primary' : 'default'}
-          />
-        </Box>
-      </Paper>
-
-      {/* Terrain Control */}
-      <Paper elevation={3} sx={{ p: 1 }}>
-        <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-          Terrain (Current: {showTerrain ? 'Enabled' : 'Disabled'})
-        </Typography>
-        <FormControlLabel
-          control={
-            <Switch
-              size="small"
-              checked={showTerrain}
-              onChange={(e) => setShowTerrain(e.target.checked)}
-            />
+    <>
+      {/* Menu Toggle Button */}
+      <button
+        ref={buttonRef}
+        style={{
+          position: 'absolute',
+          top: 16,
+          right: 16,
+          zIndex: 10001,
+          backgroundColor: buttonPressed ? 'rgba(200, 200, 200, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+          borderRadius: '8px',
+          boxShadow: buttonPressed ? '0 2px 8px rgba(0, 0, 0, 0.4)' : '0 4px 12px rgba(0, 0, 0, 0.3)',
+          border: '1px solid rgba(0, 0, 0, 0.1)',
+          width: 56,
+          height: 56,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          userSelect: 'none',
+          outline: 'none',
+          pointerEvents: 'auto',
+          transform: buttonPressed ? 'scale(0.95)' : 'scale(1)',
+          transition: 'all 0.1s ease',
+        }}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setButtonPressed(true);
+        }}
+        onMouseUp={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (buttonPressed) {
+            console.log('Menu button released, toggling menu. Current state:', menuOpen);
+            setMenuOpen(!menuOpen);
+            setButtonPressed(false);
           }
-          label={<Typography variant="caption">3D Terrain</Typography>}
-        />
-      </Paper>
+        }}
+        onMouseLeave={() => {
+          setButtonPressed(false);
+        }}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Menu button clicked (fallback), current state:', menuOpen);
+          setMenuOpen(!menuOpen);
+        }}
+        title={menuOpen ? "Close Menu" : "Open Menu"}
+      >
+        {menuOpen ? <Close /> : <Menu />}
+      </button>
 
-      {/* Drone Controls */}
-      <Paper elevation={3} sx={{ p: 1 }}>
-        <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-          Drones ({vehicles.filter(v => v.connected).length} connected)
-        </Typography>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-          <FormControlLabel
-            control={
-              <Switch
+      {/* Menu Panel */}
+      {menuOpen && (
+        <Box sx={{ 
+          position: 'absolute', 
+          top: 16, 
+          right: 80, // Position to the left of the toggle button
+          zIndex: 9998,
+          maxHeight: 'calc(100vh - 32px)',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          minWidth: 280, // Ensure consistent width
+          pointerEvents: 'auto',
+        }}
+        >
+          <Box sx={{
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+            pr: 1,
+            '&::-webkit-scrollbar': {
+              width: '8px',
+            },
+            '&::-webkit-scrollbar-track': {
+              background: 'rgba(0, 0, 0, 0.1)',
+              borderRadius: '4px',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: 'rgba(0, 0, 0, 0.3)',
+              borderRadius: '4px',
+              '&:hover': {
+                background: 'rgba(0, 0, 0, 0.5)',
+              },
+            },
+          }}>
+            {/* Scene Mode Controls */}
+            <Paper elevation={3} sx={{ p: 1 }}>
+              <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                View Mode
+              </Typography>
+              <ToggleButtonGroup
+                value={sceneMode}
+                exclusive
+                onChange={(e, newMode) => newMode && setSceneMode(newMode)}
                 size="small"
-                checked={showDrones}
-                onChange={(e) => setShowDrones(e.target.checked)}
-              />
-            }
-            label={<Typography variant="caption">Show Drones</Typography>}
-          />
-          {vehicles.filter(v => v.connected).map(vehicle => (
-            <Chip
-              key={vehicle.id}
-              label={`${vehicle.name || vehicle.id} - ${vehicle.altitude?.toFixed(1) || 0}m`}
-              size="small"
-              color={vehicle.coordinate ? "primary" : "default"}
-              variant={vehicle.coordinate ? "filled" : "outlined"}
-            />
-          ))}
-        </Box>
-      </Paper>
+                orientation="vertical"
+              >
+                <ToggleButton value="2D" aria-label="2D">
+                  <ViewComfy />
+                </ToggleButton>
+                <ToggleButton value="2.5D" aria-label="2.5D">
+                  <ViewModule />
+                </ToggleButton>
+                <ToggleButton value="3D" aria-label="3D">
+                  <ViewInAr />
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Paper>
 
-      {/* Globe Settings */}
-      <Paper elevation={3} sx={{ p: 1 }}>
-        <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-          Globe Settings
-        </Typography>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-          <FormControlLabel
-            control={
-              <Switch
-                size="small"
-                checked={showGlobe}
-                onChange={(e) => setShowGlobe(e.target.checked)}
+            {/* Camera Controls */}
+            <Paper elevation={3} sx={{ p: 1 }}>
+              <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                Camera
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                <IconButton 
+                  size="small" 
+                  onClick={centerOnGlobe}
+                  title="Center on Globe"
+                >
+                  <MyLocation />
+                </IconButton>
+                <IconButton 
+                  size="small" 
+                  onClick={centerOnDrone}
+                  title="Center on Drone"
+                >
+                  <CenterFocusStrong />
+                </IconButton>
+                <IconButton 
+                  size="small" 
+                  onClick={zoomIn}
+                  title="Zoom In"
+                >
+                  <ZoomIn />
+                </IconButton>
+                <IconButton 
+                  size="small" 
+                  onClick={zoomOut}
+                  title="Zoom Out"
+                >
+                  <ZoomOut />
+                </IconButton>
+              </Box>
+            </Paper>
+
+            {/* Map Type Controls */}
+            <Paper elevation={3} sx={{ p: 1 }}>
+              <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                Map Type (Current: {mapType})
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                <Chip
+                  icon={<Layers />}
+                  label="OpenStreetMap"
+                  size="small"
+                  onClick={() => setMapType('osm')}
+                  clickable
+                  color={mapType === 'osm' ? 'primary' : 'default'}
+                />
+                <Chip
+                  icon={<Satellite />}
+                  label="Satellite"
+                  size="small"
+                  onClick={() => setMapType('satellite')}
+                  clickable
+                  color={mapType === 'satellite' ? 'primary' : 'default'}
+                />
+                <Chip
+                  icon={<Layers />}
+                  label="Bing Maps"
+                  size="small"
+                  onClick={() => setMapType('bing')}
+                  clickable
+                  color={mapType === 'bing' ? 'primary' : 'default'}
+                />
+                <Chip
+                  icon={<Terrain />}
+                  label="Terrain"
+                  size="small"
+                  onClick={() => setMapType('terrain')}
+                  clickable
+                  color={mapType === 'terrain' ? 'primary' : 'default'}
+                />
+              </Box>
+            </Paper>
+
+            {/* Terrain Control */}
+            <Paper elevation={3} sx={{ p: 1 }}>
+              <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                Terrain (Current: {showTerrain ? 'Enabled' : 'Disabled'})
+              </Typography>
+              <FormControlLabel
+                control={
+                  <Switch
+                    size="small"
+                    checked={showTerrain}
+                    onChange={(e) => setShowTerrain(e.target.checked)}
+                  />
+                }
+                label={<Typography variant="caption">3D Terrain</Typography>}
               />
-            }
-            label={<Typography variant="caption">Globe</Typography>}
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                size="small"
-                checked={showAtmosphere}
-                onChange={(e) => setShowAtmosphere(e.target.checked)}
-              />
-            }
-            label={<Typography variant="caption">Atmosphere</Typography>}
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                size="small"
-                checked={showFog}
-                onChange={(e) => setShowFog(e.target.checked)}
-              />
-            }
-            label={<Typography variant="caption">Fog</Typography>}
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                size="small"
-                checked={showSkyBox}
-                onChange={(e) => setShowSkyBox(e.target.checked)}
-              />
-            }
-            label={<Typography variant="caption">Sky Box</Typography>}
-          />
+            </Paper>
+
+            {/* Drone Controls */}
+            <Paper elevation={3} sx={{ p: 1 }}>
+              <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                Drones ({vehicles.filter(v => v.connected).length} connected)
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      size="small"
+                      checked={showDrones}
+                      onChange={(e) => setShowDrones(e.target.checked)}
+                    />
+                  }
+                  label={<Typography variant="caption">Show Drones</Typography>}
+                />
+                {vehicles.filter(v => v.connected).map(vehicle => (
+                  <Chip
+                    key={vehicle.id}
+                    label={`${vehicle.name || vehicle.id} - ${vehicle.altitude?.toFixed(1) || 0}m`}
+                    size="small"
+                    color={vehicle.coordinate ? "primary" : "default"}
+                    variant={vehicle.coordinate ? "filled" : "outlined"}
+                  />
+                ))}
+              </Box>
+            </Paper>
+
+            {/* Globe Settings */}
+            <Paper elevation={3} sx={{ p: 1 }}>
+              <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                Globe Settings
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      size="small"
+                      checked={showGlobe}
+                      onChange={(e) => setShowGlobe(e.target.checked)}
+                    />
+                  }
+                  label={<Typography variant="caption">Globe</Typography>}
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      size="small"
+                      checked={showAtmosphere}
+                      onChange={(e) => setShowAtmosphere(e.target.checked)}
+                    />
+                  }
+                  label={<Typography variant="caption">Atmosphere</Typography>}
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      size="small"
+                      checked={showFog}
+                      onChange={(e) => setShowFog(e.target.checked)}
+                    />
+                  }
+                  label={<Typography variant="caption">Fog</Typography>}
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      size="small"
+                      checked={showSkyBox}
+                      onChange={(e) => setShowSkyBox(e.target.checked)}
+                    />
+                  }
+                  label={<Typography variant="caption">Sky Box</Typography>}
+                />
+              </Box>
+            </Paper>
+          </Box>
         </Box>
-      </Paper>
-    </Box>
+      )}
+    </>
   );
 
   return (
@@ -771,7 +862,28 @@ const FlightMap = () => {
             ref={cesiumContainer} 
             style={{ width: '100%', height: '100%' }}
           />
-          <MapControls />
+          
+          {/* UI Layer - Completely separate from Cesium */}
+          <Box sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            pointerEvents: 'none',
+            zIndex: 9999,
+          }}
+          >
+            <Box sx={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              pointerEvents: 'auto',
+              zIndex: 10000,
+            }}>
+              <MapControls />
+            </Box>
+          </Box>
     </Box>
   );
 };
