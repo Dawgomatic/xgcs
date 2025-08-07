@@ -337,6 +337,36 @@ int main() {
         bool success = ConnectionManager::instance().send_set_mode_command(vehicleId, mode);
         return crow::response(200, json{{"success", success}}.dump());
     });
+
+    // --- Jeremy: Add arm/disarm endpoints ---
+    CROW_ROUTE(app, "/api/command/arm").methods("POST"_method)
+    ([](const crow::request& req) {
+        std::cout << "[DEBUG] /api/command/arm called" << std::endl;
+        auto params = json::parse(req.body);
+        std::string vehicleId = params["vehicleId"].get<std::string>();
+        bool success = ConnectionManager::instance().send_arm_command(vehicleId);
+        return crow::response(200, json{{"success", success}}.dump());
+    });
+
+    CROW_ROUTE(app, "/api/command/disarm").methods("POST"_method)
+    ([](const crow::request& req) {
+        std::cout << "[DEBUG] /api/command/disarm called" << std::endl;
+        auto params = json::parse(req.body);
+        std::string vehicleId = params["vehicleId"].get<std::string>();
+        bool success = ConnectionManager::instance().send_disarm_command(vehicleId);
+        return crow::response(200, json{{"success", success}}.dump());
+    });
+    // --- End Jeremy patch for arm/disarm endpoints ---
+
+    // --- Jeremy: Add flight modes endpoint ---
+    CROW_ROUTE(app, "/api/vehicle/<string>/flight-modes").methods("GET"_method)
+    ([](const std::string& vehicle_id) {
+        std::cout << "[DEBUG] /api/vehicle/" << vehicle_id << "/flight-modes called" << std::endl;
+        auto result = ConnectionManager::instance().get_flight_modes(vehicle_id);
+        return crow::response(200, result);
+    });
+    // --- End Jeremy patch for flight modes endpoint ---
+
     // --- End Jeremy patch for command endpoints ---
 
     // --- Jeremy: Add parameter endpoints ---

@@ -44,12 +44,18 @@ public:
     bool send_rtl_command(const std::string& vehicle_id);
     bool send_pause_command(const std::string& vehicle_id);
     bool send_set_mode_command(const std::string& vehicle_id, const std::string& mode);
+    bool send_arm_command(const std::string& vehicle_id);
+    bool send_disarm_command(const std::string& vehicle_id);
     // --- End Jeremy patch for command methods ---
 
     // --- Jeremy: Add parameter management methods ---
     std::string get_all_parameters(const std::string& vehicle_id);
     bool set_parameter(const std::string& vehicle_id, const std::string& name, double value);
     // --- End Jeremy patch for parameter methods ---
+
+    // --- Jeremy: Add flight modes method ---
+    std::string get_flight_modes(const std::string& vehicle_id);
+    // --- End Jeremy patch for flight modes method ---
 
     // --- Jeremy: Add MAVLink message sending method ---
     bool send_mavlink_message(const std::string& vehicle_id, const std::string& message_type, const json& parameters);

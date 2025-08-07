@@ -988,6 +988,102 @@ bool ConnectionManager::send_set_mode_command(const std::string& vehicle_id, con
     std::cout << "Set mode command sent to " << vehicle_id << " for mode " << mode << ": " << (result == mavsdk::MavlinkPassthrough::Result::Success ? "SUCCESS" : "FAILED") << std::endl;
     return result == mavsdk::MavlinkPassthrough::Result::Success;
 }
+
+bool ConnectionManager::send_arm_command(const std::string& vehicle_id) {
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (!_mavlink_passthrough_plugins.count(vehicle_id)) {
+        std::cerr << "Vehicle " << vehicle_id << " not found for arm command" << std::endl;
+        return false;
+    }
+    
+    auto passthrough = _mavlink_passthrough_plugins[vehicle_id];
+    auto system = _systems[vehicle_id];
+    
+    mavlink_message_t msg;
+    mavlink_msg_command_long_pack(
+        passthrough->get_our_sysid(),
+        passthrough->get_our_compid(),
+        &msg,
+        system->get_system_id(),
+        0, // target component
+        MAV_CMD_COMPONENT_ARM_DISARM,
+        0, // confirmation
+        1.0f, // param1: arm (1 = arm, 0 = disarm)
+        0.0f, // param2: unused
+        0.0f, // param3: unused
+        0.0f, // param4: unused
+        0.0f, // param5: unused
+        0.0f, // param6: unused
+        0.0f  // param7: unused
+    );
+    
+    auto result = passthrough->send_message(msg);
+    std::cout << "Arm command sent to " << vehicle_id << ": " << (result == mavsdk::MavlinkPassthrough::Result::Success ? "SUCCESS" : "FAILED") << std::endl;
+    return result == mavsdk::MavlinkPassthrough::Result::Success;
+}
+
+bool ConnectionManager::send_disarm_command(const std::string& vehicle_id) {
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (!_mavlink_passthrough_plugins.count(vehicle_id)) {
+        std::cerr << "Vehicle " << vehicle_id << " not found for disarm command" << std::endl;
+        return false;
+    }
+    
+    auto passthrough = _mavlink_passthrough_plugins[vehicle_id];
+    auto system = _systems[vehicle_id];
+    
+    mavlink_message_t msg;
+    mavlink_msg_command_long_pack(
+        passthrough->get_our_sysid(),
+        passthrough->get_our_compid(),
+        &msg,
+        system->get_system_id(),
+        0, // target component
+        MAV_CMD_COMPONENT_ARM_DISARM,
+        0, // confirmation
+        0.0f, // param1: disarm (1 = arm, 0 = disarm)
+        0.0f, // param2: unused
+        0.0f, // param3: unused
+        0.0f, // param4: unused
+        0.0f, // param5: unused
+        0.0f, // param6: unused
+        0.0f  // param7: unused
+    );
+    
+    auto result = passthrough->send_message(msg);
+    std::cout << "Disarm command sent to " << vehicle_id << ": " << (result == mavsdk::MavlinkPassthrough::Result::Success ? "SUCCESS" : "FAILED") << std::endl;
+    return result == mavsdk::MavlinkPassthrough::Result::Success;
+}
+
+std::string ConnectionManager::get_flight_modes(const std::string& vehicle_id) {
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (!_systems.count(vehicle_id)) {
+        std::cerr << "Vehicle " << vehicle_id << " not found for flight modes" << std::endl;
+        return json{{"success", false}, {"error", "Vehicle not found"}}.dump();
+    }
+    
+    // Return a list of common ArduPilot flight modes
+    std::vector<std::string> flight_modes = {
+        "MANUAL",
+        "STABILIZED", 
+        "ALTHOLD",
+        "AUTO",
+        "RTL",
+        "LOITER",
+        "GUIDED",
+        "ACRO",
+        "CIRCLE",
+        "LAND"
+    };
+    
+    json result = {
+        {"success", true},
+        {"flightModes", flight_modes}
+    };
+    
+    std::cout << "Flight modes for " << vehicle_id << ": " << result.dump() << std::endl;
+    return result.dump();
+}
 // --- End Jeremy patch for command implementations ---
 
 // --- Jeremy: Add parameter management implementations ---

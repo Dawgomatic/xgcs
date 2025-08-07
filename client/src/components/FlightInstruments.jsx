@@ -10,7 +10,12 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Divider
+  Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button
 } from '@mui/material';
 import { Edit, Save, Cancel } from '@mui/icons-material';
 import { useVehicles } from '../context/VehicleContext';
@@ -21,6 +26,10 @@ const VehicleInstrumentCard = ({ vehicle, onNameChange }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(vehicle.name || `Vehicle ${vehicle.id}`);
   const [flightMode, setFlightMode] = useState(vehicle.flightMode || 'MANUAL');
+  
+  // @hallucinated - Flight mode dialog state
+  const [flightModeDialogOpen, setFlightModeDialogOpen] = useState(false);
+  const [availableFlightModes, setAvailableFlightModes] = useState([]);
 
   // Instrument data for this vehicle
   const instrumentData = {
@@ -82,29 +91,23 @@ const VehicleInstrumentCard = ({ vehicle, onNameChange }) => {
 
   // @hallucinated - Flight mode handler function
   const handleFlightMode = async (vehicleId) => {
-    // This would typically open a flight mode selector dialog
-    // For now, we'll cycle through common flight modes
-    const flightModes = ['MANUAL', 'STABILIZED', 'AUTO', 'RTL', 'LOITER'];
-    const currentIndex = flightModes.indexOf(vehicle.flightMode || 'MANUAL');
-    const nextMode = flightModes[(currentIndex + 1) % flightModes.length];
-    
+    // Get available flight modes from the vehicle
     try {
-      const response = await fetch('/api/command/flight-mode', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          vehicleId: vehicleId,
-          flightMode: nextMode 
-        })
-      });
-      
+      const response = await fetch(`/api/vehicle/${vehicleId}/flight-modes`);
       if (response.ok) {
-        console.log(`Flight mode changed to ${nextMode}`);
+        const data = await response.json();
+        if (data.success && data.flightModes) {
+          // Open flight mode selector dialog
+          setFlightModeDialogOpen(true);
+          setAvailableFlightModes(data.flightModes);
+        } else {
+          console.error('Failed to get flight modes');
+        }
       } else {
-        console.error('Flight mode change failed');
+        console.error('Error fetching flight modes');
       }
     } catch (error) {
-      console.error('Error changing flight mode:', error);
+      console.error('Error getting flight modes:', error);
     }
   };
 
@@ -771,6 +774,69 @@ const VehicleInstrumentCard = ({ vehicle, onNameChange }) => {
           </Box>
         </Box>
       </Box>
+
+      {/* Flight Mode Selection Dialog */}
+      <Dialog 
+        open={flightModeDialogOpen} 
+        onClose={() => setFlightModeDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle sx={{ bgcolor: '#1a1a1a', color: '#ffffff' }}>
+          Select Flight Mode
+        </DialogTitle>
+        <DialogContent sx={{ bgcolor: '#1a1a1a', color: '#ffffff' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 1 }}>
+            {availableFlightModes.map((mode) => (
+              <Button
+                key={mode}
+                variant={vehicle.flightMode === mode ? "contained" : "outlined"}
+                onClick={async () => {
+                  try {
+                    const response = await fetch('/api/command/flight-mode', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ 
+                        vehicleId: vehicle.id,
+                        flightMode: mode 
+                      })
+                    });
+                    
+                    if (response.ok) {
+                      console.log(`Flight mode changed to ${mode}`);
+                      setFlightModeDialogOpen(false);
+                    } else {
+                      console.error('Flight mode change failed');
+                    }
+                  } catch (error) {
+                    console.error('Error changing flight mode:', error);
+                  }
+                }}
+                sx={{
+                  justifyContent: 'flex-start',
+                  textTransform: 'none',
+                  color: vehicle.flightMode === mode ? '#ffffff' : '#2196f3',
+                  bgcolor: vehicle.flightMode === mode ? '#2196f3' : 'transparent',
+                  borderColor: '#2196f3',
+                  '&:hover': {
+                    bgcolor: vehicle.flightMode === mode ? '#1976d2' : 'rgba(33, 150, 243, 0.1)'
+                  }
+                }}
+              >
+                {mode}
+              </Button>
+            ))}
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ bgcolor: '#1a1a1a', color: '#ffffff' }}>
+          <Button 
+            onClick={() => setFlightModeDialogOpen(false)}
+            sx={{ color: '#ffffff' }}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

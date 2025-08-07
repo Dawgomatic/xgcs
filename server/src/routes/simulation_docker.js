@@ -228,22 +228,55 @@ class DockerManager {
     
     // Determine vehicle type and image
     let image, command;
+    
     switch (simulation.vehicleType.toLowerCase()) {
       case 'arducopter':
         image = 'custom-ardupilot-sitl:latest';
-        command = `python3 Tools/autotest/sim_vehicle.py -v ArduCopter -f ${simulation.frameType || 'X'} --sysid ${simulation.systemId || 1} --add-param-file=/tmp/frame_params.parm -A SERIAL0_PROTOCOL=2 -A STREAMRATE=10 -A SR0_POSITION=10 -A SR0_ATTITUDE=10 -A SR0_VFR_HUD=10 -A SR0_EXTENDED_STATUS=10`;
+        // Add default parameter files for ArduCopter (relative to ArduPilot root inside container)
+        const copterParamFiles = [
+          'Tools/autotest/default_params/copter.parm',
+          'Tools/autotest/default_params/copter-gps-for-yaw.parm'
+        ];
+        const copterParamArgs = copterParamFiles.map(file => `--add-param-file=${file}`).join(' ');
+        command = `python3 Tools/autotest/sim_vehicle.py -v ArduCopter -f ${simulation.frameType || 'X'} --sysid ${simulation.systemId || 1} ${copterParamArgs} --add-param-file=/tmp/frame_params.parm`;
         break;
       case 'arduplane':
         image = 'custom-ardupilot-sitl:latest';
-        command = `python3 Tools/autotest/sim_vehicle.py -v ArduPlane -f plane --sysid ${simulation.systemId || 1} -A SERIAL0_PROTOCOL=2 -A STREAMRATE=10 -A SR0_POSITION=10 -A SR0_ATTITUDE=10 -A SR0_VFR_HUD=10 -A SR0_EXTENDED_STATUS=10`;
+        // Add default parameter files for ArduPlane (relative to ArduPilot root inside container)
+        const planeParamFiles = [
+          //'Tools/autotest/default_params/plane-elevons.parm',
+          'Tools/autotest/models/plane.parm'
+        ];
+        const planeParamArgs = planeParamFiles.map(file => `--add-param-file=${file}`).join(' ');
+        command = `python3 Tools/autotest/sim_vehicle.py -v ArduPlane -f plane --sysid ${simulation.systemId || 1} ${planeParamArgs}`;
         break;
       case 'ardurover':
         image = 'custom-ardupilot-sitl:latest';
-        command = `python3 Tools/autotest/sim_vehicle.py -v ArduRover -f rover --sysid ${simulation.systemId || 1} -A SERIAL0_PROTOCOL=2 -A STREAMRATE=10 -A SR0_POSITION=10 -A SR0_ATTITUDE=10 -A SR0_VFR_HUD=10 -A SR0_EXTENDED_STATUS=10`;
+        // Add default parameter files for ArduRover (relative to ArduPilot root inside container)
+        const roverParamFiles = [
+          'Tools/autotest/default_params/rover.parm'
+        ];
+        const roverParamArgs = roverParamFiles.map(file => `--add-param-file=${file}`).join(' ');
+        command = `python3 Tools/autotest/sim_vehicle.py -v ArduRover -f rover --sysid ${simulation.systemId || 1} ${roverParamArgs}`;
         break;
       case 'ardusub':
         image = 'custom-ardupilot-sitl:latest';
-        command = `python3 Tools/autotest/sim_vehicle.py -v ArduSub -f sub --sysid ${simulation.systemId || 1} -A SERIAL0_PROTOCOL=2 -A STREAMRATE=10 -A SR0_POSITION=10 -A SR0_ATTITUDE=10 -A SR0_VFR_HUD=10 -A SR0_EXTENDED_STATUS=10`;
+        // Add default parameter files for ArduSub (relative to ArduPilot root inside container)
+        const subParamFiles = [
+          'Tools/autotest/default_params/sub.parm'
+        ];
+        const subParamArgs = subParamFiles.map(file => `--add-param-file=${file}`).join(' ');
+        command = `python3 Tools/autotest/sim_vehicle.py -v ArduSub -f sub --sysid ${simulation.systemId || 1} ${subParamArgs}`;
+        break;
+      case 'vtol':
+        image = 'custom-ardupilot-sitl:latest';
+        // Add default parameter files for VTOL (relative to ArduPilot root inside container)
+        const vtolParamFiles = [
+          'Tools/autotest/default_params/plane-elevons.parm',
+          'Tools/autotest/default_params/quadplane.parm'
+        ];
+        const vtolParamArgs = vtolParamFiles.map(file => `--add-param-file=${file}`).join(' ');
+        command = `python3 Tools/autotest/sim_vehicle.py -v ArduPlane -f quadplane --sysid ${simulation.systemId || 1} ${vtolParamArgs}`;
         break;
       default:
         // Fallback to PX4 SITL if ArduPilot image not available
@@ -273,15 +306,29 @@ class DockerManager {
       // Create frame parameter file content for ArduCopter
       let paramFileContent = '';
       if (simulation.vehicleType.toLowerCase() === 'arducopter') {
-        paramFileContent = `# Frame parameters for ${simulation.frameType || 'X'}
-FRAME_CLASS 1
-FRAME_TYPE 1
-SERIAL0_PROTOCOL 2
-STREAMRATE 10
-SR0_POSITION 10
-SR0_ATTITUDE 10
-SR0_VFR_HUD 10
-SR0_EXTENDED_STATUS 10
+        // Map frame types to proper ArduPilot frame classes and types
+        const frameConfig = {
+          'X': { class: 1, type: 1 },      // Quad X
+          'quad': { class: 1, type: 1 },    // Quad X
+          'hexa': { class: 1, type: 2 },    // Hexa
+          'octa': { class: 1, type: 3 },    // Octa
+          'octaquad': { class: 1, type: 4 }, // OctaQuad
+          'y6': { class: 1, type: 5 },      // Y6
+          'tri': { class: 1, type: 6 },     // Tri
+          'single': { class: 1, type: 7 },  // Single
+          'coax': { class: 1, type: 8 },    // Coax
+          'heli': { class: 2, type: 1 },    // Helicopter
+          'heli-dual': { class: 2, type: 2 }, // Dual Helicopter
+          'heli-compound': { class: 2, type: 3 } // Compound Helicopter
+        };
+        
+        const frameType = simulation.frameType || 'X';
+        const config = frameConfig[frameType.toLowerCase()] || frameConfig['X'];
+        
+        paramFileContent = `# Frame parameters for ${frameType}
+FRAME_CLASS ${config.class}
+FRAME_TYPE ${config.type}
+# Note: Communication and stream parameters are set via -A flags
 `;
       }
 
@@ -315,7 +362,9 @@ SR0_EXTENDED_STATUS 10
         dockerArgs.push('-v', `${paramFilePath}:/tmp/frame_params.parm:ro`);
       }
 
-      dockerArgs.push(image, ...command.split(' '));
+      // Split the command into individual arguments to ensure proper parameter passing
+      const commandArgs = command.split(' ');
+      dockerArgs.push(image, ...commandArgs);
 
       log(`Starting container with: docker ${dockerArgs.join(' ')}`);
       const containerId = await this.runDockerCommand(dockerArgs);
