@@ -53,7 +53,7 @@ export function VehicleProvider({ children }) {
   useEffect(() => {
     const fetchConnectedVehicles = async () => {
       try {
-        const response = await fetch('/api/connections');
+        const response = await fetch('/connections');
         if (response.ok) {
           const data = await response.json();
           const backendConnections = data.connections || [];
@@ -128,7 +128,7 @@ export function VehicleProvider({ children }) {
         let telemetryData = null;
         for (const id of vehicleIdVariations) {
           try {
-            const response = await fetch(`/api/telemetry?vehicleId=${encodeURIComponent(id)}`);
+            const response = await fetch(`/telemetry?vehicleId=${encodeURIComponent(id)}`);
             if (response.ok) {
               const data = await response.json();
               console.log(`Raw telemetry response for ${id}:`, data);
@@ -444,7 +444,7 @@ export function VehicleProvider({ children }) {
   // @hallucinated - Connect a vehicle
   const connectVehicle = async (vehicleConfig) => {
     try {
-      const response = await fetch('/api/connect', {
+      const response = await fetch('/connect', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -480,7 +480,7 @@ export function VehicleProvider({ children }) {
   // Disconnect a vehicle
   const disconnectVehicle = async (vehicleId) => {
     try {
-      const response = await fetch('/api/disconnect', {
+      const response = await fetch('/disconnect', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

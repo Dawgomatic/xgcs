@@ -4,6 +4,7 @@
 #include <chrono>
 #include <atomic>
 #include <mavlink/common/mavlink.h>
+#include <algorithm>
 
 std::string flight_mode_to_string(mavsdk::Telemetry::FlightMode mode);
 
@@ -949,44 +950,97 @@ bool ConnectionManager::send_set_mode_command(const std::string& vehicle_id, con
     auto passthrough = _mavlink_passthrough_plugins[vehicle_id];
     auto system = _systems[vehicle_id];
     
-    // Convert mode string to custom mode
-    uint32_t custom_mode = 0;
-    if (mode == "MANUAL") custom_mode = 0;
-    else if (mode == "STABILIZED") custom_mode = 2;
-    else if (mode == "ALTHOLD") custom_mode = 3;
-    else if (mode == "AUTO") custom_mode = 3;
-    else if (mode == "RTL") custom_mode = 6;
-    else if (mode == "LOITER") custom_mode = 5;
-    else if (mode == "GUIDED") custom_mode = 4;
-    else if (mode == "ACRO") custom_mode = 1;
-    else if (mode == "CIRCLE") custom_mode = 7;
-    else if (mode == "LAND") custom_mode = 9;
-    else {
+    // Normalize mode string
+    std::string upper_mode = mode;
+    std::transform(upper_mode.begin(), upper_mode.end(), upper_mode.begin(), ::toupper);
+
+    // Build candidate custom_mode values for ArduPlane and ArduCopter
+    std::vector<uint32_t> candidates;
+    auto push_unique = [&candidates](uint32_t v) {
+        if (std::find(candidates.begin(), candidates.end(), v) == candidates.end()) candidates.push_back(v);
+    };
+
+    // Plane mapping (ArduPlane)
+    if (upper_mode == "MANUAL") push_unique(0);
+    if (upper_mode == "CIRCLE") push_unique(1);
+    if (upper_mode == "STABILIZE" || upper_mode == "STABILIZED") push_unique(2);
+    if (upper_mode == "ACRO") push_unique(4);
+    if (upper_mode == "FBWA") push_unique(5);
+    if (upper_mode == "FBWB") push_unique(6);
+    if (upper_mode == "CRUISE") push_unique(7);
+    if (upper_mode == "AUTOTUNE") push_unique(8);
+    if (upper_mode == "LAND") push_unique(9);
+    if (upper_mode == "AUTO") push_unique(10);
+    if (upper_mode == "RTL") push_unique(11);
+    if (upper_mode == "LOITER") push_unique(12);
+    if (upper_mode == "TAKEOFF") push_unique(13);
+    if (upper_mode == "GUIDED") push_unique(15);
+
+    // Copter mapping (ArduCopter)
+    if (upper_mode == "STABILIZE" || upper_mode == "STABILIZED" || upper_mode == "MANUAL") push_unique(0);
+    if (upper_mode == "ACRO") push_unique(1);
+    if (upper_mode == "ALTHOLD") push_unique(2);
+    if (upper_mode == "AUTO") push_unique(3);
+    if (upper_mode == "GUIDED") push_unique(4);
+    if (upper_mode == "LOITER") push_unique(5);
+    if (upper_mode == "RTL") push_unique(6);
+    if (upper_mode == "CIRCLE") push_unique(7);
+    if (upper_mode == "LAND") push_unique(9);
+    if (upper_mode == "POSHOLD") push_unique(16);
+
+    if (candidates.empty()) {
         std::cerr << "Unknown mode: " << mode << std::endl;
         return false;
     }
-    
-    mavlink_message_t msg;
-    mavlink_msg_command_long_pack(
-        passthrough->get_our_sysid(),
-        passthrough->get_our_compid(),
-        &msg,
-        system->get_system_id(),
-        0, // target component
-        MAV_CMD_DO_SET_MODE,
-        0, // confirmation
-        MAV_MODE_FLAG_SAFETY_ARMED, // param1: mode
-        custom_mode, // param2: custom mode
-        0.0f, // param3: unused
-        0.0f, // param4: unused
-        0.0f, // param5: unused
-        0.0f, // param6: unused
-        0.0f  // param7: unused
-    );
-    
-    auto result = passthrough->send_message(msg);
-    std::cout << "Set mode command sent to " << vehicle_id << " for mode " << mode << ": " << (result == mavsdk::MavlinkPassthrough::Result::Success ? "SUCCESS" : "FAILED") << std::endl;
-    return result == mavsdk::MavlinkPassthrough::Result::Success;
+
+    std::cout << "[MODE] Requested mode='" << mode << "' (normalized='" << upper_mode << "')" << std::endl;
+    std::cout << "[MODE] Candidate custom_mode values: ";
+    for (size_t i = 0; i < candidates.size(); ++i) {
+        std::cout << candidates[i] << (i + 1 < candidates.size() ? ", " : "\n");
+    }
+
+    bool any_sent_success = false;
+    for (uint32_t custom_mode : candidates) {
+        // First try SET_MODE (preferred by ArduPilot)
+        {
+            mavlink_message_t set_mode_msg;
+            mavlink_msg_set_mode_pack(
+                passthrough->get_our_sysid(),
+                passthrough->get_our_compid(),
+                &set_mode_msg,
+                system->get_system_id(),
+                static_cast<uint8_t>(MAV_MODE_FLAG_CUSTOM_MODE_ENABLED), // base_mode
+                custom_mode                                          // custom_mode
+            );
+            auto res = passthrough->send_message(set_mode_msg);
+            std::cout << "SET_MODE sent to " << vehicle_id << " (custom_mode=" << custom_mode << "): "
+                      << (res == mavsdk::MavlinkPassthrough::Result::Success ? "SUCCESS" : "FAILED") << std::endl;
+            any_sent_success = any_sent_success || (res == mavsdk::MavlinkPassthrough::Result::Success);
+        }
+
+        // Also send COMMAND_LONG MAV_CMD_DO_SET_MODE with correct param1 flag
+        {
+            mavlink_message_t cmd_msg;
+            mavlink_msg_command_long_pack(
+                passthrough->get_our_sysid(),
+                passthrough->get_our_compid(),
+                &cmd_msg,
+                system->get_system_id(),
+                MAV_COMP_ID_AUTOPILOT1, // target component
+                MAV_CMD_DO_SET_MODE,
+                0, // confirmation
+                static_cast<float>(MAV_MODE_FLAG_CUSTOM_MODE_ENABLED), // param1: base_mode (custom mode enabled)
+                static_cast<float>(custom_mode),                       // param2: custom mode
+                0.0f, 0.0f, 0.0f, 0.0f, 0.0f
+            );
+            auto res = passthrough->send_message(cmd_msg);
+            std::cout << "COMMAND_LONG:DO_SET_MODE sent to " << vehicle_id << " (custom_mode=" << custom_mode << "): "
+                      << (res == mavsdk::MavlinkPassthrough::Result::Success ? "SUCCESS" : "FAILED") << std::endl;
+            any_sent_success = any_sent_success || (res == mavsdk::MavlinkPassthrough::Result::Success);
+        }
+    }
+
+    return any_sent_success;
 }
 
 bool ConnectionManager::send_arm_command(const std::string& vehicle_id) {

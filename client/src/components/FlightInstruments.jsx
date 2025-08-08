@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Box, 
-  Paper, 
   Typography, 
   Chip, 
   TextField, 
   IconButton,
-  Grid,
   Card,
   CardContent,
   CardHeader,
-  Divider,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -19,13 +16,13 @@ import {
 } from '@mui/material';
 import { Edit, Save, Cancel } from '@mui/icons-material';
 import { useVehicles } from '../context/VehicleContext';
-import FlightModeSelector from './FlightModeSelector';
 
 // Individual Vehicle Instrument Card Component
 const VehicleInstrumentCard = ({ vehicle, onNameChange }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(vehicle.name || `Vehicle ${vehicle.id}`);
-  const [flightMode, setFlightMode] = useState(vehicle.flightMode || 'MANUAL');
+  const [flightMode, setFlightMode] = useState(vehicle.flightMode || 'MANUAL'); // @hallucinated (unused)
+  const [pendingMode, setPendingMode] = useState(null); // @hallucinated - show selected until telemetry confirms
   
   // @hallucinated - Flight mode dialog state
   const [flightModeDialogOpen, setFlightModeDialogOpen] = useState(false);
@@ -72,43 +69,56 @@ const VehicleInstrumentCard = ({ vehicle, onNameChange }) => {
 
   // @hallucinated - Arm/Disarm handler function
   const handleArmDisarm = async (vehicleId) => {
-    try {
-      const response = await fetch(`/api/command/${vehicle.armed ? 'disarm' : 'arm'}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ vehicleId: vehicleId })
-      });
-      
-      if (response.ok) {
-        console.log(`${vehicle.armed ? 'Disarm' : 'Arm'} command sent successfully`);
-      } else {
-        console.error(`${vehicle.armed ? 'Disarm' : 'Arm'} command failed`);
+    const endpoint = `/api/command/${vehicle.armed ? 'disarm' : 'arm'}`;
+    const idVariations = [vehicleId, `SITL: ${vehicleId}`, vehicleId.replace('SITL: ', '')];
+    for (const id of idVariations) {
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ vehicleId: id })
+        });
+        const data = await res.json().catch(() => ({ success: false }));
+        if (res.ok && data.success) {
+          console.log(`${vehicle.armed ? 'Disarm' : 'Arm'} command sent successfully for ${id}`);
+          return;
+        } else {
+          console.warn(`Arm/disarm attempt failed for ${id}: status=${res.status}, success=${String(data.success)}`);
+        }
+      } catch (err) {
+        console.warn(`Arm/disarm request error for ${id}:`, err);
       }
-    } catch (error) {
-      console.error('Error sending arm/disarm command:', error);
     }
+    console.error(`All arm/disarm attempts failed for ${vehicleId}`);
   };
 
   // @hallucinated - Flight mode handler function
   const handleFlightMode = async (vehicleId) => {
-    // Get available flight modes from the vehicle
-    try {
-      const response = await fetch(`/api/vehicle/${vehicleId}/flight-modes`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success && data.flightModes) {
-          // Open flight mode selector dialog
-          setFlightModeDialogOpen(true);
-          setAvailableFlightModes(data.flightModes);
+    const baseId = (vehicleId || '').trim();
+    const idVariations = [baseId, `SITL: ${baseId}`, baseId.replace(/^SITL:\s*/,'')];
+    for (const id of idVariations) {
+      try {
+        const response = await fetch(`/api/vehicle/${encodeURIComponent(id)}/flight-modes`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && (data.flightModes || data.flight_modes)) {
+            setAvailableFlightModes(data.flightModes || data.flight_modes);
+            setFlightModeDialogOpen(true);
+            return;
+          }
+          console.warn(`Flight modes response missing list for ${id}:`, data);
         } else {
-          console.error('Failed to get flight modes');
+          const text = await response.text().catch(() => '');
+          console.warn(`Flight modes request failed for ${id}: ${response.status} ${text}`);
         }
-      } else {
-        console.error('Error fetching flight modes');
+      } catch (error) {
+        console.warn(`Flight modes request error for ${id}:`, error);
       }
-    } catch (error) {
-      console.error('Error getting flight modes:', error);
     }
+    // @hallucinated fallback to common ArduPilot modes so user can still choose
+    const fallbackModes = ['MANUAL','STABILIZED','ALTHOLD','AUTO','RTL','LOITER','GUIDED','ACRO','CIRCLE','LAND'];
+    setAvailableFlightModes(fallbackModes);
+    setFlightModeDialogOpen(true);
   };
 
   return (
@@ -769,7 +779,7 @@ const VehicleInstrumentCard = ({ vehicle, onNameChange }) => {
               fontWeight: 'bold',
               textTransform: 'uppercase'
             }}>
-              {vehicle.flightMode || 'MANUAL'}
+              {pendingMode || vehicle.flightMode || 'MANUAL'}
             </Typography>
           </Box>
         </Box>
@@ -792,24 +802,29 @@ const VehicleInstrumentCard = ({ vehicle, onNameChange }) => {
                 key={mode}
                 variant={vehicle.flightMode === mode ? "contained" : "outlined"}
                 onClick={async () => {
+                  // Optimistically reflect selection in UI; telemetry will overwrite once confirmed
+                  setPendingMode(mode);
+                  const baseId = (vehicle.id || '').trim();
+                  const idVariations = [baseId, `SITL: ${baseId}`, baseId.replace(/^SITL:\s*/, '')];
                   try {
-                    const response = await fetch('/api/command/flight-mode', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ 
-                        vehicleId: vehicle.id,
-                        flightMode: mode 
-                      })
-                    });
-                    
-                    if (response.ok) {
-                      console.log(`Flight mode changed to ${mode}`);
-                      setFlightModeDialogOpen(false);
-                    } else {
-                      console.error('Flight mode change failed');
+                    for (const id of idVariations) {
+                      const response = await fetch('/api/command/set_mode', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ vehicleId: id, mode })
+                      });
+                      const data = await response.json().catch(() => ({ success: false }));
+                      if (response.ok && data.success) {
+                        console.log(`Flight mode change requested for ${id}: ${mode}`);
+                        setFlightModeDialogOpen(false);
+                        return;
+                      }
                     }
+                    console.error('Flight mode change failed for all id variations');
+                    setPendingMode(null);
                   } catch (error) {
                     console.error('Error changing flight mode:', error);
+                    setPendingMode(null);
                   }
                 }}
                 sx={{

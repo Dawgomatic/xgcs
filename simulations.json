@@ -1,7 +1,7 @@
 [
   {
-    "id": "cd8ede4b-a46b-4c5c-b7bd-f38de0e8f970",
-    "name": "arduplane cd8ede4b",
+    "id": "906e313b-f3c6-4349-8c87-ecc82fe9361f",
+    "name": "arduplane 906e313b",
     "vehicleType": "arduplane",
     "frameType": "X",
     "ipAddress": "localhost",
@@ -17,11 +17,11 @@
       "alt": 0
     },
     "status": "running",
-    "createdAt": "2025-08-07T03:17:30.237Z",
+    "createdAt": "2025-08-08T01:36:00.274Z",
     "processId": null,
     "stats": null,
-    "containerId": "fcecd990b8f100c680a5dfe5894d843794a20585ce90c9f3fd021112a41f2754",
+    "containerId": "69aa5ef63980",
     "mockData": null,
-    "startedAt": "2025-08-07T03:17:32.471Z"
+    "startedAt": "2025-08-08T01:36:07.870Z"
   }
 ]

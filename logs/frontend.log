@@ -3,9 +3,9 @@ $ react-app-rewired start
 Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
   npx update-browserslist-db@latest
   Why you should do it regularly: https://github.com/browserslist/update-db#readme
-(node:134970) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:34284) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 (Use `node --trace-deprecation ...` to show where the warning was created)
-(node:134970) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:34284) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 Starting the development server...
 
 Compiled successfully!
@@ -19,3 +19,379 @@ Note that the development build is not optimized.
 To create a production build, use yarn build.
 
 webpack compiled successfully
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error [ERR_STREAM_WRITE_AFTER_END]: write after end
+    at _write (node:internal/streams/writable:489:11)
+    at Writable.write (node:internal/streams/writable:510:10)
+    at ClientRequest.<anonymous> (/home/dawg/Desktop/gcs_project/xgcs/client/node_modules/http-proxy/lib/http-proxy/passes/ws-incoming.js:115:16)
+    at ClientRequest.emit (node:events:518:28)
+    at HTTPParser.parserOnIncomingClient [as onIncoming] (node:_http_client:702:27)
+    at HTTPParser.parserOnHeadersComplete (node:_http_common:118:17)
+    at Socket.socketOnData (node:_http_client:544:22)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3) {
+  code: 'ERR_STREAM_WRITE_AFTER_END'
+}
+[HPM] WebSocket error: Error [ERR_STREAM_WRITE_AFTER_END]: write after end
+    at _write (node:internal/streams/writable:489:11)
+    at Writable.write (node:internal/streams/writable:510:10)
+    at ClientRequest.<anonymous> (/home/dawg/Desktop/gcs_project/xgcs/client/node_modules/http-proxy/lib/http-proxy/passes/ws-incoming.js:115:16)
+    at ClientRequest.emit (node:events:518:28)
+    at HTTPParser.parserOnIncomingClient [as onIncoming] (node:_http_client:702:27)
+    at HTTPParser.parserOnHeadersComplete (node:_http_common:118:17)
+    at Socket.socketOnData (node:_http_client:544:22)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3) {
+  code: 'ERR_STREAM_WRITE_AFTER_END'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error [ERR_STREAM_WRITE_AFTER_END]: write after end
+    at _write (node:internal/streams/writable:489:11)
+    at Writable.write (node:internal/streams/writable:510:10)
+    at ClientRequest.<anonymous> (/home/dawg/Desktop/gcs_project/xgcs/client/node_modules/http-proxy/lib/http-proxy/passes/ws-incoming.js:115:16)
+    at ClientRequest.emit (node:events:518:28)
+    at HTTPParser.parserOnIncomingClient [as onIncoming] (node:_http_client:702:27)
+    at HTTPParser.parserOnHeadersComplete (node:_http_common:118:17)
+    at Socket.socketOnData (node:_http_client:544:22)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3) {
+  code: 'ERR_STREAM_WRITE_AFTER_END'
+}
+[HPM] WebSocket error: Error [ERR_STREAM_WRITE_AFTER_END]: write after end
+    at _write (node:internal/streams/writable:489:11)
+    at Writable.write (node:internal/streams/writable:510:10)
+    at ClientRequest.<anonymous> (/home/dawg/Desktop/gcs_project/xgcs/client/node_modules/http-proxy/lib/http-proxy/passes/ws-incoming.js:115:16)
+    at ClientRequest.emit (node:events:518:28)
+    at HTTPParser.parserOnIncomingClient [as onIncoming] (node:_http_client:702:27)
+    at HTTPParser.parserOnHeadersComplete (node:_http_common:118:17)
+    at Socket.socketOnData (node:_http_client:544:22)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3) {
+  code: 'ERR_STREAM_WRITE_AFTER_END'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+[HPM] WebSocket error: Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
