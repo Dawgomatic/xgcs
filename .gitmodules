@@ -8,8 +8,6 @@
 	url = https://github.com/mavlink/c_library_v2.git
 	branch = master
 
-
-
 [submodule "server/Crow"]
 	path = server/Crow
 	url = https://github.com/CrowCpp/Crow
