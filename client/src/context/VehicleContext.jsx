@@ -6,10 +6,7 @@ import {
   Transforms,
   SampledPositionProperty,
   JulianDate,
-  TimeIntervalCollection,
-  TimeInterval,
-  PolylineGlowMaterialProperty,
-  ConstantPositionProperty
+  PolylineGlowMaterialProperty
 } from 'cesium';
 import { Color as CesiumColor } from '@cesium/engine';
 
@@ -24,6 +21,21 @@ export function VehicleProvider({ children }) {
   const viewerRef = useRef(null);
   const pathInitializedRef = useRef({});
   const previousPositionRef = useRef({});
+
+  // @hallucinated - Normalize backend-reported flight mode strings to ArduPilot-style tokens
+  // Maps MAVSDK/PX4-style names to ArduPilot tokens used in UI and commands
+  const normalizeFlightMode = useCallback((mode) => {
+    const raw = (mode || 'UNKNOWN').toString().trim().toUpperCase();
+    const aliasMap = {
+      'STABILIZED': 'STABILIZE',
+      'HOLD': 'LOITER',
+      'RETURN TO LAUNCH': 'RTL',
+      'ALTITUDE CONTROL': 'ALTHOLD',
+      'POSITION CONTROL': 'POSHOLD',
+      'MISSION': 'AUTO'
+    };
+    return aliasMap[raw] || raw;
+  }, []);
 
   // Set Cesium viewer reference for use in entity creation
   const setViewer = useCallback((viewer) => {
@@ -239,12 +251,12 @@ export function VehicleProvider({ children }) {
       if (!vehicleConfig) {
         console.warn(`Vehicle config not found for ${vehicleId}, creating default config`);
         // Create a default vehicle config for telemetry-only vehicles
-        const defaultConfig = {
-          id: vehicleId,
-          name: vehicleId,
-          modelUrl: '',
-          modelScale: 1.0
-        };
+        // const defaultConfig = {
+        //   id: vehicleId,
+        //   name: vehicleId,
+        //   modelUrl: '',
+        //   modelScale: 1.0
+        // };
         
                  // Create a new entity with default properties
          const entityProperties = {
@@ -561,7 +573,7 @@ export function VehicleProvider({ children }) {
       name: firstTelemetryId, 
       connected: true,
       connectionStatus: telemetry.connectionStatus || 'connected',
-      flightMode: telemetry.flight_mode || 'UNKNOWN',
+      flightMode: normalizeFlightMode(telemetry.flight_mode),
       batteryLevel: telemetry.battery?.remaining || 0,
       airspeed: telemetry.velocity?.airspeed || 0,
       groundspeed: telemetry.velocity?.groundspeed || 0,
@@ -591,7 +603,7 @@ export function VehicleProvider({ children }) {
       name: v.name,
       connected: v.connected,
       connectionStatus: telemetry?.connectionStatus || (v.connected ? 'connected' : 'disconnected'),
-      flightMode: telemetry?.flight_mode || 'UNKNOWN',
+      flightMode: normalizeFlightMode(telemetry?.flight_mode),
       batteryLevel: telemetry?.battery?.remaining || 0,
       airspeed: telemetry?.velocity?.airspeed || 0,
       groundspeed: telemetry?.velocity?.groundspeed || 0,
@@ -617,7 +629,7 @@ export function VehicleProvider({ children }) {
         name: telemetryId,
         connected: true,
         connectionStatus: telemetry.connectionStatus || 'connected',
-        flightMode: telemetry.flight_mode || 'UNKNOWN',
+        flightMode: normalizeFlightMode(telemetry.flight_mode),
         batteryLevel: telemetry.battery?.remaining || 0,
         airspeed: telemetry.velocity?.airspeed || 0,
         groundspeed: telemetry.velocity?.groundspeed || 0,

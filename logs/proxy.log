@@ -4,21 +4,48 @@ Proxying other API requests to C++ backend at http://localhost:8081
 GET /health
 GET /api/simulation/list
 GET /api/simulation/list
-GET /api/simulation/906e313b-f3c6-4349-8c87-ecc82fe9361f/logs
+DELETE /api/simulation/eb8880ca-7d0a-432a-928d-f4d71b0d5fa0
+POST /api/simulation/create
+POST /api/simulation/ec6f91f1-380b-4ddd-b5ef-f775696d40c7/start
+GET /api/simulation/ec6f91f1-380b-4ddd-b5ef-f775696d40c7/status
+GET /api/simulation/ec6f91f1-380b-4ddd-b5ef-f775696d40c7/logs
+GET /api/simulation/list
+GET /api/simulation/list
+GET /api/simulation/list
+GET /api/simulation/list
+GET /api/simulation/list
+GET /api/simulation/list
 GET /api/simulation/list
 GET /api/simulation/list
 GET /simulation
 [UNHANDLED] GET /simulation
+GET /simulation
+[UNHANDLED] GET /simulation
 GET /api/simulation/list
 GET /api/simulation/list
-GET /api/simulation/906e313b-f3c6-4349-8c87-ecc82fe9361f/logs
-GET /api/simulation/906e313b-f3c6-4349-8c87-ecc82fe9361f/logs
-GET /api/simulation/906e313b-f3c6-4349-8c87-ecc82fe9361f/logs
-GET /api/simulation/906e313b-f3c6-4349-8c87-ecc82fe9361f/logs
-GET /api/simulation/906e313b-f3c6-4349-8c87-ecc82fe9361f/logs
-02:10:18.616Z - GET /api/simulation/list
-2025-08-08T02:10:20.857Z - GET /api/simulation/906e313b-f3c6-4349-8c87-ecc82fe9361f/logs
-2025-08-08T02:10:33.946Z - GET /api/simulation/906e313b-f3c6-4349-8c87-ecc82fe9361f/logs
-2025-08-08T02:10:39.445Z - GET /api/simulation/906e313b-f3c6-4349-8c87-ecc82fe9361f/logs
-2025-08-08T02:10:46.260Z - GET /api/simulation/906e313b-f3c6-4349-8c87-ecc82fe9361f/logs
-2025-08-08T02:10:53.327Z - GET /api/simulation/906e313b-f3c6-4349-8c87-ecc82fe9361f/logs
+GET /api/simulation/list
+GET /api/simulation/list
+GET /api/simulation/list
+GET /api/simulation/list
+GET /api/simulation/list
+GET /api/simulation/list
+GET /api/simulation/list
+GET /api/simulation/list
+pi/simulation/list
+2025-08-10T02:49:50.028Z - GET /api/simulation/list
+2025-08-10T02:49:50.029Z - GET /api/simulation/list
+2025-08-10T02:49:50.031Z - GET /api/simulation/list
+2025-08-10T02:49:50.045Z - GET /simulation
+2025-08-10T02:49:50.046Z - [UNHANDLED] GET /simulation
+2025-08-10T02:49:50.971Z - GET /simulation
+2025-08-10T02:49:50.971Z - [UNHANDLED] GET /simulation
+2025-08-10T02:49:53.073Z - GET /api/simulation/list
+2025-08-10T02:49:53.076Z - GET /api/simulation/list
+2025-08-10T02:49:55.590Z - GET /api/simulation/list
+2025-08-10T02:49:55.594Z - GET /api/simulation/list
+2025-08-10T02:50:17.408Z - GET /api/simulation/list
+2025-08-10T02:50:17.412Z - GET /api/simulation/list
+2025-08-10T02:50:19.599Z - GET /api/simulation/list
+2025-08-10T02:50:19.602Z - GET /api/simulation/list
+2025-08-10T02:50:32.007Z - GET /api/simulation/list
+2025-08-10T02:50:32.010Z - GET /api/simulation/list

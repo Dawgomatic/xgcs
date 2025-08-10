@@ -112,6 +112,16 @@ bool ConnectionManager::add_vehicle(const std::string& vehicle_id, const std::st
             passthrough->send_message(req);
             std::cout << "[MAVLINK] Sent REQUEST_DATA_STREAM for stream_id " << (int)stream_id << " at " << stream_rate_hz << " Hz" << std::endl;
         }
+
+        // Subscribe to HEARTBEAT and COMMAND_ACK immediately to track mode/acks even without WS streaming
+        passthrough->subscribe_message(MAVLINK_MSG_ID_HEARTBEAT,
+            [this, vehicle_id](const mavlink_message_t& message) {
+                handle_mavlink_message(vehicle_id, message);
+            });
+        passthrough->subscribe_message(MAVLINK_MSG_ID_COMMAND_ACK,
+            [this, vehicle_id](const mavlink_message_t& message) {
+                handle_mavlink_message(vehicle_id, message);
+            });
     }
 
     std::cout << "Vehicle " << vehicle_id << " connected." << std::endl;
@@ -172,6 +182,95 @@ std::string ConnectionManager::get_telemetry_data_json(const std::string& vehicl
         auto system = _systems.at(vehicle_id);
         bool connected = system->is_connected();
 
+        // Derive ArduPilot flight mode name from last HEARTBEAT custom_mode when possible (QGC style)
+        std::string mode_string = flight_mode_to_string(flight_mode);
+        auto it_type = _last_mav_type.find(vehicle_id);
+        auto it_cust = _last_custom_mode.find(vehicle_id);
+        if (it_type != _last_mav_type.end() && it_cust != _last_custom_mode.end()) {
+            uint8_t mav_type = it_type->second;
+            uint32_t cm = it_cust->second;
+            switch (mav_type) {
+                case MAV_TYPE_FIXED_WING: {
+                    // ArduPlane
+                    switch (cm) {
+                        case 0: mode_string = "MANUAL"; break;
+                        case 1: mode_string = "CIRCLE"; break;
+                        case 2: mode_string = "STABILIZE"; break;
+                        case 4: mode_string = "ACRO"; break;
+                        case 5: mode_string = "FBWA"; break;
+                        case 6: mode_string = "FBWB"; break;
+                        case 7: mode_string = "CRUISE"; break;
+                        case 8: mode_string = "AUTOTUNE"; break;
+                        case 9: mode_string = "LAND"; break;
+                        case 10: mode_string = "AUTO"; break;
+                        case 11: mode_string = "RTL"; break;
+                        case 12: mode_string = "LOITER"; break;
+                        case 13: mode_string = "TAKEOFF"; break;
+                        case 15: mode_string = "GUIDED"; break;
+                        default: break;
+                    }
+                    break;
+                }
+                case MAV_TYPE_QUADROTOR:
+                case MAV_TYPE_HELICOPTER:
+                case MAV_TYPE_HEXAROTOR:
+                case MAV_TYPE_OCTOROTOR:
+                case MAV_TYPE_TRICOPTER:
+                case MAV_TYPE_COAXIAL:
+                case MAV_TYPE_VTOL_TAILSITTER_DUOROTOR:
+                case MAV_TYPE_VTOL_TAILSITTER_QUADROTOR:
+                case MAV_TYPE_VTOL_TILTROTOR: {
+                    // ArduCopter
+                    switch (cm) {
+                        case 0: mode_string = "STABILIZE"; break;
+                        case 1: mode_string = "ACRO"; break;
+                        case 2: mode_string = "ALTHOLD"; break;
+                        case 3: mode_string = "AUTO"; break;
+                        case 4: mode_string = "GUIDED"; break;
+                        case 5: mode_string = "LOITER"; break;
+                        case 6: mode_string = "RTL"; break;
+                        case 7: mode_string = "CIRCLE"; break;
+                        case 9: mode_string = "LAND"; break;
+                        case 16: mode_string = "POSHOLD"; break;
+                        default: break;
+                    }
+                    break;
+                }
+                case MAV_TYPE_GROUND_ROVER:
+                case MAV_TYPE_SURFACE_BOAT: {
+                    // ArduRover (subset)
+                    switch (cm) {
+                        case 0: mode_string = "MANUAL"; break;
+                        case 1: mode_string = "ACRO"; break;
+                        case 2: mode_string = "LEARNING"; break;
+                        case 3: mode_string = "STEERING"; break;
+                        case 4: mode_string = "HOLD"; break;
+                        case 5: mode_string = "LOITER"; break;
+                        case 10: mode_string = "AUTO"; break;
+                        case 11: mode_string = "RTL"; break;
+                        case 15: mode_string = "GUIDED"; break;
+                        default: break;
+                    }
+                    break;
+                }
+                case MAV_TYPE_SUBMARINE: {
+                    // ArduSub (subset)
+                    switch (cm) {
+                        case 0: mode_string = "STABILIZE"; break;
+                        case 1: mode_string = "ACRO"; break;
+                        case 2: mode_string = "DEPTH HOLD"; break;
+                        case 3: mode_string = "AUTO"; break;
+                        case 4: mode_string = "GUIDED"; break;
+                        case 16: mode_string = "POSHOLD"; break;
+                        default: break;
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
         json telemetry_json = {
             {"success", true},
             {"position", {
@@ -188,7 +287,7 @@ std::string ConnectionManager::get_telemetry_data_json(const std::string& vehicl
                 {"voltage", battery.voltage_v},
                 {"remaining", battery.remaining_percent}
             }},
-            {"flight_mode", flight_mode_to_string(flight_mode)},
+            {"flight_mode", mode_string},
             {"armed", armed},
             {"in_air", armed && position.relative_altitude_m > 1.0}, // Simple air detection
             {"velocity", {
@@ -522,6 +621,19 @@ void ConnectionManager::handle_mavlink_message(const std::string& vehicle_id, co
     std::cout << "[MAVLINK] Vehicle: " << vehicle_id << ", Msg: " << get_mavlink_message_name(message.msgid) << " (" << message.msgid << ")" << std::endl;
     // Optionally, print key fields for common messages
     switch (message.msgid) {
+        case MAVLINK_MSG_ID_HEARTBEAT: {
+            // Track last-known base/custom mode and MAV type/autopilot for QGC-like behavior
+            mavlink_heartbeat_t hb;
+            mavlink_msg_heartbeat_decode(&message, &hb);
+            {
+                std::lock_guard<std::mutex> lock(_mutex);
+                _last_base_mode[vehicle_id] = hb.base_mode;
+                _last_custom_mode[vehicle_id] = hb.custom_mode;
+                _last_mav_type[vehicle_id] = hb.type;
+                _last_autopilot[vehicle_id] = hb.autopilot;
+            }
+            break;
+        }
         case MAVLINK_MSG_ID_ATTITUDE: {
             mavlink_attitude_t att;
             mavlink_msg_attitude_decode(&message, &att);
@@ -544,6 +656,17 @@ void ConnectionManager::handle_mavlink_message(const std::string& vehicle_id, co
             mavlink_sys_status_t sys;
             mavlink_msg_sys_status_decode(&message, &sys);
             std::cout << "  [SYS_STATUS] voltage_battery: " << sys.voltage_battery << ", battery_remaining: " << (int)sys.battery_remaining << std::endl;
+            break;
+        }
+        case MAVLINK_MSG_ID_COMMAND_ACK: {
+            mavlink_command_ack_t ack;
+            mavlink_msg_command_ack_decode(&message, &ack);
+            {
+                std::lock_guard<std::mutex> lock(_mutex);
+                _last_ack_command[vehicle_id] = ack.command;
+                _last_ack_result[vehicle_id] = ack.result;
+            }
+            _ack_cv.notify_all();
             break;
         }
         default:
@@ -807,6 +930,107 @@ std::string flight_mode_to_string(mavsdk::Telemetry::FlightMode mode) {
     }
 }
 
+// Convert ArduPilot custom mode directly to string, preserving original mode names
+std::string ardupilot_custom_mode_to_string(uint8_t mav_type, uint32_t custom_mode) {
+    switch (mav_type) {
+        case MAV_TYPE_FIXED_WING: {
+            // ArduPlane - use exact mode names from ArduPilot
+            switch (custom_mode) {
+                case 0: return "MANUAL";
+                case 1: return "CIRCLE";
+                case 2: return "STABILIZE";
+                case 3: return "TRAINING";
+                case 4: return "ACRO";
+                case 5: return "FBWA";
+                case 6: return "FBWB";
+                case 7: return "CRUISE";
+                case 8: return "AUTOTUNE";
+                case 9: return "LAND";  // Reserved for future use
+                case 10: return "AUTO";
+                case 11: return "RTL";
+                case 12: return "LOITER";
+                case 13: return "TAKEOFF";
+                case 14: return "AVOID_ADSB";
+                case 15: return "GUIDED";
+                case 16: return "INITIALIZING";
+                case 17: return "QSTABILIZE";
+                case 18: return "QHOVER";
+                case 19: return "QLOITER";
+                case 20: return "QLAND";
+                case 21: return "QRTL";
+                case 22: return "QAUTOTUNE";
+                case 23: return "QACRO";
+                case 24: return "THERMAL";
+                default: return "UNKNOWN";
+            }
+        }
+        case MAV_TYPE_QUADROTOR:
+        case MAV_TYPE_HELICOPTER:
+        case MAV_TYPE_HEXAROTOR:
+        case MAV_TYPE_OCTOROTOR:
+        case MAV_TYPE_TRICOPTER:
+        case MAV_TYPE_COAXIAL:
+        case MAV_TYPE_VTOL_TAILSITTER_DUOROTOR:
+        case MAV_TYPE_VTOL_TAILSITTER_QUADROTOR:
+        case MAV_TYPE_VTOL_TILTROTOR:
+        case MAV_TYPE_VTOL_FIXEDROTOR:
+        case MAV_TYPE_VTOL_TAILSITTER:
+        case MAV_TYPE_VTOL_TILTWING: {
+            // ArduCopter - use exact mode names from ArduPilot
+            switch (custom_mode) {
+                case 0: return "STABILIZE";
+                case 1: return "ACRO";
+                case 2: return "ALT_HOLD";
+                case 3: return "AUTO";
+                case 4: return "GUIDED";
+                case 5: return "LOITER";
+                case 6: return "RTL";
+                case 7: return "CIRCLE";
+                case 9: return "LAND";
+                case 11: return "DRIFT";
+                case 13: return "SPORT";
+                case 14: return "FLIP";
+                case 15: return "AUTOTUNE";
+                case 16: return "POSHOLD";
+                case 17: return "BRAKE";
+                case 18: return "THROW";
+                case 19: return "AVOID_ADSB";
+                case 20: return "GUIDED_NOGPS";
+                case 21: return "SMART_RTL";
+                case 22: return "FLOWHOLD";
+                case 23: return "FOLLOW";
+                case 24: return "ZIGZAG";
+                case 25: return "SYSTEMID";
+                case 26: return "AUTOROTATE";
+                case 27: return "AUTORTL";
+                case 28: return "TURTLE";
+                default: return "UNKNOWN";
+            }
+        }
+        case MAV_TYPE_GROUND_ROVER:
+        case MAV_TYPE_SURFACE_BOAT: {
+            // ArduRover - use exact mode names from ArduPilot
+            switch (custom_mode) {
+                case 0: return "MANUAL";
+                case 1: return "ACRO";
+                case 3: return "STEERING";
+                case 4: return "HOLD";
+                case 5: return "LOITER";
+                case 6: return "FOLLOW";
+                case 7: return "SIMPLE";
+                case 10: return "AUTO";
+                case 11: return "RTL";
+                case 12: return "SMART_RTL";
+                case 15: return "GUIDED";
+                case 16: return "INITIALIZING";
+                default: return "UNKNOWN";
+            }
+        }
+        default:
+            return "UNKNOWN";
+    }
+}
+
 // --- Jeremy: Add command implementations for flight control ---
 bool ConnectionManager::send_takeoff_command(const std::string& vehicle_id) {
     std::lock_guard<std::mutex> lock(_mutex);
@@ -954,39 +1178,131 @@ bool ConnectionManager::send_set_mode_command(const std::string& vehicle_id, con
     std::string upper_mode = mode;
     std::transform(upper_mode.begin(), upper_mode.end(), upper_mode.begin(), ::toupper);
 
-    // Build candidate custom_mode values for ArduPlane and ArduCopter
+    // Build custom_mode mapping based on MAV_TYPE like QGC FirmwarePlugin
     std::vector<uint32_t> candidates;
     auto push_unique = [&candidates](uint32_t v) {
         if (std::find(candidates.begin(), candidates.end(), v) == candidates.end()) candidates.push_back(v);
     };
 
-    // Plane mapping (ArduPlane)
-    if (upper_mode == "MANUAL") push_unique(0);
-    if (upper_mode == "CIRCLE") push_unique(1);
-    if (upper_mode == "STABILIZE" || upper_mode == "STABILIZED") push_unique(2);
-    if (upper_mode == "ACRO") push_unique(4);
-    if (upper_mode == "FBWA") push_unique(5);
-    if (upper_mode == "FBWB") push_unique(6);
-    if (upper_mode == "CRUISE") push_unique(7);
-    if (upper_mode == "AUTOTUNE") push_unique(8);
-    if (upper_mode == "LAND") push_unique(9);
-    if (upper_mode == "AUTO") push_unique(10);
-    if (upper_mode == "RTL") push_unique(11);
-    if (upper_mode == "LOITER") push_unique(12);
-    if (upper_mode == "TAKEOFF") push_unique(13);
-    if (upper_mode == "GUIDED") push_unique(15);
+    uint8_t mav_type = 0;
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+        mav_type = _last_mav_type[vehicle_id];
+    }
 
-    // Copter mapping (ArduCopter)
-    if (upper_mode == "STABILIZE" || upper_mode == "STABILIZED" || upper_mode == "MANUAL") push_unique(0);
-    if (upper_mode == "ACRO") push_unique(1);
-    if (upper_mode == "ALTHOLD") push_unique(2);
-    if (upper_mode == "AUTO") push_unique(3);
-    if (upper_mode == "GUIDED") push_unique(4);
-    if (upper_mode == "LOITER") push_unique(5);
-    if (upper_mode == "RTL") push_unique(6);
-    if (upper_mode == "CIRCLE") push_unique(7);
-    if (upper_mode == "LAND") push_unique(9);
-    if (upper_mode == "POSHOLD") push_unique(16);
+    // Heuristic override: choose stack by requested mode token to avoid misclassification
+    auto in_set = [&](const std::initializer_list<const char*> names) {
+        for (auto* n : names) { if (upper_mode == n) return true; }
+        return false;
+    };
+    enum class Stack { Unknown, Plane, Copter, Rover, Sub };
+    Stack forced = Stack::Unknown;
+    if (in_set({"FBWA","FBWB","CRUISE","AUTOTUNE","TAKEOFF"})) forced = Stack::Plane;
+    else if (in_set({"POSHOLD","BRAKE","SPORT","DRIFT","THROW","GUIDED_NOGPS","SMART_RTL"})) forced = Stack::Copter;
+    else if (in_set({"LEARNING","STEERING","HOLD"})) forced = Stack::Rover;
+    else if (in_set({"DEPTH HOLD"})) forced = Stack::Sub;
+
+    auto map_plane = [&]() {
+        // Reference: ArduPlane Mode mapping - Fixed mapping based on actual ArduPlane firmware
+        // 0=MANUAL,1=CIRCLE,2=STABILIZE,4=ACRO,5=FBWA,6=FBWB,7=CRUISE,8=AUTOTUNE,9=LAND,10=AUTO,11=RTL,12=LOITER,13=TAKEOFF,15=GUIDED
+        if (upper_mode == "MANUAL") push_unique(0);
+        if (upper_mode == "CIRCLE") push_unique(1);
+        if (upper_mode == "STABILIZE" || upper_mode == "STABILIZED") push_unique(2);
+        if (upper_mode == "ACRO") push_unique(4);
+        if (upper_mode == "FBWA") push_unique(5);
+        if (upper_mode == "FBWB") push_unique(6);
+        if (upper_mode == "CRUISE") push_unique(7);
+        if (upper_mode == "AUTOTUNE") push_unique(8);
+        if (upper_mode == "LAND") push_unique(9);
+        if (upper_mode == "AUTO") push_unique(10);
+        if (upper_mode == "RTL") push_unique(11);
+        if (upper_mode == "LOITER") push_unique(12);
+        if (upper_mode == "TAKEOFF") push_unique(13);
+        if (upper_mode == "GUIDED") push_unique(15);
+    };
+
+    auto map_copter = [&]() {
+        if (upper_mode == "STABILIZE" || upper_mode == "STABILIZED" || upper_mode == "MANUAL") push_unique(0);
+        if (upper_mode == "ACRO") push_unique(1);
+        if (upper_mode == "ALTHOLD") push_unique(2);
+        if (upper_mode == "AUTO") push_unique(3);
+        if (upper_mode == "GUIDED") push_unique(4);
+        if (upper_mode == "LOITER") push_unique(5);
+        if (upper_mode == "RTL") push_unique(6);
+        if (upper_mode == "CIRCLE") push_unique(7);
+        if (upper_mode == "LAND") push_unique(9);
+        if (upper_mode == "POSHOLD") push_unique(16);
+    };
+
+    auto map_rover = [&]() {
+        if (upper_mode == "MANUAL") push_unique(0);
+        if (upper_mode == "ACRO") push_unique(1);
+        if (upper_mode == "LEARNING") push_unique(2);
+        if (upper_mode == "STEERING") push_unique(3);
+        if (upper_mode == "HOLD") push_unique(4);
+        if (upper_mode == "LOITER") push_unique(5);
+        if (upper_mode == "AUTO") push_unique(10);
+        if (upper_mode == "RTL") push_unique(11);
+        if (upper_mode == "GUIDED") push_unique(15);
+    };
+
+    auto map_sub = [&]() {
+        if (upper_mode == "STABILIZE" || upper_mode == "STABILIZED") push_unique(0);
+        if (upper_mode == "ACRO") push_unique(1);
+        if (upper_mode == "AUTO") push_unique(3);
+        if (upper_mode == "GUIDED") push_unique(4);
+        if (upper_mode == "DEPTH HOLD" || upper_mode == "DEPHOLD" || upper_mode == "ALTHOLD") push_unique(2);
+        if (upper_mode == "POSHOLD") push_unique(16);
+    };
+
+    switch (forced == Stack::Unknown ? mav_type : 0xFF) {
+        case 0xFF: // Forced stack mapping by requested mode
+            if (forced == Stack::Plane) { map_plane(); break; }
+            if (forced == Stack::Copter) { map_copter(); break; }
+            if (forced == Stack::Rover) { map_rover(); break; }
+            if (forced == Stack::Sub) { map_sub(); break; }
+            // fallthrough to use mav_type
+            [[fallthrough]];
+        case MAV_TYPE_QUADROTOR:
+        case MAV_TYPE_HELICOPTER:
+        case MAV_TYPE_HEXAROTOR:
+        case MAV_TYPE_OCTOROTOR:
+        case MAV_TYPE_TRICOPTER:
+        case MAV_TYPE_COAXIAL:
+        case MAV_TYPE_VTOL_TAILSITTER_DUOROTOR:
+        case MAV_TYPE_VTOL_TAILSITTER_QUADROTOR:
+        case MAV_TYPE_VTOL_TILTROTOR:
+            map_copter();
+            break;
+        case MAV_TYPE_FIXED_WING:
+            // Full ArduPlane mapping - Fixed mapping based on actual ArduPlane firmware
+            if (upper_mode == "MANUAL") push_unique(0);
+            if (upper_mode == "CIRCLE") push_unique(1);
+            if (upper_mode == "STABILIZE" || upper_mode == "STABILIZED") push_unique(2);
+            if (upper_mode == "ACRO") push_unique(4);
+            if (upper_mode == "FBWA") push_unique(5);
+            if (upper_mode == "FBWB") push_unique(6);
+            if (upper_mode == "CRUISE") push_unique(7);
+            if (upper_mode == "AUTOTUNE") push_unique(8);
+            if (upper_mode == "LAND") push_unique(9);
+            if (upper_mode == "AUTO") push_unique(10);
+            if (upper_mode == "RTL") push_unique(11);
+            if (upper_mode == "LOITER") push_unique(12);
+            if (upper_mode == "TAKEOFF") push_unique(13);
+            if (upper_mode == "GUIDED") push_unique(15);
+            break;
+        case MAV_TYPE_GROUND_ROVER:
+        case MAV_TYPE_SURFACE_BOAT:
+            map_rover();
+            break;
+        case MAV_TYPE_SUBMARINE:
+            map_sub();
+            break;
+        default:
+            // Unknown type: try all maps to increase success probability
+            map_plane(); map_copter(); map_rover(); map_sub();
+            break;
+    }
 
     if (candidates.empty()) {
         std::cerr << "Unknown mode: " << mode << std::endl;
@@ -1000,47 +1316,77 @@ bool ConnectionManager::send_set_mode_command(const std::string& vehicle_id, con
     }
 
     bool any_sent_success = false;
+    uint8_t current_base_mode = 0;
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+        current_base_mode = _last_base_mode[vehicle_id];
+    }
+    // Preserve existing base mode bits like QGC does, but ensure CUSTOM_MODE is enabled
+    uint8_t preserved_base_mode = (current_base_mode & ~MAV_MODE_FLAG_DECODE_POSITION_CUSTOM_MODE) | MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
     for (uint32_t custom_mode : candidates) {
-        // First try SET_MODE (preferred by ArduPilot)
+        // Prefer COMMAND_LONG MAV_CMD_DO_SET_MODE (QGC behavior)
+        mavlink_message_t cmd_msg;
+        mavlink_msg_command_long_pack(
+            passthrough->get_our_sysid(),
+            passthrough->get_our_compid(),
+            &cmd_msg,
+            system->get_system_id(),
+            MAV_COMP_ID_AUTOPILOT1, // target component
+            MAV_CMD_DO_SET_MODE,
+            0, // confirmation
+            static_cast<float>(MAV_MODE_FLAG_CUSTOM_MODE_ENABLED), // param1: only custom enabled
+            static_cast<float>(custom_mode),                       // param2: custom mode
+            0.0f, 0.0f, 0.0f, 0.0f, 0.0f
+        );
+        auto res_cmd = passthrough->send_message(cmd_msg);
+        any_sent_success = any_sent_success || (res_cmd == mavsdk::MavlinkPassthrough::Result::Success);
+        std::cout << "DO_SET_MODE sent (custom_mode=" << custom_mode << ") result="
+                  << (res_cmd == mavsdk::MavlinkPassthrough::Result::Success ? "SUCCESS" : "FAILED") << std::endl;
+
+        // Wait for ACK; if not accepted, fallback once to SET_MODE
+        bool ack_ok_local = false;
         {
+            std::unique_lock<std::mutex> lock(_mutex);
+            _ack_cv.wait_for(lock, std::chrono::milliseconds(1500), [&]{
+                return _last_ack_command[vehicle_id] == MAV_CMD_DO_SET_MODE; 
+            });
+            if (_last_ack_command[vehicle_id] == MAV_CMD_DO_SET_MODE && _last_ack_result[vehicle_id] == MAV_RESULT_ACCEPTED) {
+                ack_ok_local = true;
+            }
+        }
+        if (!ack_ok_local) {
+            // Fallback to SET_MODE
             mavlink_message_t set_mode_msg;
             mavlink_msg_set_mode_pack(
                 passthrough->get_our_sysid(),
                 passthrough->get_our_compid(),
                 &set_mode_msg,
                 system->get_system_id(),
-                static_cast<uint8_t>(MAV_MODE_FLAG_CUSTOM_MODE_ENABLED), // base_mode
-                custom_mode                                          // custom_mode
+                preserved_base_mode,
+                custom_mode
             );
-            auto res = passthrough->send_message(set_mode_msg);
-            std::cout << "SET_MODE sent to " << vehicle_id << " (custom_mode=" << custom_mode << "): "
-                      << (res == mavsdk::MavlinkPassthrough::Result::Success ? "SUCCESS" : "FAILED") << std::endl;
-            any_sent_success = any_sent_success || (res == mavsdk::MavlinkPassthrough::Result::Success);
+            auto res_set = passthrough->send_message(set_mode_msg);
+            any_sent_success = any_sent_success || (res_set == mavsdk::MavlinkPassthrough::Result::Success);
+            std::cout << "SET_MODE fallback sent (custom_mode=" << custom_mode << ") result="
+                      << (res_set == mavsdk::MavlinkPassthrough::Result::Success ? "SUCCESS" : "FAILED") << std::endl;
         }
-
-        // Also send COMMAND_LONG MAV_CMD_DO_SET_MODE with correct param1 flag
-        {
-            mavlink_message_t cmd_msg;
-            mavlink_msg_command_long_pack(
-                passthrough->get_our_sysid(),
-                passthrough->get_our_compid(),
-                &cmd_msg,
-                system->get_system_id(),
-                MAV_COMP_ID_AUTOPILOT1, // target component
-                MAV_CMD_DO_SET_MODE,
-                0, // confirmation
-                static_cast<float>(MAV_MODE_FLAG_CUSTOM_MODE_ENABLED), // param1: base_mode (custom mode enabled)
-                static_cast<float>(custom_mode),                       // param2: custom mode
-                0.0f, 0.0f, 0.0f, 0.0f, 0.0f
-            );
-            auto res = passthrough->send_message(cmd_msg);
-            std::cout << "COMMAND_LONG:DO_SET_MODE sent to " << vehicle_id << " (custom_mode=" << custom_mode << "): "
-                      << (res == mavsdk::MavlinkPassthrough::Result::Success ? "SUCCESS" : "FAILED") << std::endl;
-            any_sent_success = any_sent_success || (res == mavsdk::MavlinkPassthrough::Result::Success);
-        }
+        // Only attempt first mapping
+        break;
     }
 
-    return any_sent_success;
+    // Wait briefly for COMMAND_ACK of DO_SET_MODE
+    // Re-check final ACK status after possible fallback
+    bool ack_ok = false;
+    {
+        std::unique_lock<std::mutex> lock(_mutex);
+        _ack_cv.wait_for(lock, std::chrono::milliseconds(500), [&]{
+            return _last_ack_command[vehicle_id] == MAV_CMD_DO_SET_MODE; 
+        });
+        if (_last_ack_command[vehicle_id] == MAV_CMD_DO_SET_MODE && _last_ack_result[vehicle_id] == MAV_RESULT_ACCEPTED) {
+            ack_ok = true;
+        }
+    }
+    return any_sent_success && ack_ok;
 }
 
 bool ConnectionManager::send_arm_command(const std::string& vehicle_id) {
@@ -1115,20 +1461,51 @@ std::string ConnectionManager::get_flight_modes(const std::string& vehicle_id) {
         std::cerr << "Vehicle " << vehicle_id << " not found for flight modes" << std::endl;
         return json{{"success", false}, {"error", "Vehicle not found"}}.dump();
     }
-    
-    // Return a list of common ArduPilot flight modes
-    std::vector<std::string> flight_modes = {
-        "MANUAL",
-        "STABILIZED", 
-        "ALTHOLD",
-        "AUTO",
-        "RTL",
-        "LOITER",
-        "GUIDED",
-        "ACRO",
-        "CIRCLE",
-        "LAND"
-    };
+
+    // Return mode list based on MAV type similar to QGC FirmwarePlugin
+    uint8_t mav_type = _last_mav_type[vehicle_id];
+    std::vector<std::string> flight_modes;
+    switch (mav_type) {
+        case MAV_TYPE_QUADROTOR:
+        case MAV_TYPE_HELICOPTER:
+        case MAV_TYPE_HEXAROTOR:
+        case MAV_TYPE_OCTOROTOR:
+        case MAV_TYPE_TRICOPTER:
+        case MAV_TYPE_COAXIAL:
+        case MAV_TYPE_VTOL_TAILSITTER_DUOROTOR:
+        case MAV_TYPE_VTOL_TAILSITTER_QUADROTOR:
+        case MAV_TYPE_VTOL_TILTROTOR:
+        case MAV_TYPE_VTOL_FIXEDROTOR:
+        case MAV_TYPE_VTOL_TAILSITTER:
+        case MAV_TYPE_VTOL_TILTWING:
+            // ArduCopter comprehensive set (common)
+            flight_modes = {
+                "STABILIZE","ACRO","ALTHOLD","AUTO","GUIDED","LOITER","RTL","CIRCLE",
+                "LAND","POSHOLD","BRAKE","SPORT","DRIFT","AUTOTUNE","THROW","GUIDED_NOGPS",
+                "SMART_RTL"
+            };
+            break;
+        case MAV_TYPE_FIXED_WING:
+            // ArduPlane comprehensive set (LAND is not a standalone mode on Plane)
+            flight_modes = {
+                "MANUAL","CIRCLE","STABILIZE","ACRO","FBWA","FBWB","CRUISE","AUTOTUNE",
+                "AUTO","RTL","LOITER","TAKEOFF","GUIDED"
+            };
+            break;
+        case MAV_TYPE_GROUND_ROVER:
+        case MAV_TYPE_SURFACE_BOAT:
+            // ArduRover common set
+            flight_modes = {"MANUAL","ACRO","LEARNING","STEERING","HOLD","LOITER","AUTO","RTL","SMART_RTL","GUIDED"};
+            break;
+        case MAV_TYPE_SUBMARINE:
+            // ArduSub common set
+            flight_modes = {"STABILIZE","ACRO","DEPTH HOLD","AUTO","GUIDED","POSHOLD"};
+            break;
+        default:
+            // Fallback generic set
+            flight_modes = {"MANUAL","STABILIZE","ALTHOLD","AUTO","RTL","LOITER","GUIDED","ACRO","CIRCLE","LAND"};
+            break;
+    }
     
     json result = {
         {"success", true},

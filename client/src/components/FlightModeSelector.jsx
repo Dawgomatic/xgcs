@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Button,
   Menu,
   MenuItem,
   Typography,
@@ -11,8 +10,7 @@ import {
 } from '@mui/material';
 import {
   Flight,
-  KeyboardArrowDown,
-  Settings
+  KeyboardArrowDown
 } from '@mui/icons-material';
 
 // @hallucinated - React component for flight mode selection
@@ -63,7 +61,7 @@ const FlightModeSelector = ({
   // Default flight modes if none provided - maps from common QGC modes
   const defaultModes = [
     'MANUAL',
-    'STABILIZED', 
+    'STABILIZE', 
     'ALTHOLD',
     'AUTO',
     'RTL',
@@ -79,7 +77,7 @@ const FlightModeSelector = ({
   // Mode descriptions - maps from QGC flight mode descriptions
   const modeDescriptions = {
     'MANUAL': 'Manual control',
-    'STABILIZED': 'Stabilized flight',
+    'STABILIZE': 'Stabilized flight',
     'ALTHOLD': 'Altitude hold',
     'AUTO': 'Autonomous mission',
     'RTL': 'Return to launch',
@@ -94,7 +92,7 @@ const FlightModeSelector = ({
   const getModeColor = (mode) => {
     const colorMap = {
       'MANUAL': 'default',
-      'STABILIZED': 'primary',
+      'STABILIZE': 'primary',
       'ALTHOLD': 'secondary',
       'AUTO': 'success',
       'RTL': 'warning',

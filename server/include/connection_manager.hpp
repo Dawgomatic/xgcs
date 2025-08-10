@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <vector>
 #include <queue>
+#include <condition_variable>
 
 using json = nlohmann::json;
 
@@ -61,6 +62,10 @@ public:
     bool send_mavlink_message(const std::string& vehicle_id, const std::string& message_type, const json& parameters);
     // --- End Jeremy patch for MAVLink message sending method ---
 
+    // --- Jeremy: Add flight mode conversion methods ---
+    std::string ardupilot_custom_mode_to_string(uint8_t mav_type, uint32_t custom_mode);
+    // --- End Jeremy patch for flight mode conversion methods ---
+
 private:
     ConnectionManager();
     ~ConnectionManager() = default;
@@ -82,4 +87,17 @@ private:
     void setup_mavlink_subscriptions(const std::string& vehicle_id);
     std::string get_mavlink_message_name(uint16_t msgid);
     json decode_mavlink_message(const mavlink_message_t& message);
+
+    // --- Mode/state tracking for QGC-like behavior ---
+    // Stores last-known mode bits and MAV type to enable correct mode mapping and base_mode preservation
+    std::unordered_map<std::string, uint8_t>  _last_base_mode;     // from HEARTBEAT.base_mode
+    std::unordered_map<std::string, uint32_t> _last_custom_mode;   // from HEARTBEAT.custom_mode
+    std::unordered_map<std::string, uint8_t>  _last_mav_type;      // from HEARTBEAT.type (MAV_TYPE_*)
+    std::unordered_map<std::string, uint8_t>  _last_autopilot;     // from HEARTBEAT.autopilot (MAV_AUTOPILOT_*)
+
+    // COMMAND_ACK synchronization
+    std::condition_variable _ack_cv;
+    // Last ack seen per vehicle
+    std::unordered_map<std::string, uint16_t> _last_ack_command;   // MAV_CMD_*
+    std::unordered_map<std::string, uint8_t>  _last_ack_result;    // MAV_RESULT_*
 }; 

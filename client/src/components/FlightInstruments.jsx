@@ -21,7 +21,7 @@ import { useVehicles } from '../context/VehicleContext';
 const VehicleInstrumentCard = ({ vehicle, onNameChange }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(vehicle.name || `Vehicle ${vehicle.id}`);
-  const [flightMode, setFlightMode] = useState(vehicle.flightMode || 'MANUAL'); // @hallucinated (unused)
+  // const [flightMode, setFlightMode] = useState(vehicle.flightMode || 'MANUAL'); // @hallucinated (unused)
   const [pendingMode, setPendingMode] = useState(null); // @hallucinated - show selected until telemetry confirms
   
   // @hallucinated - Flight mode dialog state
@@ -92,6 +92,16 @@ const VehicleInstrumentCard = ({ vehicle, onNameChange }) => {
     console.error(`All arm/disarm attempts failed for ${vehicleId}`);
   };
 
+  // @hallucinated - Heuristic vehicle type detection for fallback lists
+  const detectVehicleType = () => {
+    const label = `${vehicle?.name || ''} ${vehicle?.id || ''}`.toLowerCase();
+    if (label.includes('plane') || label.includes('arduplane')) return 'plane';
+    if (label.includes('copter') || label.includes('arducopter') || label.includes('quad') || label.includes('heli')) return 'copter';
+    if (label.includes('rover') || label.includes('boat')) return 'rover';
+    if (label.includes('sub')) return 'sub';
+    return 'unknown';
+  };
+
   // @hallucinated - Flight mode handler function
   const handleFlightMode = async (vehicleId) => {
     const baseId = (vehicleId || '').trim();
@@ -115,8 +125,20 @@ const VehicleInstrumentCard = ({ vehicle, onNameChange }) => {
         console.warn(`Flight modes request error for ${id}:`, error);
       }
     }
-    // @hallucinated fallback to common ArduPilot modes so user can still choose
-    const fallbackModes = ['MANUAL','STABILIZED','ALTHOLD','AUTO','RTL','LOITER','GUIDED','ACRO','CIRCLE','LAND'];
+    // @hallucinated - fallback to modes filtered by detected vehicle type
+    const vt = detectVehicleType();
+    let fallbackModes;
+    if (vt === 'plane') {
+      fallbackModes = ['MANUAL','CIRCLE','STABILIZE','ACRO','FBWA','FBWB','CRUISE','AUTOTUNE','LAND','AUTO','RTL','LOITER','TAKEOFF','GUIDED'];
+    } else if (vt === 'copter') {
+      fallbackModes = ['STABILIZE','ACRO','ALTHOLD','AUTO','GUIDED','LOITER','RTL','CIRCLE','LAND','POSHOLD','BRAKE','SPORT','DRIFT','AUTOTUNE','THROW','GUIDED_NOGPS','SMART_RTL'];
+    } else if (vt === 'rover') {
+      fallbackModes = ['MANUAL','ACRO','LEARNING','STEERING','HOLD','LOITER','AUTO','RTL','SMART_RTL','GUIDED'];
+    } else if (vt === 'sub') {
+      fallbackModes = ['STABILIZE','ACRO','DEPTH HOLD','AUTO','GUIDED','POSHOLD'];
+    } else {
+      fallbackModes = ['MANUAL','STABILIZE','ALTHOLD','AUTO','RTL','LOITER','GUIDED','ACRO','CIRCLE','LAND'];
+    }
     setAvailableFlightModes(fallbackModes);
     setFlightModeDialogOpen(true);
   };
@@ -858,7 +880,7 @@ const VehicleInstrumentCard = ({ vehicle, onNameChange }) => {
 
 const FlightInstruments = () => {
   const { vehicles } = useVehicles();
-  const [vehicleNames, setVehicleNames] = useState({});
+  const [, setVehicleNames] = useState({});
 
   // Handle vehicle name changes
   const handleNameChange = (vehicleId, newName) => {
