@@ -1,29 +1,30 @@
 // @hallucinated
-// Development proxy for CRA: split API traffic between control API (8081) and simulation API (3001)
+// Development proxy for CRA: route all API calls to proxy server
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function (app) {
-  // Simulation service (Docker-only per Jeremy's preference)
-  app.use(
-    ['/api/simulation', '/api/sim', '/simulation'],
-    createProxyMiddleware({
-      target: 'http://localhost:3001',
-      changeOrigin: true,
-      logLevel: 'warn',
-      ws: true,
-    })
-  );
-
-  // Main control API served by C++ backend (Crow) on 8081
-  app.use(
-    ['/api', '/connect', '/disconnect', '/telemetry', '/vehicles', '/connections'],
-    createProxyMiddleware({
-      target: 'http://localhost:8081',
-      changeOrigin: true,
-      logLevel: 'warn',
-      ws: true,
-    })
-  );
+  console.log('[setupProxy] Loading proxy configuration...');
+  
+  // Route ALL API calls to the proxy server
+  app.use('/api', createProxyMiddleware({
+    target: 'http://localhost:3001',
+    changeOrigin: true,
+    logLevel: 'debug',
+    pathRewrite: {
+      '^/api': '/api' // Keep the /api prefix
+    },
+    onProxyReq: (proxyReq, req, res) => {
+      console.log(`[setupProxy] Proxying ${req.method} ${req.url} -> http://localhost:3001${req.url}`);
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      console.log(`[setupProxy] Response: ${proxyRes.statusCode} for ${req.url}`);
+    },
+    onError: (err, req, res) => {
+      console.error(`[setupProxy] Error proxying ${req.url}:`, err.message);
+    }
+  }));
+  
+  console.log('[setupProxy] Proxy configuration loaded successfully');
 };
 
 

@@ -54,19 +54,19 @@ async function loadSimulations() {
 async function scanDockerContainers() {
   try {
     const dockerManager = new DockerManager();
-    
+
     // Get all containers (running and stopped)
     const psOutput = await dockerManager.runDockerCommand(['ps', '-a', '--format', '{{.Names}}|{{.ID}}|{{.Status}}|{{.Ports}}']);
     const containers = psOutput.split('\n').filter(line => line.trim());
-    
+
     const sitlContainers = [];
     for (const container of containers) {
       const [name, id, status, ports] = container.split('|');
-      
+
       // Check if it's a SITL container (starts with 'sitl-')
       if (name && name.startsWith('sitl-')) {
         const simulationId = name.substring(5); // Remove 'sitl-' prefix
-        
+
         // Extract port from port mapping
         // Handle format: "10:5762/tcp" where frontend port maps to Serial 2
         let port = null;
@@ -83,7 +83,7 @@ async function scanDockerContainers() {
             }
           }
         }
-        
+
         sitlContainers.push({
           name,
           containerId: id,
@@ -93,7 +93,7 @@ async function scanDockerContainers() {
         });
       }
     }
-    
+
     log(`Found ${sitlContainers.length} SITL containers`);
     return sitlContainers;
   } catch (error) {
@@ -105,7 +105,7 @@ async function scanDockerContainers() {
 // Reconcile simulations with Docker containers
 async function reconcileSimulations() {
   log('Reconciling simulations with Docker containers...');
-  
+
   // Load saved simulations
   let savedSimulations = [];
   try {
@@ -114,17 +114,17 @@ async function reconcileSimulations() {
     log(`Error loading simulations during reconciliation: ${error.message}`, 'warn');
     savedSimulations = [];
   }
-  
+
   const dockerContainers = await scanDockerContainers();
-  
+
   // Update simulation states based on container status
   if (savedSimulations && Array.isArray(savedSimulations)) {
     for (const sim of savedSimulations) {
-      const container = dockerContainers.find(c => 
-        sim.id.startsWith(c.simulationIdPrefix) || 
+      const container = dockerContainers.find(c =>
+        sim.id.startsWith(c.simulationIdPrefix) ||
         c.containerId === sim.containerId
       );
-      
+
       if (container) {
         // Update simulation with current container state
         sim.containerId = container.containerId;
@@ -133,7 +133,7 @@ async function reconcileSimulations() {
           log(`Port mismatch for ${sim.id}: saved=${sim.port}, container=${container.port}`);
         }
         simulations.set(sim.id, sim);
-        
+
         // Update dockerManager's container map
         dockerManager.containers.set(sim.id, {
           id: container.containerId,
@@ -151,20 +151,20 @@ async function reconcileSimulations() {
       }
     }
   }
-  
+
   // Check for orphaned containers (containers without matching simulations)
   for (const container of dockerContainers) {
-    const hasMatchingSim = Array.from(simulations.values()).some(sim => 
-      sim.id.startsWith(container.simulationIdPrefix) || 
+    const hasMatchingSim = Array.from(simulations.values()).some(sim =>
+      sim.id.startsWith(container.simulationIdPrefix) ||
       sim.containerId === container.containerId
     );
-    
+
     if (!hasMatchingSim && container.status === 'running') {
       log(`Found orphaned container: ${container.name}, consider cleanup`);
       // Optionally: await dockerManager.runDockerCommand(['stop', container.name]);
     }
   }
-  
+
   // Save updated state
   await saveSimulations();
   log(`Reconciliation complete. Active simulations: ${simulations.size}`);
@@ -181,7 +181,7 @@ class DockerManager {
   async runDockerCommand(args) {
     return new Promise((resolve, reject) => {
       log(`Running Docker command: docker ${args.join(' ')}`);
-      
+
       const dockerProcess = spawn('docker', args, {
         stdio: ['pipe', 'pipe', 'pipe']
       });
@@ -222,13 +222,13 @@ class DockerManager {
   async createSITLContainer(simulation) {
     const containerName = `sitl-${simulation.id.slice(0, 8)}`;
     const basePort = simulation.port; // This is the base port (e.g., 2220)
-    
+
     log(`Creating SITL container: ${containerName} with base port ${basePort}`);
     log(`Simulation config: ${JSON.stringify(simulation, null, 2)}`);
-    
+
     // Determine vehicle type and image
     let image, command;
-    
+
     switch (simulation.vehicleType.toLowerCase()) {
       case 'arducopter':
         image = 'custom-ardupilot-sitl:latest';
@@ -321,10 +321,10 @@ class DockerManager {
           'heli-dual': { class: 2, type: 2 }, // Dual Helicopter
           'heli-compound': { class: 2, type: 3 } // Compound Helicopter
         };
-        
+
         const frameType = simulation.frameType || 'X';
         const config = frameConfig[frameType.toLowerCase()] || frameConfig['X'];
-        
+
         paramFileContent = `# Frame parameters for ${frameType}
 FRAME_CLASS ${config.class}
 FRAME_TYPE ${config.type}
@@ -368,9 +368,9 @@ FRAME_TYPE ${config.type}
 
       log(`Starting container with: docker ${dockerArgs.join(' ')}`);
       const containerId = await this.runDockerCommand(dockerArgs);
-      
+
       log(`Container started successfully: ${containerId.trim()}`);
-      
+
       // Store container info with all port mappings
       this.containers.set(simulation.id, {
         id: containerId.trim(),
@@ -455,13 +455,13 @@ FRAME_TYPE ${config.type}
   // Create a mock simulation as fallback
   createMockSimulation(simulation) {
     log(`Creating mock simulation for ${simulation.vehicleType}`);
-    
+
     // Start mock data updates
     simulation.mockDataInterval = setInterval(() => {
       if (simulation.status === 'running') {
         const time = Date.now() / 1000;
         const radius = 0.001;
-        
+
         simulation.mockData = {
           position: {
             lat: simulation.homeLocation.lat + radius * Math.cos(time * 0.1),
@@ -485,7 +485,7 @@ FRAME_TYPE ${config.type}
           },
           flightMode: ['STABILIZED', 'ALTHOLD', 'LOITER', 'RTL'][Math.floor(time / 10) % 4]
         };
-        
+
         simulations.set(simulation.id, simulation);
       }
     }, 1000);
@@ -498,18 +498,106 @@ FRAME_TYPE ${config.type}
 // Create singleton instance
 const dockerManager = new DockerManager();
 
+// Persistent simulation monitoring - keeps containers running independently of frontend
+let persistentMonitorInterval = null;
+
+// Start persistent monitoring of all running simulations
+function startPersistentMonitoring() {
+  if (persistentMonitorInterval) {
+    log('Persistent monitoring already running');
+    return;
+  }
+
+  log('Starting persistent simulation monitoring...');
+  persistentMonitorInterval = setInterval(async () => {
+    try {
+      // Check all running simulations and ensure their containers are still running
+      for (const [simId, simulation] of simulations) {
+        if (simulation.status === 'running' && simulation.containerId && simulation.containerId !== 'mock-simulation') {
+          try {
+            const containerStatus = await dockerManager.getContainerStatus(simId);
+            if (containerStatus === 'exited' || containerStatus === 'stopped') {
+              log(`Container for simulation ${simId} has stopped unexpectedly, attempting to restart...`);
+
+              // Try to restart the container
+              try {
+                await dockerManager.runDockerCommand(['start', simulation.containerId]);
+                log(`Successfully restarted container for simulation ${simId}`);
+              } catch (restartError) {
+                log(`Failed to restart container for simulation ${simId}: ${restartError.message}`, 'error');
+                // Mark simulation as stopped if we can't restart
+                simulation.status = 'stopped';
+                simulation.stoppedAt = new Date().toISOString();
+                simulations.set(simId, simulation);
+              }
+            }
+          } catch (statusError) {
+            log(`Error checking container status for simulation ${simId}: ${statusError.message}`, 'warn');
+          }
+        }
+      }
+    } catch (error) {
+      log(`Error in persistent monitoring: ${error.message}`, 'error');
+    }
+  }, 10000); // Check every 10 seconds
+
+  log('Persistent simulation monitoring started');
+}
+
+// Stop persistent monitoring
+function stopPersistentMonitoring() {
+  if (persistentMonitorInterval) {
+    clearInterval(persistentMonitorInterval);
+    persistentMonitorInterval = null;
+    log('Persistent simulation monitoring stopped');
+  }
+}
+
+// Restart persistent monitoring
+function restartPersistentMonitoring() {
+  log('Restarting persistent simulation monitoring...');
+  stopPersistentMonitoring();
+  startPersistentMonitoring();
+}
+
+// Get monitoring status
+function getMonitoringStatus() {
+  return {
+    active: persistentMonitorInterval !== null,
+    interval: persistentMonitorInterval ? '10 seconds' : 'stopped',
+    runningSimulations: Array.from(simulations.values()).filter(sim => sim.status === 'running').length
+  };
+}
+
 // Initialize on module load
 (async function initialize() {
   log('Initializing simulation manager...');
   await reconcileSimulations();
-  log('Simulation manager ready');
+
+  // Start persistent monitoring to keep containers running
+  startPersistentMonitoring();
+
+  // Graceful shutdown handler
+  process.on('SIGINT', () => {
+    log('Received SIGINT, shutting down simulation manager gracefully...');
+    stopPersistentMonitoring();
+    process.exit(0);
+  });
+
+  process.on('SIGTERM', () => {
+    log('Received SIGTERM, shutting down simulation manager gracefully...');
+    stopPersistentMonitoring();
+    process.exit(0);
+  });
+
+  log('Simulation manager ready with persistent monitoring');
 })();
 
 // Create simulation
 router.post('/create', async (req, res) => {
   try {
     log('Creating simulation with config:', req.body);
-    
+
     const config = req.body;
     const simulationId = uuidv4();
     let port = config.port;
@@ -520,16 +608,16 @@ router.post('/create', async (req, res) => {
       // Validate user-specified port is not in use
       const usedPorts = Array.from(simulations.values()).map(sim => sim.port);
       if (usedPorts.includes(port)) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           error: 'Port already in use',
-          details: `Port ${port} is already assigned to another simulation` 
+          details: `Port ${port} is already assigned to another simulation`
         });
       }
     }
-    
+
     log(`Generated simulation ID: ${simulationId}`);
     log(`Assigned port: ${port}`);
-    
+
     const simulation = {
       id: simulationId,
       name: config.name || `${config.vehicleType || 'Vehicle'} ${simulationId.slice(0, 8)}`,
@@ -550,25 +638,25 @@ router.post('/create', async (req, res) => {
       containerId: null,
       mockData: null
     };
-    
+
     simulations.set(simulationId, simulation);
-    
+
     // Save to file
     await saveSimulations();
-    
+
     log(`Simulation created successfully: ${simulationId}`);
     log(`Total simulations: ${simulations.size}`);
-    
-    res.json({ 
-      success: true, 
-      simulation: simulation 
+
+    res.json({
+      success: true,
+      simulation: simulation
     });
-    
+
   } catch (error) {
     log(`Error creating simulation: ${error.message}`, 'error');
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to create simulation',
-      details: error.message 
+      details: error.message
     });
   }
 });
@@ -579,7 +667,7 @@ router.get('/list', (req, res) => {
     const simulationList = Array.from(simulations.values()).map(sim => {
       // Create a clean copy without circular references
       const { mockDataInterval, ...cleanSim } = sim;
-      
+
       // Get container info for port mapping
       const container = dockerManager.containers.get(sim.id);
       const ports = container ? {
@@ -588,10 +676,10 @@ router.get('/list', (req, res) => {
         serial1: container.port + 1,
         serial2: container.port + 2
       } : null;
-      
+
       // Always use the host-mapped port for simulation.port
       const hostPort = container ? container.port : cleanSim.port;
-      
+
       return {
         id: cleanSim.id,
         name: cleanSim.name,
@@ -618,15 +706,15 @@ router.get('/list', (req, res) => {
       };
     });
     log(`Listing ${simulationList.length} simulations`);
-    res.json({ 
-      success: true, 
-      simulations: simulationList 
+    res.json({
+      success: true,
+      simulations: simulationList
     });
   } catch (error) {
     log(`Error listing simulations: ${error.message}`, 'error');
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to list simulations',
-      details: error.message 
+      details: error.message
     });
   }
 });
@@ -636,53 +724,59 @@ router.post('/:id/start', async (req, res) => {
   try {
     const simulationId = req.params.id;
     log(`Starting simulation: ${simulationId}`);
-    
+
     const simulation = simulations.get(simulationId);
-    
+
     if (!simulation) {
       log(`Simulation not found: ${simulationId}`, 'error');
       return res.status(404).json({ error: 'Simulation not found' });
     }
-    
+
     if (simulation.status === 'running' || simulation.status === 'starting') {
       log(`Simulation already running/starting: ${simulationId}`, 'warn');
       return res.status(400).json({ error: 'Simulation is already running' });
     }
-    
+
     log('Starting simulation with Docker container:', simulationId);
     log(`Simulation config: ${JSON.stringify(simulation, null, 2)}`);
-    
+
     // Update status
     simulation.status = 'starting';
     simulations.set(simulationId, simulation);
-    
+
     // Create and start Docker container
     log(`Creating Docker container for simulation: ${simulationId}`);
     const containerId = await dockerManager.createSITLContainer(simulation);
-    
+
     log(`Docker container created: ${containerId}`);
-    
+
     // Update simulation
     simulation.status = 'running';
     simulation.startedAt = new Date().toISOString();
     simulation.containerId = containerId;
     simulations.set(simulationId, simulation);
-    
+
     // Save to file
     await saveSimulations();
-    
+
     log(`Simulation started successfully: ${simulationId}`);
     log(`Container ID: ${containerId}`);
-    
-    res.json({ 
-      success: true, 
+
+    // Ensure persistent monitoring is active for this simulation
+    if (!persistentMonitorInterval) {
+      log('Persistent monitoring was stopped, restarting...');
+      startPersistentMonitoring();
+    }
+
+    res.json({
+      success: true,
       message: 'Simulation started successfully',
       containerId: containerId
     });
-    
+
   } catch (error) {
     log(`Error starting simulation: ${error.message}`, 'error');
-    
+
     // Update simulation status to error
     const simulationId = req.params.id;
     const simulation = simulations.get(simulationId);
@@ -692,10 +786,10 @@ router.post('/:id/start', async (req, res) => {
       simulations.set(simulationId, simulation);
       log(`Updated simulation ${simulationId} status to error`);
     }
-    
-    res.status(500).json({ 
+
+    res.status(500).json({
       error: 'Failed to start simulation',
-      details: error.message 
+      details: error.message
     });
   }
 });
@@ -705,54 +799,54 @@ router.post('/:id/stop', async (req, res) => {
   try {
     const simulationId = req.params.id;
     log(`Stopping simulation: ${simulationId}`);
-    
+
     const simulation = simulations.get(simulationId);
-    
+
     if (!simulation) {
       log(`Simulation not found: ${simulationId}`, 'error');
       return res.status(404).json({ error: 'Simulation not found' });
     }
-    
+
     if (simulation.status === 'stopped' || simulation.status === 'stopping') {
       log(`Simulation already stopped/stopping: ${simulationId}`, 'warn');
       return res.status(400).json({ error: 'Simulation is not running' });
     }
-    
+
     log('Stopping simulation:', simulationId);
     log(`Current status: ${simulation.status}`);
     log(`Container ID: ${simulation.containerId}`);
-    
+
     // Stop Docker container
     await dockerManager.stopContainer(simulationId);
-    
+
     // Clear mock data interval if it exists
     if (simulation.mockDataInterval) {
       clearInterval(simulation.mockDataInterval);
       simulation.mockDataInterval = null;
       log(`Cleared mock data interval for simulation: ${simulationId}`);
     }
-    
+
     // Update simulation
     simulation.status = 'stopped';
     simulation.stoppedAt = new Date().toISOString();
     simulation.containerId = null;
     simulations.set(simulationId, simulation);
-    
+
     // Save to file
     await saveSimulations();
-    
+
     log(`Simulation stopped successfully: ${simulationId}`);
-    
-    res.json({ 
-      success: true, 
-      message: 'Simulation stopped successfully' 
+
+    res.json({
+      success: true,
+      message: 'Simulation stopped successfully'
     });
-    
+
   } catch (error) {
     log(`Error stopping simulation: ${error.message}`, 'error');
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to stop simulation',
-      details: error.message 
+      details: error.message
     });
   }
 });
@@ -762,24 +856,24 @@ router.get('/:id/status', async (req, res) => {
   try {
     const simulationId = req.params.id;
     log(`Getting status for simulation: ${simulationId}`);
-    
+
     const simulation = simulations.get(simulationId);
-    
+
     if (!simulation) {
       log(`Simulation not found: ${simulationId}`, 'error');
       return res.status(404).json({ error: 'Simulation not found' });
     }
-    
+
     log(`Simulation status: ${simulation.status}`);
     log(`Container ID: ${simulation.containerId}`);
-    
+
     // Get container status if it's a Docker container
     let containerStatus = null;
     if (simulation.containerId && simulation.containerId !== 'mock-simulation') {
       containerStatus = await dockerManager.getContainerStatus(simulationId);
       log(`Container status: ${containerStatus}`);
     }
-    
+
     // Calculate uptime if running
     let stats = null;
     if (simulation.status === 'running' && simulation.startedAt) {
@@ -791,26 +885,24 @@ router.get('/:id/status', async (req, res) => {
         containerStatus: containerStatus,
         mockData: simulation.mockData
       };
-      
+
       simulation.stats = stats;
       simulations.set(simulationId, simulation);
       log(`Updated stats for simulation: ${simulationId}`);
     }
-    
+
     res.json({
-      id: simulation.id,
+      id: simulationId,
       status: simulation.status,
       stats: stats,
-      containerId: simulation.containerId,
-      containerStatus: containerStatus,
-      mockData: simulation.mockData
+      containerStatus: containerStatus
     });
-    
+
   } catch (error) {
     log(`Error getting simulation status: ${error.message}`, 'error');
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to get simulation status',
-      details: error.message 
+      details: error.message
     });
   }
 });
@@ -820,43 +912,43 @@ router.get('/:id/logs', async (req, res) => {
   try {
     const simulationId = req.params.id;
     log(`Getting logs for simulation: ${simulationId}`);
-    
+
     const simulation = simulations.get(simulationId);
-    
+
     if (!simulation) {
       log(`Simulation not found: ${simulationId}`, 'error');
       return res.status(404).json({ error: 'Simulation not found' });
     }
-    
+
     let logs = [];
-    
+
+    // Get Docker container logs if available
     if (simulation.containerId && simulation.containerId !== 'mock-simulation') {
-      // Get Docker container logs
-      log(`Fetching Docker container logs for: ${simulation.containerId}`);
-      logs = await dockerManager.getContainerLogs(simulationId);
-      log(`Retrieved ${logs.length} log entries from Docker container`);
+      try {
+        logs = await dockerManager.getContainerLogs(simulationId);
+      } catch (error) {
+        log(`Error getting Docker logs: ${error.message}`, 'warn');
+        logs = [`Error retrieving Docker logs: ${error.message}`];
+      }
     } else {
-      // Generate mock logs
-      log(`Generating mock logs for simulation: ${simulationId}`);
+      // Mock logs for mock simulations
       logs = [
-        `${new Date().toISOString()} - Mock simulation started`,
-        `${new Date().toISOString()} - GPS: 8 satellites, HDOP: 1.2`,
-        `${new Date().toISOString()} - Battery: 12.6V, 85% remaining`,
-        `${new Date().toISOString()} - Flight mode: ${simulation.mockData?.flightMode || 'STABILIZED'}`,
-        `${new Date().toISOString()} - Position: ${simulation.mockData?.position.lat.toFixed(6)}, ${simulation.mockData?.position.lng.toFixed(6)}, ${simulation.mockData?.position.alt.toFixed(1)}m`
+        `[${new Date().toISOString()}] Mock simulation started`,
+        `[${new Date().toISOString()}] Generating mock MAVLink data`,
+        `[${new Date().toISOString()}] Simulation running normally`
       ];
     }
-    
+
     res.json({
-      success: true,
+      id: simulationId,
       logs: logs
     });
-    
+
   } catch (error) {
     log(`Error getting simulation logs: ${error.message}`, 'error');
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to get simulation logs',
-      details: error.message 
+      details: error.message
     });
   }
 });
@@ -866,113 +958,174 @@ router.delete('/:id', async (req, res) => {
   try {
     const simulationId = req.params.id;
     log(`Deleting simulation: ${simulationId}`);
-    
+
     const simulation = simulations.get(simulationId);
-    
+
     if (!simulation) {
       log(`Simulation not found: ${simulationId}`, 'error');
       return res.status(404).json({ error: 'Simulation not found' });
     }
-    
-    log(`Simulation status: ${simulation.status}`);
-    log(`Container ID: ${simulation.containerId}`);
-    
-    // Stop container if running
+
+    // Stop if running
     if (simulation.status === 'running') {
-      log(`Stopping running container before deletion: ${simulationId}`);
+      log(`Stopping running simulation before deletion: ${simulationId}`);
       await dockerManager.stopContainer(simulationId);
-      
+
       if (simulation.mockDataInterval) {
         clearInterval(simulation.mockDataInterval);
-        log(`Cleared mock data interval for simulation: ${simulationId}`);
+        simulation.mockDataInterval = null;
       }
     }
-    
-    // Remove from simulations map
+
+    // Remove from memory
     simulations.delete(simulationId);
-    log(`Removed simulation from storage: ${simulationId}`);
-    log(`Total simulations remaining: ${simulations.size}`);
-    
+
     // Save to file
     await saveSimulations();
-    
-    res.json({ 
-      success: true, 
-      message: 'Simulation deleted successfully' 
-    });
-    
-  } catch (error) {
-    log(`Error deleting simulation: ${error.message}`, 'error');
-    res.status(500).json({ 
-      error: 'Failed to delete simulation',
-      details: error.message 
-    });
-  }
-});
 
-// Get next available port range (3 ports per simulation)
-function getNextPortRange() {
-  const basePort = nextPort;
-  nextPort += 3; // Increment by 3 for next simulation
-  return basePort;
-}
+    log(`Simulation deleted successfully: ${simulationId}`);
 
-// Get simulation port information
-router.get('/:id/ports', (req, res) => {
-  try {
-    const simulationId = req.params.id;
-    const simulation = simulations.get(simulationId);
-    
-    if (!simulation) {
-      return res.status(404).json({ error: 'Simulation not found' });
-    }
-    
-    const container = dockerManager.containers.get(simulationId);
-    if (!container) {
-      return res.status(404).json({ error: 'Container not found' });
-    }
-    
     res.json({
       success: true,
-      simulationId: simulationId,
-      ports: {
-        primary: container.port,           // Main MAVLink port (SERIAL0)
-        serial0: container.port,           // SERIAL0 (MAVLink)
-        serial1: container.port + 1,       // SERIAL1 (GPS)
-        serial2: container.port + 2        // SERIAL2 (Telemetry)
-      },
-      connectionInfo: {
-        primary: `tcp://localhost:${container.port}`,
-        serial0: `tcp://localhost:${container.port}`,      // MAVLink
-        serial1: `tcp://localhost:${container.port + 1}`,  // GPS
-        serial2: `tcp://localhost:${container.port + 2}`   // Telemetry
-      },
-      ardupilotSitlPorts: {
-        serial0: {
-          port: container.port,
-          purpose: "MAVLink",
-          description: "Primary MAVLink communication port"
-        },
-        serial1: {
-          port: container.port + 1,
-          purpose: "GPS",
-          description: "GPS data port"
-        },
-        serial2: {
-          port: container.port + 2,
-          purpose: "Telemetry",
-          description: "Telemetry data port"
-        }
-      }
+      message: 'Simulation deleted successfully'
     });
-    
+
   } catch (error) {
-    console.error('Error getting simulation ports:', error);
-    res.status(500).json({ 
-      error: 'Failed to get simulation ports',
-      details: error.message 
+    log(`Error deleting simulation: ${error.message}`, 'error');
+    res.status(500).json({
+      error: 'Failed to delete simulation',
+      details: error.message
     });
   }
 });
 
-module.exports = router; 
+// Get all simulations
+router.get('/', async (req, res) => {
+  try {
+    log('Getting all simulations');
+
+    const simulationList = Array.from(simulations.values()).map(sim => ({
+      id: sim.id,
+      name: sim.name,
+      status: sim.status,
+      type: sim.type,
+      startedAt: sim.startedAt,
+      stoppedAt: sim.stoppedAt,
+      containerId: sim.containerId
+    }));
+
+    res.json(simulationList);
+
+  } catch (error) {
+    log(`Error getting simulations: ${error.message}`, 'error');
+    res.status(500).json({
+      error: 'Failed to get simulations',
+      details: error.message
+    });
+  }
+});
+// Batch Swarm Create
+router.post('/swarm/create', async (req, res) => {
+  try {
+    const { count, vehicleType, frameType, homeLocation, spacing = 0.0001, startImmediately = true } = req.body;
+    log(`Creating swarm of ${count} ${vehicleType}s at ${homeLocation?.lat}, ${homeLocation?.lng}`);
+
+    if (!homeLocation) {
+      return res.status(400).json({ error: 'Home location required' });
+    }
+
+    const createdSims = [];
+    const gridSize = Math.ceil(Math.sqrt(count));
+
+    // Helper to check if a port is in use (by existing or newly created sims)
+    const isPortUsed = (port) => {
+      for (const sim of simulations.values()) {
+        if (sim.port === port || (sim.ports && Object.values(sim.ports).includes(port))) return true;
+        // Also check range (port, port+1, port+2)
+        if (sim.port && (sim.port <= port && sim.port + 2 >= port)) return true;
+      }
+      for (const sim of createdSims) {
+        if (sim.port === port || (sim.port <= port && sim.port + 2 >= port)) return true;
+      }
+      return false;
+    };
+
+    let currentPort = 2220;
+
+    for (let i = 0; i < count; i++) {
+      // Find free block of 3 ports (N, N+1, N+2)
+      while (isPortUsed(currentPort) || isPortUsed(currentPort + 1) || isPortUsed(currentPort + 2)) {
+        currentPort += 10; // Increment by 10 to keep nice spacing
+      }
+
+      // Grid Position
+      const row = Math.floor(i / gridSize);
+      const col = i % gridSize;
+      const newLat = parseFloat(homeLocation.lat) + (row * parseFloat(spacing));
+      const newLng = parseFloat(homeLocation.lng) + (col * parseFloat(spacing));
+
+      const simId = uuidv4();
+      const sim = {
+        id: simId,
+        name: `Swarm ${vehicleType} ${i + 1}`,
+        vehicleType: vehicleType,
+        frameType: frameType || 'quad',
+        ipAddress: 'localhost',
+        port: currentPort,
+        systemId: i + 1,
+        speedFactor: 1.0,
+        enableLogging: false,
+        enableVideo: false,
+        homeLocation: { lat: newLat, lng: newLng, alt: homeLocation.alt },
+        status: 'created',
+        createdAt: new Date().toISOString()
+      };
+
+      simulations.set(simId, sim);
+      createdSims.push(sim);
+    }
+
+    await saveSimulations();
+
+    // Trigger creation/start async
+    if (startImmediately) {
+      log(`Starting ${createdSims.length} swarm agents asynchronously...`);
+      // Do not await this loop, let it run in background
+      (async () => {
+        for (const sim of createdSims) {
+          try {
+            sim.status = 'starting';
+            simulations.set(sim.id, sim);
+
+            const containerId = await dockerManager.createSITLContainer(sim);
+            sim.status = 'running';
+            sim.containerId = containerId;
+            sim.startedAt = new Date().toISOString();
+            simulations.set(sim.id, sim);
+            log(`Swarm agent ${sim.id} started.`);
+          } catch (err) {
+            log(`Failed to start swarm agent ${sim.id}: ${err.message}`, 'error');
+            sim.status = 'error';
+            sim.error = err.message;
+            simulations.set(sim.id, sim);
+          }
+          // Stagger starts to protect system resources
+          await new Promise(r => setTimeout(r, 1000));
+        }
+        await saveSimulations();
+      })();
+    }
+
+    res.json({
+      success: true,
+      message: `Created configuration for ${count} updates. Starting sequentially.`,
+      simulations: createdSims
+    });
+
+  } catch (error) {
+    log(`Error creating swarm: ${error.message}`, 'error');
+    res.status(500).json({ error: error.message });
+  }
+});
+
+module.exports = router;

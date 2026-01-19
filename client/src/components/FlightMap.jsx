@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { 
-  Box, 
-  Paper, 
-  Typography, 
-  IconButton, 
-  Chip, 
-  Button, 
-  Switch, 
-  FormControlLabel, 
-  ToggleButton, 
+import {
+  Box,
+  Paper,
+  Typography,
+  IconButton,
+  Chip,
+  Button,
+  Switch,
+  FormControlLabel,
+  ToggleButton,
   ToggleButtonGroup,
   Dialog,
   DialogTitle,
@@ -28,10 +28,10 @@ import {
   FormControl,
   InputLabel
 } from '@mui/material';
-import { 
-  MyLocation, 
-  CenterFocusStrong, 
-  ZoomIn, 
+import {
+  MyLocation,
+  CenterFocusStrong,
+  ZoomIn,
   ZoomOut,
   Layers,
   Satellite,
@@ -63,7 +63,41 @@ import {
 import * as Cesium from 'cesium';
 import { useVehicles } from '../context/VehicleContext';
 
-const FlightMap = () => {
+// ADSB Aircraft Color Helper
+const getDetailsFromEmitterType = (emitterType) => {
+  switch (emitterType) {
+    case 1:  // Light
+    case 2:  // Small
+    case 3:  // Large
+    case 4:  // High Vortex Large
+    case 5:  // Heavy
+      return { color: Cesium.Color.CYAN, scale: 1.0, icon: '✈️' }; // Fixed Wing
+    case 6:  // Highly Maneuverable
+    case 7:  // Rotocraft
+      return { color: Cesium.Color.LIME, scale: 0.8, icon: '🚁' }; // Helicopter
+    case 10: // Glider
+      return { color: Cesium.Color.WHITE, scale: 0.8, icon: '🪁' };
+    case 11: // Lighter-than-air
+      return { color: Cesium.Color.YELLOW, scale: 1.2, icon: '🎈' };
+    default:
+      return { color: Cesium.Color.ORANGE, scale: 0.8, icon: '✈️' }; // Unknown
+  }
+};
+
+const FlightMap = ({
+  externalWaypoints,
+  externalPolygons,
+  externalPolylines,
+  onMapClick,
+  readOnly = false,
+  mode = 'mission', // 'mission' or 'safety'
+  onFenceChange,
+  onRallyChange,
+  onFenceChange,
+  onRallyChange,
+  onContextMenu, // callback(event, coordinate)
+  radioRangeRing // { radius (meters), color (hex), opacity }
+}) => {
   const { setViewer } = useVehicles();
   const cesiumContainer = useRef(null);
   const viewerRef = useRef(null);
@@ -105,6 +139,19 @@ const FlightMap = () => {
   // Get vehicle data from context
   const { vehicles } = useVehicles();
 
+  // Sync internal state to external callbacks
+  useEffect(() => {
+    if (onFenceChange) {
+      onFenceChange(fencePolygon);
+    }
+  }, [fencePolygon, onFenceChange]);
+
+  useEffect(() => {
+    if (onRallyChange) {
+      onRallyChange(rallyPoints);
+    }
+  }, [rallyPoints, onRallyChange]);
+
   // Mission Planning Functions
   const addWaypoint = (coordinate, altitude = 100) => {
     const newWaypoint = {
@@ -127,7 +174,7 @@ const FlightMap = () => {
   };
 
   const updateWaypoint = (waypointId, updates) => {
-    setWaypoints(waypoints.map(wp => 
+    setWaypoints(waypoints.map(wp =>
       wp.id === waypointId ? { ...wp, ...updates } : wp
     ));
     updateWaypointOnMap(waypointId, updates);
@@ -136,7 +183,7 @@ const FlightMap = () => {
 
   const addWaypointToMap = (waypoint) => {
     if (!viewerRef.current) return;
-    
+
     const position = Cesium.Cartesian3.fromDegrees(
       waypoint.coordinate.lon,
       waypoint.coordinate.lat,
@@ -196,8 +243,8 @@ const FlightMap = () => {
 
   const addFencePolygon = (coordinates) => {
     if (!viewerRef.current || coordinates.length < 3) return;
-    
-    const positions = coordinates.map(coord => 
+
+    const positions = coordinates.map(coord =>
       Cesium.Cartesian3.fromDegrees(coord.lon, coord.lat)
     );
 
@@ -214,7 +261,7 @@ const FlightMap = () => {
 
   const addFenceCircle = (center, radius) => {
     if (!viewerRef.current) return;
-    
+
     const entity = viewerRef.current.entities.add({
       id: 'fence-circle',
       position: Cesium.Cartesian3.fromDegrees(center.lon, center.lat),
@@ -241,7 +288,7 @@ const FlightMap = () => {
 
   const addRallyPointToMap = (rallyPoint) => {
     if (!viewerRef.current) return;
-    
+
     const position = Cesium.Cartesian3.fromDegrees(
       rallyPoint.coordinate.lon,
       rallyPoint.coordinate.lat,
@@ -275,18 +322,23 @@ const FlightMap = () => {
 
   const handleMapClick = (event) => {
     if (!viewerRef.current) return;
-    
+
     const pickedPosition = viewerRef.current.camera.pickEllipsoid(
       new Cesium.Cartesian2(event.clientX, event.clientY),
       viewerRef.current.scene.globe.ellipsoid
     );
-    
+
     if (pickedPosition) {
       const cartographic = Cesium.Cartographic.fromCartesian(pickedPosition);
       const coordinate = {
         lat: Cesium.Math.toDegrees(cartographic.latitude),
         lon: Cesium.Math.toDegrees(cartographic.longitude)
       };
+
+      if (onMapClick) {
+        onMapClick(coordinate);
+        return;
+      }
 
       switch (missionMode) {
         case 'waypoint':
@@ -315,7 +367,7 @@ const FlightMap = () => {
     setFenceCircle(null);
     setRallyPoints([]);
     setMissionDirty(false);
-    
+
     // Clear map entities
     if (viewerRef.current) {
       viewerRef.current.entities.removeAll();
@@ -324,7 +376,7 @@ const FlightMap = () => {
 
   const uploadMission = async () => {
     if (!vehicles.length) return;
-    
+
     const mission = {
       waypoints: waypoints,
       fence: {
@@ -338,12 +390,12 @@ const FlightMap = () => {
       const response = await fetch('/api/mission/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           vehicleId: vehicles[0].id,
-          mission: mission 
+          mission: mission
         })
       });
-      
+
       if (response.ok) {
         setMissionDirty(false);
         console.log('Mission uploaded successfully');
@@ -475,6 +527,71 @@ const FlightMap = () => {
     }
   };
 
+  // Update ADSB Traffic on Map
+  const updateAdsbTraffic = (viewer, adsbData) => {
+    /* 
+     adsbData: { 
+       icao_address: number, 
+       lat: number, // deg
+       lon: number, // deg
+       altitude: number, // m
+       heading: number, // deg 
+       callsign: string, 
+       emitter_type: number,
+       hor_velocity: number, // m/s
+       ver_velocity: number // m/s
+     }
+    */
+    const id = `adsb-${adsbData.icao_address}`;
+    let entity = viewer.entities.getById(id);
+
+    const position = Cesium.Cartesian3.fromDegrees(
+      adsbData.lon,
+      adsbData.lat,
+      adsbData.altitude
+    );
+
+    const details = getDetailsFromEmitterType(adsbData.emitter_type);
+
+    if (!entity) {
+      entity = viewer.entities.add({
+        id: id,
+        position: position,
+        name: `Traffic ${adsbData.callsign.replace(/\0/g, '')}`, // Clean callsign
+        description: `ICAO: ${adsbData.icao_address}\nAlt: ${adsbData.altitude.toFixed(0)}m\nSpeed: ${adsbData.hor_velocity.toFixed(0)}m/s`,
+        // Simple Billboard for now
+        point: {
+          pixelSize: 8,
+          color: details.color,
+          outlineColor: Cesium.Color.BLACK,
+          outlineWidth: 1,
+          heightReference: Cesium.HeightReference.NONE
+        },
+        label: {
+          text: `${adsbData.callsign.replace(/\0/g, '')}\n${(adsbData.altitude / 3.28).toFixed(0)}ft`, // Display feet for aviation
+          font: '10pt monospace',
+          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+          fillColor: details.color,
+          outlineColor: Cesium.Color.BLACK,
+          outlineWidth: 2,
+          pixelOffset: new Cesium.Cartesian2(0, -20),
+          distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 50000) // Hide labels when far
+        }
+      });
+    } else {
+      // Interpolate for smoothness? For now just jump
+      entity.position = position;
+
+      // Update label text if needed
+      if (Math.random() < 0.1) { // Throttle string updates
+        entity.label.text = `${adsbData.callsign.replace(/\0/g, '')}\n${(adsbData.altitude / 3.28).toFixed(0)}ft`;
+      }
+    }
+
+    // Handle timeout/cleanup externally or add timestamp check here?
+    // For now rely on constant stream. Ideally we add a "lastSeen" property and a cleanup loop.
+  };
+
 
 
   useEffect(() => {
@@ -483,26 +600,26 @@ const FlightMap = () => {
     console.log('Starting Cesium initialization with full configuration...');
 
     // Create a comprehensive Cesium viewer with all options
-      const viewer = new Cesium.Viewer(cesiumContainer.current, {
+    const viewer = new Cesium.Viewer(cesiumContainer.current, {
       baseLayerPicker: false, // We'll create our own
       geocoder: false,
       homeButton: false,
       sceneModePicker: false, // We'll create our own
-        navigationHelpButton: false,
-        animation: false,
-        timeline: false,
-        fullscreenButton: false,
-        infoBox: false,
-        selectionIndicator: false,
+      navigationHelpButton: false,
+      animation: false,
+      timeline: false,
+      fullscreenButton: false,
+      infoBox: false,
+      selectionIndicator: false,
       scene3DOnly: false, // Allow 2D and 2.5D modes
-        shouldAnimate: true
-      });
+      shouldAnimate: true
+    });
 
     console.log('Comprehensive viewer created');
 
     // Store viewer reference
     viewerRef.current = viewer;
-    
+
     // Register viewer with VehicleContext for telemetry updates
     setViewer(viewer);
 
@@ -529,10 +646,45 @@ const FlightMap = () => {
     const clickHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
     clickHandler.setInputAction(handleMapClick, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
+    // Right Click for Context Menu
+    clickHandler.setInputAction((event) => {
+      const pickedPosition = viewer.camera.pickEllipsoid(
+        event.position,
+        viewer.scene.globe.ellipsoid
+      );
+
+      if (pickedPosition) {
+        const cartographic = Cesium.Cartographic.fromCartesian(pickedPosition);
+        const coordinate = {
+          lat: Cesium.Math.toDegrees(cartographic.latitude),
+          lon: Cesium.Math.toDegrees(cartographic.longitude)
+        };
+
+        if (onContextMenu) {
+          onContextMenu({
+            clientX: event.position.x,
+            clientY: event.position.y,
+          }, coordinate);
+        }
+      }
+    }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+
+    // Listen for ADSB events from VehicleContext (assuming it emits custom events or we hook into the stream)
+    // Currently, MavlinkInspector component handles the WebSocket. 
+    // We need a way to get this data. 
+    // HACK: We will listen to a custom window event dispatched by MavlinkInspector or a global socket handler
+    const handleAdsbEvent = (e) => {
+      if (e.detail) {
+        updateAdsbTraffic(viewer, e.detail);
+      }
+    };
+    window.addEventListener('mavlink-adsb-traffic', handleAdsbEvent);
+
     console.log('Cesium viewer fully configured');
 
     // Cleanup
     return () => {
+      window.removeEventListener('mavlink-adsb-traffic', handleAdsbEvent);
       if (clickHandler) {
         clickHandler.destroy();
       }
@@ -547,7 +699,7 @@ const FlightMap = () => {
     try {
       console.log('Setting up imagery for type:', type);
       viewer.imageryLayers.removeAll();
-      
+
       switch (type) {
         case 'osm':
           const osmImagery = new Cesium.OpenStreetMapImageryProvider({
@@ -556,7 +708,7 @@ const FlightMap = () => {
           viewer.imageryLayers.addImageryProvider(osmImagery);
           console.log('OpenStreetMap imagery added');
           break;
-          
+
         case 'bing':
           try {
             const bingImagery = new Cesium.BingMapsImageryProvider({
@@ -575,86 +727,86 @@ const FlightMap = () => {
             console.log('Bing fallback imagery added');
           }
           break;
-          
+
         case 'satellite':
           // Try Cesium World Imagery if token is available
           const hasToken = !!localStorage.getItem('cesiumIonKey');
           console.log('Satellite setup - hasToken:', hasToken);
           if (hasToken) {
             console.log('Token value for satellite:', localStorage.getItem('cesiumIonKey'));
-                          try {
-                console.log('Attempting to use Cesium World Imagery...');
-                const ionImagery = new Cesium.IonImageryProvider({
-                  assetId: 2 // Cesium World Imagery
-                });
-                viewer.imageryLayers.addImageryProvider(ionImagery);
-                console.log('Cesium World Imagery added successfully');
-              } catch (error) {
-                console.log('Cesium World Imagery failed with error:', error.message);
-                console.log('Falling back to OpenStreetMap satellite-style...');
-                
-                // Use a different OpenStreetMap subdomain for satellite-like appearance
-                const satelliteImagery = new Cesium.OpenStreetMapImageryProvider({
-                  url: 'https://c.tile.openstreetmap.org/'
-                });
-                const satelliteLayer = viewer.imageryLayers.addImageryProvider(satelliteImagery);
-                console.log('OpenStreetMap satellite-style imagery added successfully');
-                
-                // Force the layer to be visible and opaque
-                satelliteLayer.show = true;
-                satelliteLayer.alpha = 1.0;
-                console.log('Satellite layer visibility forced to true, alpha set to 1.0');
-                
-                // Debug imagery layer status
-                setTimeout(() => {
-                  console.log('=== IMAGERY LAYER DEBUG ===');
-                  console.log('Number of imagery layers:', viewer.imageryLayers.length);
-                  for (let i = 0; i < viewer.imageryLayers.length; i++) {
-                    const layer = viewer.imageryLayers.get(i);
-                    console.log(`Layer ${i}:`, {
-                      visible: layer.show,
-                      alpha: layer.alpha,
-                      provider: layer.imageryProvider.constructor.name
-                    });
-                  }
-                  console.log('=== END DEBUG ===');
-                  
-                  // Adjust camera to ensure we're looking at the globe properly
-                  viewer.camera.setView({
-                    destination: Cesium.Cartesian3.fromDegrees(-75.0, 40.0, 1000000),
-                    orientation: {
-                      heading: Cesium.Math.toRadians(0.0),
-                      pitch: Cesium.Math.toRadians(-45.0),
-                      roll: 0.0
-                    }
+            try {
+              console.log('Attempting to use Cesium World Imagery...');
+              const ionImagery = new Cesium.IonImageryProvider({
+                assetId: 2 // Cesium World Imagery
+              });
+              viewer.imageryLayers.addImageryProvider(ionImagery);
+              console.log('Cesium World Imagery added successfully');
+            } catch (error) {
+              console.log('Cesium World Imagery failed with error:', error.message);
+              console.log('Falling back to OpenStreetMap satellite-style...');
+
+              // Use a different OpenStreetMap subdomain for satellite-like appearance
+              const satelliteImagery = new Cesium.OpenStreetMapImageryProvider({
+                url: 'https://c.tile.openstreetmap.org/'
+              });
+              const satelliteLayer = viewer.imageryLayers.addImageryProvider(satelliteImagery);
+              console.log('OpenStreetMap satellite-style imagery added successfully');
+
+              // Force the layer to be visible and opaque
+              satelliteLayer.show = true;
+              satelliteLayer.alpha = 1.0;
+              console.log('Satellite layer visibility forced to true, alpha set to 1.0');
+
+              // Debug imagery layer status
+              setTimeout(() => {
+                console.log('=== IMAGERY LAYER DEBUG ===');
+                console.log('Number of imagery layers:', viewer.imageryLayers.length);
+                for (let i = 0; i < viewer.imageryLayers.length; i++) {
+                  const layer = viewer.imageryLayers.get(i);
+                  console.log(`Layer ${i}:`, {
+                    visible: layer.show,
+                    alpha: layer.alpha,
+                    provider: layer.imageryProvider.constructor.name
                   });
-                  console.log('Camera adjusted for satellite view');
-                }, 1000);
-              }
+                }
+                console.log('=== END DEBUG ===');
+
+                // Adjust camera to ensure we're looking at the globe properly
+                viewer.camera.setView({
+                  destination: Cesium.Cartesian3.fromDegrees(-75.0, 40.0, 1000000),
+                  orientation: {
+                    heading: Cesium.Math.toRadians(0.0),
+                    pitch: Cesium.Math.toRadians(-45.0),
+                    roll: 0.0
+                  }
+                });
+                console.log('Camera adjusted for satellite view');
+              }, 1000);
+            }
           } else {
             console.log('No token available, using OpenStreetMap satellite-style...');
-            
+
             // Use a different OpenStreetMap subdomain for satellite-like appearance
             const satelliteImagery = new Cesium.OpenStreetMapImageryProvider({
               url: 'https://c.tile.openstreetmap.org/'
             });
             const satelliteLayer = viewer.imageryLayers.addImageryProvider(satelliteImagery);
             console.log('OpenStreetMap satellite-style imagery added successfully');
-            
+
             // Force the layer to be visible and opaque
             satelliteLayer.show = true;
             satelliteLayer.alpha = 1.0;
             console.log('Satellite layer visibility forced to true, alpha set to 1.0');
           }
           break;
-          
+
         case 'terrain':
           // Add terrain-focused imagery with different URL
           const terrainImagery = new Cesium.OpenStreetMapImageryProvider({
             url: 'https://d.tile.openstreetmap.org/'
           });
           viewer.imageryLayers.addImageryProvider(terrainImagery);
-          
+
           // Add a simple color overlay to make it visually distinct
           try {
             const colorOverlay = new Cesium.SingleTileImageryProvider({
@@ -670,7 +822,7 @@ const FlightMap = () => {
             console.log('Color overlay failed, terrain imagery only');
           }
           break;
-          
+
         default:
           const defaultImagery = new Cesium.OpenStreetMapImageryProvider({
             url: 'https://a.tile.openstreetmap.org/'
@@ -692,7 +844,7 @@ const FlightMap = () => {
       if (hasToken) {
         console.log('Token value:', localStorage.getItem('cesiumIonKey'));
       }
-      
+
       if (enabled) {
         if (hasToken) {
           try {
@@ -724,37 +876,185 @@ const FlightMap = () => {
     try {
       // Globe visibility
       viewer.scene.globe.show = showGlobe;
-      
+
       // Ensure globe has proper material when terrain is enabled
       if (showTerrain) {
         // Use default material for terrain
         viewer.scene.globe.material = undefined;
         console.log('Globe material set to default for terrain');
       }
-      
+
       // Atmosphere
       viewer.scene.skyAtmosphere.show = showAtmosphere;
-      
+
       // Fog
       viewer.scene.fog.enabled = showFog;
-      
+
       // Sky box
       viewer.scene.skyBox.show = showSkyBox;
-      
+
       // Sun
       viewer.scene.sun.show = showSun;
-      
+
       // Moon
       viewer.scene.moon.show = showMoon;
-      
+
       // Stars
       viewer.scene.skyBox.show = showStars;
-      
+
       console.log('Globe settings configured');
     } catch (error) {
       console.error('Error configuring globe:', error);
     }
   };
+
+  // Sync external waypoints
+  useEffect(() => {
+    if (!viewerRef.current || !externalWaypoints) return;
+
+    // Clear existing waypoints managed by this component
+    const viewer = viewerRef.current;
+
+    // Efficiently remove old waypoints
+    const entitiesToRemove = [];
+    viewer.entities.values.forEach(entity => {
+      if (entity.id && entity.id.toString().startsWith('waypoint-')) {
+        entitiesToRemove.push(entity);
+      }
+    });
+    entitiesToRemove.forEach(e => viewer.entities.remove(e));
+
+    // Add new waypoints
+    externalWaypoints.forEach((wp, index) => {
+      // Adapt structure: MissionPlanning uses {lat, lon, altitude}
+      // FlightMap expects {coordinate: {lat, lon}, altitude}
+      const adaptedWp = {
+        id: wp.id || Date.now() + index,
+        coordinate: wp.coordinate || { lat: wp.lat, lon: wp.lon },
+        altitude: wp.altitude || 0,
+        sequence: index + 1,
+        name: wp.description || `WP ${index + 1}`
+      };
+      addWaypointToMap(adaptedWp);
+    });
+  }, [externalWaypoints]);
+
+  // Sync external polygons (Fence/Survey)
+  useEffect(() => {
+    if (!viewerRef.current || !externalPolygons) return;
+
+    // Clear existing polygons
+    const viewer = viewerRef.current;
+    const entitiesToRemove = [];
+    viewer.entities.values.forEach(entity => {
+      if (entity.id && (entity.id.toString().startsWith('polygon-') || entity.id === 'fence-polygon')) {
+        entitiesToRemove.push(entity);
+      }
+    });
+    entitiesToRemove.forEach(e => viewer.entities.remove(e));
+
+    // Add new polygons
+    externalPolygons.forEach((poly, index) => {
+      if (!poly.points || poly.points.length < 3) return;
+
+      const positions = poly.points.map(p =>
+        Cesium.Cartesian3.fromDegrees(p.lon, p.lat)
+      );
+
+      viewer.entities.add({
+        id: `polygon-${index}`,
+        polygon: {
+          hierarchy: positions,
+          material: poly.color ? Cesium.Color.fromCssColorString(poly.color).withAlpha(0.3) : Cesium.Color.GREEN.withAlpha(0.3),
+          outline: true,
+          outlineColor: poly.color ? Cesium.Color.fromCssColorString(poly.color) : Cesium.Color.GREEN
+        }
+      });
+    });
+  }, [externalPolygons]);
+
+  // Sync external polylines (Mission paths / Replay)
+  useEffect(() => {
+    if (!viewerRef.current || !externalPolylines) return;
+
+    const viewer = viewerRef.current;
+
+    // Clear existing polylines
+    const entitiesToRemove = [];
+    viewer.entities.values.forEach(entity => {
+      if (entity.id && entity.id.toString().startsWith('polyline-')) {
+        entitiesToRemove.push(entity);
+      }
+    });
+    entitiesToRemove.forEach(e => viewer.entities.remove(e));
+
+    // Add new polylines
+    externalPolylines.forEach((poly, index) => {
+      if (!poly.points || poly.points.length < 2) return;
+
+      const positions = poly.points.map(p =>
+        Cesium.Cartesian3.fromDegrees(p.lon, p.lat, p.alt || 0)
+      );
+
+      viewer.entities.add({
+        id: `polyline-${index}`,
+        polyline: {
+          positions: positions,
+          width: 3,
+          material: poly.color ? Cesium.Color.fromCssColorString(poly.color) : Cesium.Color.BLUE,
+          clampToGround: true
+        }
+      });
+    });
+  }, [externalPolylines]);
+
+  // Handle Radio Range Ring
+  useEffect(() => {
+    if (!viewerRef.current) return;
+
+    const entityId = 'radio-range-ring';
+    const existing = viewerRef.current.entities.getById(entityId);
+
+    if (!radioRangeRing || !radioRangeRing.radius) {
+      if (existing) viewerRef.current.entities.remove(existing);
+      return;
+    }
+
+    // Determine Center: Try Home (WP #1) -> then Active Vehicle -> then Map Center
+    let centerPosition = null;
+
+    // 1. Try first waypoint (Home usually)
+    if (externalWaypoints && externalWaypoints.length > 0) {
+      const wp = externalWaypoints[0];
+      centerPosition = Cesium.Cartesian3.fromDegrees(wp.lon, wp.lat);
+    }
+
+    if (!centerPosition) {
+      if (existing) viewerRef.current.entities.remove(existing);
+      return;
+    }
+
+    if (existing) {
+      existing.ellipse.semiMinorAxis = radioRangeRing.radius;
+      existing.ellipse.semiMajorAxis = radioRangeRing.radius;
+      existing.ellipse.material = Cesium.Color.fromCssColorString(radioRangeRing.color || '#4caf50').withAlpha(radioRangeRing.opacity || 0.2);
+      existing.position = centerPosition;
+    } else {
+      viewerRef.current.entities.add({
+        id: entityId,
+        position: centerPosition,
+        ellipse: {
+          semiMinorAxis: radioRangeRing.radius,
+          semiMajorAxis: radioRangeRing.radius,
+          material: Cesium.Color.fromCssColorString(radioRangeRing.color || '#4caf50').withAlpha(radioRangeRing.opacity || 0.2),
+          outline: true,
+          outlineColor: Cesium.Color.fromCssColorString(radioRangeRing.color || '#4caf50'),
+          height: 0
+        }
+      });
+    }
+
+  }, [radioRangeRing, externalWaypoints]);
 
   // Update map type
   useEffect(() => {
@@ -770,7 +1070,7 @@ const FlightMap = () => {
       setupTerrain(viewerRef.current, showTerrain);
       // Also reconfigure globe settings when terrain changes
       configureGlobe(viewerRef.current);
-      
+
       // Add a test sphere when terrain is enabled to verify it's working
       if (showTerrain) {
         try {
@@ -799,7 +1099,7 @@ const FlightMap = () => {
   // Update scene mode
   useEffect(() => {
     if (viewerRef.current) {
-    const viewer = viewerRef.current;
+      const viewer = viewerRef.current;
       switch (sceneMode) {
         case '2D':
           viewer.scene.morphTo2D(0);
@@ -819,7 +1119,7 @@ const FlightMap = () => {
   useEffect(() => {
     // Only update if we have a viewer and drones should be shown
     if (!viewerRef.current || !showDrones) return;
-    
+
     const viewer = viewerRef.current;
     const currentDroneIds = new Set();
     const connectedVehicles = vehicles.filter(v => v.connected && v.coordinate);
@@ -827,7 +1127,7 @@ const FlightMap = () => {
     // Update or create drone entities
     connectedVehicles.forEach(vehicle => {
       currentDroneIds.add(vehicle.id);
-      
+
       const entityId = `drone-${vehicle.id}`;
       const existingEntity = viewer.entities.getById(entityId);
 
@@ -839,7 +1139,7 @@ const FlightMap = () => {
           vehicle.coordinate.lat,
           vehicle.altitude || 0
         );
-        
+
         // Check if position actually changed (with some tolerance)
         if (!currentPos || Cesium.Cartesian3.distance(currentPos, newPos) > 1.0) {
           updateDronePosition(viewer, vehicle);
@@ -870,7 +1170,7 @@ const FlightMap = () => {
           connectedVehicle.coordinate.lat,
           connectedVehicle.altitude || 0
         );
-        
+
         viewerRef.current.camera.flyTo({
           destination: position,
           duration: 2.0,
@@ -885,8 +1185,8 @@ const FlightMap = () => {
     if (viewerRef.current) {
       viewerRef.current.camera.flyTo({
         destination: Cesium.Cartesian3.fromDegrees(0, 0, 10000000),
-      duration: 2.0
-    });
+        duration: 2.0
+      });
     }
   };
 
@@ -902,7 +1202,7 @@ const FlightMap = () => {
     }
   };
 
-    // Map controls overlay
+  // Map controls overlay
   const MapControls = () => (
     <>
       {/* Map Settings Button */}
@@ -1007,546 +1307,550 @@ const FlightMap = () => {
 
   return (
     <Box sx={{ width: '100%', height: '100%', position: 'relative' }}>
-          <div 
-            ref={cesiumContainer} 
-            style={{ width: '100%', height: '100%' }}
-          />
-          
-          {/* UI Layer - Completely separate from Cesium */}
+      <div
+        ref={cesiumContainer}
+        style={{ width: '100%', height: '100%' }}
+      />
+
+      {/* UI Layer - Completely separate from Cesium */}
+      <Box sx={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        pointerEvents: 'none',
+        zIndex: 9999,
+      }}
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          pointerEvents: 'auto',
+          zIndex: 100000,
+        }}>
+          <MapControls externalPlanningMode={false} />
+        </Box>
+
+        {/* Map Settings Overlay */}
+        {mapSettingsOpen && (
           <Box sx={{
             position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            pointerEvents: 'none',
-            zIndex: 9999,
-          }}
-          >
-                      <Box sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
+            top: 16,
+            left: 144,
+            zIndex: 9998,
+            maxHeight: 'calc(100vh - 32px)',
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            minWidth: 280,
             pointerEvents: 'auto',
-            zIndex: 100000,
           }}>
-            <MapControls />
-          </Box>
-
-          {/* Map Settings Overlay */}
-          {mapSettingsOpen && (
             <Box sx={{
-              position: 'absolute',
-              top: 16,
-              left: 144,
-              zIndex: 9998,
-              maxHeight: 'calc(100vh - 32px)',
-              overflow: 'hidden',
+              overflowY: 'auto',
+              overflowX: 'hidden',
               display: 'flex',
               flexDirection: 'column',
-              minWidth: 280,
-              pointerEvents: 'auto',
+              gap: 1,
+              pr: 1,
+              '&::-webkit-scrollbar': {
+                width: '8px',
+              },
+              '&::-webkit-scrollbar-track': {
+                background: 'rgba(0, 0, 0, 0.1)',
+                borderRadius: '4px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                background: 'rgba(0, 0, 0, 0.3)',
+                borderRadius: '4px',
+                '&:hover': {
+                  background: 'rgba(0, 0, 0, 0.5)',
+                },
+              },
             }}>
-              <Box sx={{
-                overflowY: 'auto',
-                overflowX: 'hidden',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 1,
-                pr: 1,
-                '&::-webkit-scrollbar': {
-                  width: '8px',
-                },
-                '&::-webkit-scrollbar-track': {
-                  background: 'rgba(0, 0, 0, 0.1)',
-                  borderRadius: '4px',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  background: 'rgba(0, 0, 0, 0.3)',
-                  borderRadius: '4px',
-                  '&:hover': {
-                    background: 'rgba(0, 0, 0, 0.5)',
-                  },
-                },
-              }}>
-                {/* Scene Mode Controls */}
-                <Paper elevation={3} sx={{ p: 1 }}>
-                  <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-                    View Mode
-                  </Typography>
-                  <ToggleButtonGroup
-                    value={sceneMode}
-                    exclusive
-                    onChange={(e, newMode) => newMode && setSceneMode(newMode)}
+              {/* Scene Mode Controls */}
+              <Paper elevation={3} sx={{ p: 1 }}>
+                <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                  View Mode
+                </Typography>
+                <ToggleButtonGroup
+                  value={sceneMode}
+                  exclusive
+                  onChange={(e, newMode) => newMode && setSceneMode(newMode)}
+                  size="small"
+                  orientation="vertical"
+                >
+                  <ToggleButton value="2D" aria-label="2D">
+                    <ViewComfy />
+                  </ToggleButton>
+                  <ToggleButton value="2.5D" aria-label="2.5D">
+                    <ViewModule />
+                  </ToggleButton>
+                  <ToggleButton value="3D" aria-label="3D">
+                    <ViewInAr />
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </Paper>
+
+              {/* Camera Controls */}
+              <Paper elevation={3} sx={{ p: 1 }}>
+                <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                  Camera
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                  <IconButton
                     size="small"
-                    orientation="vertical"
+                    onClick={centerOnGlobe}
+                    title="Center on Globe"
                   >
-                    <ToggleButton value="2D" aria-label="2D">
-                      <ViewComfy />
-                    </ToggleButton>
-                    <ToggleButton value="2.5D" aria-label="2.5D">
-                      <ViewModule />
-                    </ToggleButton>
-                    <ToggleButton value="3D" aria-label="3D">
-                      <ViewInAr />
-                    </ToggleButton>
-                  </ToggleButtonGroup>
-                </Paper>
+                    <MyLocation />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    onClick={centerOnDrone}
+                    title="Center on Drone"
+                  >
+                    <CenterFocusStrong />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    onClick={zoomIn}
+                    title="Zoom In"
+                  >
+                    <ZoomIn />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    onClick={zoomOut}
+                    title="Zoom Out"
+                  >
+                    <ZoomOut />
+                  </IconButton>
+                </Box>
+              </Paper>
 
-                {/* Camera Controls */}
-                <Paper elevation={3} sx={{ p: 1 }}>
-                  <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-                    Camera
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                    <IconButton 
-                      size="small" 
-                      onClick={centerOnGlobe}
-                      title="Center on Globe"
-                    >
-                      <MyLocation />
-                    </IconButton>
-                    <IconButton 
-                      size="small" 
-                      onClick={centerOnDrone}
-                      title="Center on Drone"
-                    >
-                      <CenterFocusStrong />
-                    </IconButton>
-                    <IconButton 
-                      size="small" 
-                      onClick={zoomIn}
-                      title="Zoom In"
-                    >
-                      <ZoomIn />
-                    </IconButton>
-                    <IconButton 
-                      size="small" 
-                      onClick={zoomOut}
-                      title="Zoom Out"
-                    >
-                      <ZoomOut />
-                    </IconButton>
-                  </Box>
-                </Paper>
+              {/* Map Type Controls */}
+              <Paper elevation={3} sx={{ p: 1 }}>
+                <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                  Map Type (Current: {mapType})
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                  <Chip
+                    icon={<Layers />}
+                    label="OpenStreetMap"
+                    size="small"
+                    onClick={() => setMapType('osm')}
+                    clickable
+                    color={mapType === 'osm' ? 'primary' : 'default'}
+                  />
+                  <Chip
+                    icon={<Satellite />}
+                    label="Satellite"
+                    size="small"
+                    onClick={() => setMapType('satellite')}
+                    clickable
+                    color={mapType === 'satellite' ? 'primary' : 'default'}
+                  />
+                  <Chip
+                    icon={<Layers />}
+                    label="Bing Maps"
+                    size="small"
+                    onClick={() => setMapType('bing')}
+                    clickable
+                    color={mapType === 'bing' ? 'primary' : 'default'}
+                  />
+                  <Chip
+                    icon={<Terrain />}
+                    label="Terrain"
+                    size="small"
+                    onClick={() => setMapType('terrain')}
+                    clickable
+                    color={mapType === 'terrain' ? 'primary' : 'default'}
+                  />
+                </Box>
+              </Paper>
 
-                {/* Map Type Controls */}
-                <Paper elevation={3} sx={{ p: 1 }}>
-                  <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-                    Map Type (Current: {mapType})
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                    <Chip
-                      icon={<Layers />}
-                      label="OpenStreetMap"
+              {/* Terrain Control */}
+              <Paper elevation={3} sx={{ p: 1 }}>
+                <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                  Terrain (Current: {showTerrain ? 'Enabled' : 'Disabled'})
+                </Typography>
+                <FormControlLabel
+                  control={
+                    <Switch
                       size="small"
-                      onClick={() => setMapType('osm')}
-                      clickable
-                      color={mapType === 'osm' ? 'primary' : 'default'}
+                      checked={showTerrain}
+                      onChange={(e) => setShowTerrain(e.target.checked)}
                     />
-                    <Chip
-                      icon={<Satellite />}
-                      label="Satellite"
-                      size="small"
-                      onClick={() => setMapType('satellite')}
-                      clickable
-                      color={mapType === 'satellite' ? 'primary' : 'default'}
-                    />
-                    <Chip
-                      icon={<Layers />}
-                      label="Bing Maps"
-                      size="small"
-                      onClick={() => setMapType('bing')}
-                      clickable
-                      color={mapType === 'bing' ? 'primary' : 'default'}
-                    />
-                    <Chip
-                      icon={<Terrain />}
-                      label="Terrain"
-                      size="small"
-                      onClick={() => setMapType('terrain')}
-                      clickable
-                      color={mapType === 'terrain' ? 'primary' : 'default'}
-                    />
-                  </Box>
-                </Paper>
+                  }
+                  label={<Typography variant="caption">3D Terrain</Typography>}
+                />
+              </Paper>
 
-                {/* Terrain Control */}
-                <Paper elevation={3} sx={{ p: 1 }}>
-                  <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-                    Terrain (Current: {showTerrain ? 'Enabled' : 'Disabled'})
-                  </Typography>
+              {/* Drone Controls */}
+              <Paper elevation={3} sx={{ p: 1 }}>
+                <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                  Drones ({vehicles.filter(v => v.connected).length} connected)
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                   <FormControlLabel
                     control={
                       <Switch
                         size="small"
-                        checked={showTerrain}
-                        onChange={(e) => setShowTerrain(e.target.checked)}
+                        checked={showDrones}
+                        onChange={(e) => setShowDrones(e.target.checked)}
                       />
                     }
-                    label={<Typography variant="caption">3D Terrain</Typography>}
+                    label={<Typography variant="caption">Show Drones</Typography>}
                   />
-                </Paper>
-
-                {/* Drone Controls */}
-                <Paper elevation={3} sx={{ p: 1 }}>
-                  <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-                    Drones ({vehicles.filter(v => v.connected).length} connected)
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          size="small"
-                          checked={showDrones}
-                          onChange={(e) => setShowDrones(e.target.checked)}
-                        />
-                      }
-                      label={<Typography variant="caption">Show Drones</Typography>}
+                  {vehicles.filter(v => v.connected).map(vehicle => (
+                    <Chip
+                      key={vehicle.id}
+                      label={`${vehicle.name || vehicle.id} - ${vehicle.altitude?.toFixed(1) || 0}m`}
+                      size="small"
+                      color={vehicle.coordinate ? "primary" : "default"}
+                      variant={vehicle.coordinate ? "filled" : "outlined"}
                     />
-                    {vehicles.filter(v => v.connected).map(vehicle => (
-                      <Chip
-                        key={vehicle.id}
-                        label={`${vehicle.name || vehicle.id} - ${vehicle.altitude?.toFixed(1) || 0}m`}
+                  ))}
+                </Box>
+              </Paper>
+
+              {/* Globe Settings */}
+              <Paper elevation={3} sx={{ p: 1 }}>
+                <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                  Globe Settings
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                  <FormControlLabel
+                    control={
+                      <Switch
                         size="small"
-                        color={vehicle.coordinate ? "primary" : "default"}
-                        variant={vehicle.coordinate ? "filled" : "outlined"}
+                        checked={showGlobe}
+                        onChange={(e) => setShowGlobe(e.target.checked)}
                       />
-                    ))}
-                  </Box>
-                </Paper>
-
-                {/* Globe Settings */}
-                <Paper elevation={3} sx={{ p: 1 }}>
-                  <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-                    Globe Settings
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          size="small"
-                          checked={showGlobe}
-                          onChange={(e) => setShowGlobe(e.target.checked)}
-                        />
-                      }
-                      label={<Typography variant="caption">Globe</Typography>}
-                    />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          size="small"
-                          checked={showAtmosphere}
-                          onChange={(e) => setShowAtmosphere(e.target.checked)}
-                        />
-                      }
-                      label={<Typography variant="caption">Atmosphere</Typography>}
-                    />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          size="small"
-                          checked={showFog}
-                          onChange={(e) => setShowFog(e.target.checked)}
-                        />
-                      }
-                      label={<Typography variant="caption">Fog</Typography>}
-                    />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          size="small"
-                          checked={showSkyBox}
-                          onChange={(e) => setShowSkyBox(e.target.checked)}
-                        />
-                      }
-                      label={<Typography variant="caption">Sky Box</Typography>}
-                    />
-                  </Box>
-                </Paper>
-              </Box>
+                    }
+                    label={<Typography variant="caption">Globe</Typography>}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        size="small"
+                        checked={showAtmosphere}
+                        onChange={(e) => setShowAtmosphere(e.target.checked)}
+                      />
+                    }
+                    label={<Typography variant="caption">Atmosphere</Typography>}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        size="small"
+                        checked={showFog}
+                        onChange={(e) => setShowFog(e.target.checked)}
+                      />
+                    }
+                    label={<Typography variant="caption">Fog</Typography>}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        size="small"
+                        checked={showSkyBox}
+                        onChange={(e) => setShowSkyBox(e.target.checked)}
+                      />
+                    }
+                    label={<Typography variant="caption">Sky Box</Typography>}
+                  />
+                </Box>
+              </Paper>
             </Box>
-          )}
+          </Box>
+        )}
 
-          {/* Mission Planning Overlay */}
-          {missionPlanningOpen && (
+        {/* Mission Planning Overlay */}
+        {missionPlanningOpen && (
+          <Box sx={{
+            position: 'absolute',
+            top: 16,
+            left: 144,
+            zIndex: 9998,
+            maxHeight: 'calc(100vh - 32px)',
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            minWidth: 320,
+            pointerEvents: 'auto',
+          }}>
             <Box sx={{
-              position: 'absolute',
-              top: 16,
-              left: 144,
-              zIndex: 9998,
-              maxHeight: 'calc(100vh - 32px)',
-              overflow: 'hidden',
+              overflowY: 'auto',
+              overflowX: 'hidden',
               display: 'flex',
               flexDirection: 'column',
-              minWidth: 320,
-              pointerEvents: 'auto',
+              gap: 1,
+              pr: 1,
+              '&::-webkit-scrollbar': {
+                width: '8px',
+              },
+              '&::-webkit-scrollbar-track': {
+                background: 'rgba(0, 0, 0, 0.1)',
+                borderRadius: '4px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                background: 'rgba(0, 0, 0, 0.3)',
+                borderRadius: '4px',
+                '&:hover': {
+                  background: 'rgba(0, 0, 0, 0.5)',
+                },
+              },
             }}>
-              <Box sx={{
-                overflowY: 'auto',
-                overflowX: 'hidden',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 1,
-                pr: 1,
-                '&::-webkit-scrollbar': {
-                  width: '8px',
-                },
-                '&::-webkit-scrollbar-track': {
-                  background: 'rgba(0, 0, 0, 0.1)',
-                  borderRadius: '4px',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  background: 'rgba(0, 0, 0, 0.3)',
-                  borderRadius: '4px',
-                  '&:hover': {
-                    background: 'rgba(0, 0, 0, 0.5)',
-                  },
-                },
-              }}>
-                {/* Mission Mode Selector */}
-                <Paper elevation={3} sx={{ p: 1 }}>
-                  <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-                    Mission Mode
-                  </Typography>
-                  <ToggleButtonGroup
-                    value={missionMode}
-                    exclusive
-                    onChange={(e, newMode) => newMode && setMissionMode(newMode)}
-                    size="small"
-                    orientation="vertical"
-                    sx={{ mb: 1 }}
-                  >
+              {/* Mission Mode Selector */}
+              <Paper elevation={3} sx={{ p: 1 }}>
+                <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                  Mission Mode
+                </Typography>
+                <ToggleButtonGroup
+                  value={missionMode}
+                  exclusive
+                  onChange={(e, newMode) => newMode && setMissionMode(newMode)}
+                  size="small"
+                  orientation="vertical"
+                  sx={{ mb: 1 }}
+                >
+                  {mode === 'mission' && (
                     <ToggleButton value="view" aria-label="View">
                       <Navigation />
                     </ToggleButton>
+                  )}
+                  {mode === 'mission' && (
                     <ToggleButton value="waypoint" aria-label="Waypoint">
                       <LocationOn />
                     </ToggleButton>
-                    <ToggleButton value="fence" aria-label="Fence">
-                      <Fence />
-                    </ToggleButton>
-                    <ToggleButton value="rally" aria-label="Rally">
-                      <Flag />
-                    </ToggleButton>
-                  </ToggleButtonGroup>
-                </Paper>
+                  )}
+                  <ToggleButton value="fence" aria-label="Fence">
+                    <Fence />
+                  </ToggleButton>
+                  <ToggleButton value="rally" aria-label="Rally">
+                    <Flag />
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </Paper>
 
-                {/* Mission Actions */}
-                <Paper elevation={3} sx={{ p: 1 }}>
-                  <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-                    Mission Actions
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      startIcon={<Upload />}
-                      onClick={uploadMission}
-                      disabled={!missionDirty || !vehicles.length}
-                      sx={{ fontSize: '10px' }}
-                    >
-                      Upload Mission
-                    </Button>
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      startIcon={<Download />}
-                      onClick={downloadMission}
-                      sx={{ fontSize: '10px' }}
-                    >
-                      Download Mission
-                    </Button>
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      startIcon={<Clear />}
-                      onClick={clearMission}
-                      sx={{ fontSize: '10px' }}
-                    >
-                      Clear Mission
-                    </Button>
-                  </Box>
-                </Paper>
-
-                {/* Mission Status */}
-                <Paper elevation={3} sx={{ p: 1 }}>
-                  <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-                    Mission Status
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                    <Chip
-                      label={`${waypoints.length} Waypoints`}
-                      size="small"
-                      color="primary"
-                      sx={{ fontSize: '10px' }}
-                    />
-                    <Chip
-                      label={`${fencePolygon.length} Fence Points`}
-                      size="small"
-                      color="secondary"
-                      sx={{ fontSize: '10px' }}
-                    />
-                    <Chip
-                      label={`${rallyPoints.length} Rally Points`}
-                      size="small"
-                      color="warning"
-                      sx={{ fontSize: '10px' }}
-                    />
-                    {missionDirty && (
-                      <Chip
-                        label="Unsaved Changes"
-                        size="small"
-                        color="error"
-                        sx={{ fontSize: '10px' }}
-                      />
-                    )}
-                  </Box>
-                </Paper>
-
-                {/* Waypoints List */}
-                {waypoints.length > 0 && (
-                  <Paper elevation={3} sx={{ p: 1 }}>
-                    <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-                      Waypoints
-                    </Typography>
-                    <List dense sx={{ maxHeight: 200, overflow: 'auto' }}>
-                      {waypoints.map((waypoint, index) => (
-                        <ListItem key={waypoint.id} sx={{ py: 0.5 }}>
-                          <ListItemText
-                            primary={`${waypoint.sequence}. ${waypoint.name}`}
-                            secondary={`${waypoint.coordinate.lat.toFixed(6)}, ${waypoint.coordinate.lon.toFixed(6)} - ${waypoint.altitude}m`}
-                            sx={{ '& .MuiListItemText-primary': { fontSize: '12px' }, '& .MuiListItemText-secondary': { fontSize: '10px' } }}
-                          />
-                          <ListItemSecondaryAction>
-                            <IconButton
-                              size="small"
-                              onClick={() => { setSelectedWaypoint(waypoint); setWaypointDialogOpen(true); }}
-                            >
-                              <Edit />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              onClick={() => removeWaypoint(waypoint.id)}
-                            >
-                              <Delete />
-                            </IconButton>
-                          </ListItemSecondaryAction>
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Paper>
-                )}
-              </Box>
-            </Box>
-          )}
-
-          {/* Mission Planning FAB */}
-          <Box sx={{
-            position: 'absolute',
-            bottom: 16,
-            right: 16,
-            pointerEvents: 'auto',
-            zIndex: 100000,
-          }}>
-            <Fab
-              color="primary"
-              size="medium"
-              onClick={(e) => setMissionMenuAnchor(e.currentTarget)}
-              sx={{ mb: 1 }}
-            >
-              <Add />
-            </Fab>
-            
-            {/* Mission Menu */}
-            <Menu
-              anchorEl={missionMenuAnchor}
-              open={Boolean(missionMenuAnchor)}
-              onClose={() => setMissionMenuAnchor(null)}
-            >
-              <MenuItem onClick={() => { setMissionMode('waypoint'); setMissionMenuAnchor(null); }}>
-                <LocationOn sx={{ mr: 1 }} />
-                Add Waypoint
-              </MenuItem>
-              <MenuItem onClick={() => { setMissionMode('fence'); setIsDrawingFence(true); setMissionMenuAnchor(null); }}>
-                <Fence sx={{ mr: 1 }} />
-                Draw Fence
-              </MenuItem>
-              <MenuItem onClick={() => { setMissionMode('rally'); setMissionMenuAnchor(null); }}>
-                <Flag sx={{ mr: 1 }} />
-                Add Rally Point
-              </MenuItem>
-              <Divider />
-              <MenuItem onClick={() => { uploadMission(); setMissionMenuAnchor(null); }}>
-                <Upload sx={{ mr: 1 }} />
-                Upload Mission
-              </MenuItem>
-              <MenuItem onClick={() => { downloadMission(); setMissionMenuAnchor(null); }}>
-                <Download sx={{ mr: 1 }} />
-                Download Mission
-              </MenuItem>
-              <MenuItem onClick={() => { clearMission(); setMissionMenuAnchor(null); }}>
-                <Clear sx={{ mr: 1 }} />
-                Clear Mission
-              </MenuItem>
-            </Menu>
-          </Box>
-
-          {/* Waypoint Dialog */}
-          <Dialog open={waypointDialogOpen} onClose={() => setWaypointDialogOpen(false)}>
-            <DialogTitle>Edit Waypoint</DialogTitle>
-            <DialogContent>
-              {selectedWaypoint && (
-                <Box sx={{ pt: 1 }}>
-                  <TextField
-                    fullWidth
-                    label="Name"
-                    value={selectedWaypoint.name}
-                    onChange={(e) => updateWaypoint(selectedWaypoint.id, { name: e.target.value })}
-                    sx={{ mb: 2 }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Altitude (m)"
-                    type="number"
-                    value={selectedWaypoint.altitude}
-                    onChange={(e) => updateWaypoint(selectedWaypoint.id, { altitude: parseFloat(e.target.value) })}
-                    sx={{ mb: 2 }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Latitude"
-                    type="number"
-                    value={selectedWaypoint.coordinate.lat}
-                    onChange={(e) => updateWaypoint(selectedWaypoint.id, { 
-                      coordinate: { 
-                        ...selectedWaypoint.coordinate, 
-                        lat: parseFloat(e.target.value) 
-                      } 
-                    })}
-                    sx={{ mb: 2 }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Longitude"
-                    type="number"
-                    value={selectedWaypoint.coordinate.lon}
-                    onChange={(e) => updateWaypoint(selectedWaypoint.id, { 
-                      coordinate: { 
-                        ...selectedWaypoint.coordinate, 
-                        lon: parseFloat(e.target.value) 
-                      } 
-                    })}
-                  />
+              {/* Mission Actions */}
+              <Paper elevation={3} sx={{ p: 1 }}>
+                <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                  Mission Actions
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    startIcon={<Upload />}
+                    onClick={uploadMission}
+                    disabled={!missionDirty || !vehicles.length}
+                    sx={{ fontSize: '10px', display: mode === 'mission' ? 'flex' : 'none' }}
+                  >
+                    Upload Mission
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    startIcon={<Download />}
+                    onClick={downloadMission}
+                    sx={{ fontSize: '10px' }}
+                  >
+                    Download Mission
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    startIcon={<Clear />}
+                    onClick={clearMission}
+                    sx={{ fontSize: '10px' }}
+                  >
+                    Clear Mission
+                  </Button>
                 </Box>
+              </Paper>
+
+              {/* Mission Status */}
+              <Paper elevation={3} sx={{ p: 1 }}>
+                <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                  Mission Status
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                  <Chip
+                    label={`${waypoints.length} Waypoints`}
+                    size="small"
+                    color="primary"
+                    sx={{ fontSize: '10px' }}
+                  />
+                  <Chip
+                    label={`${fencePolygon.length} Fence Points`}
+                    size="small"
+                    color="secondary"
+                    sx={{ fontSize: '10px' }}
+                  />
+                  <Chip
+                    label={`${rallyPoints.length} Rally Points`}
+                    size="small"
+                    color="warning"
+                    sx={{ fontSize: '10px' }}
+                  />
+                  {missionDirty && (
+                    <Chip
+                      label="Unsaved Changes"
+                      size="small"
+                      color="error"
+                      sx={{ fontSize: '10px' }}
+                    />
+                  )}
+                </Box>
+              </Paper>
+
+              {/* Waypoints List */}
+              {waypoints.length > 0 && (
+                <Paper elevation={3} sx={{ p: 1 }}>
+                  <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                    Waypoints
+                  </Typography>
+                  <List dense sx={{ maxHeight: 200, overflow: 'auto' }}>
+                    {waypoints.map((waypoint, index) => (
+                      <ListItem key={waypoint.id} sx={{ py: 0.5 }}>
+                        <ListItemText
+                          primary={`${waypoint.sequence}. ${waypoint.name}`}
+                          secondary={`${waypoint.coordinate.lat.toFixed(6)}, ${waypoint.coordinate.lon.toFixed(6)} - ${waypoint.altitude}m`}
+                          sx={{ '& .MuiListItemText-primary': { fontSize: '12px' }, '& .MuiListItemText-secondary': { fontSize: '10px' } }}
+                        />
+                        <ListItemSecondaryAction>
+                          <IconButton
+                            size="small"
+                            onClick={() => { setSelectedWaypoint(waypoint); setWaypointDialogOpen(true); }}
+                          >
+                            <Edit />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            onClick={() => removeWaypoint(waypoint.id)}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                    ))}
+                  </List>
+                </Paper>
               )}
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setWaypointDialogOpen(false)}>Cancel</Button>
-              <Button onClick={() => setWaypointDialogOpen(false)} variant="contained">Save</Button>
-            </DialogActions>
-          </Dialog>
+            </Box>
           </Box>
+        )}
+
+        {/* Mission Planning FAB */}
+        <Box sx={{
+          position: 'absolute',
+          bottom: 16,
+          right: 16,
+          pointerEvents: 'auto',
+          zIndex: 100000,
+        }}>
+          <Fab
+            color="primary"
+            size="medium"
+            onClick={(e) => setMissionMenuAnchor(e.currentTarget)}
+            sx={{ mb: 1 }}
+          >
+            <Add />
+          </Fab>
+
+          {/* Mission Menu */}
+          <Menu
+            anchorEl={missionMenuAnchor}
+            open={Boolean(missionMenuAnchor)}
+            onClose={() => setMissionMenuAnchor(null)}
+          >
+            <MenuItem onClick={() => { setMissionMode('waypoint'); setMissionMenuAnchor(null); }}>
+              <LocationOn sx={{ mr: 1 }} />
+              Add Waypoint
+            </MenuItem>
+            <MenuItem onClick={() => { setMissionMode('fence'); setIsDrawingFence(true); setMissionMenuAnchor(null); }}>
+              <Fence sx={{ mr: 1 }} />
+              Draw Fence
+            </MenuItem>
+            <MenuItem onClick={() => { setMissionMode('rally'); setMissionMenuAnchor(null); }}>
+              <Flag sx={{ mr: 1 }} />
+              Add Rally Point
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={() => { uploadMission(); setMissionMenuAnchor(null); }}>
+              <Upload sx={{ mr: 1 }} />
+              Upload Mission
+            </MenuItem>
+            <MenuItem onClick={() => { downloadMission(); setMissionMenuAnchor(null); }}>
+              <Download sx={{ mr: 1 }} />
+              Download Mission
+            </MenuItem>
+            <MenuItem onClick={() => { clearMission(); setMissionMenuAnchor(null); }}>
+              <Clear sx={{ mr: 1 }} />
+              Clear Mission
+            </MenuItem>
+          </Menu>
+        </Box>
+
+        {/* Waypoint Dialog */}
+        <Dialog open={waypointDialogOpen} onClose={() => setWaypointDialogOpen(false)}>
+          <DialogTitle>Edit Waypoint</DialogTitle>
+          <DialogContent>
+            {selectedWaypoint && (
+              <Box sx={{ pt: 1 }}>
+                <TextField
+                  fullWidth
+                  label="Name"
+                  value={selectedWaypoint.name}
+                  onChange={(e) => updateWaypoint(selectedWaypoint.id, { name: e.target.value })}
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  fullWidth
+                  label="Altitude (m)"
+                  type="number"
+                  value={selectedWaypoint.altitude}
+                  onChange={(e) => updateWaypoint(selectedWaypoint.id, { altitude: parseFloat(e.target.value) })}
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  fullWidth
+                  label="Latitude"
+                  type="number"
+                  value={selectedWaypoint.coordinate.lat}
+                  onChange={(e) => updateWaypoint(selectedWaypoint.id, {
+                    coordinate: {
+                      ...selectedWaypoint.coordinate,
+                      lat: parseFloat(e.target.value)
+                    }
+                  })}
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  fullWidth
+                  label="Longitude"
+                  type="number"
+                  value={selectedWaypoint.coordinate.lon}
+                  onChange={(e) => updateWaypoint(selectedWaypoint.id, {
+                    coordinate: {
+                      ...selectedWaypoint.coordinate,
+                      lon: parseFloat(e.target.value)
+                    }
+                  })}
+                />
+              </Box>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setWaypointDialogOpen(false)}>Cancel</Button>
+            <Button onClick={() => setWaypointDialogOpen(false)} variant="contained">Save</Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
     </Box>
   );
 };

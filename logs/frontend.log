@@ -3,9 +3,14 @@ $ react-app-rewired start
 Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
   npx update-browserslist-db@latest
   Why you should do it regularly: https://github.com/browserslist/update-db#readme
-(node:3602) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+[setupProxy] Loading proxy configuration...
+[HPM] Proxy created: /  -> http://localhost:3001
+[HPM] Proxy rewrite rule created: "^/api" ~> "/api"
+[HPM] Subscribed to http-proxy events: [ 'error', 'proxyReq', 'proxyRes', 'close' ]
+[setupProxy] Proxy configuration loaded successfully
+(node:20690) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 (Use `node --trace-deprecation ...` to show where the warning was created)
-(node:3602) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:20690) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 Starting the development server...
 
 Compiled successfully!
@@ -19,87 +24,1779 @@ Note that the development build is not optimized.
 To create a production build, use yarn build.
 
 webpack compiled successfully
-[HPM] WebSocket error: Error: read ECONNRESET
-    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
-  errno: -104,
-  code: 'ECONNRESET',
-  syscall: 'read'
-}
-[HPM] WebSocket error: Error: read ECONNRESET
-    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
-  errno: -104,
-  code: 'ECONNRESET',
-  syscall: 'read'
-}
-[HPM] WebSocket error: Error: read ECONNRESET
-    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
-  errno: -104,
-  code: 'ECONNRESET',
-  syscall: 'read'
-}
-[HPM] WebSocket error: Error: read ECONNRESET
-    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
-  errno: -104,
-  code: 'ECONNRESET',
-  syscall: 'read'
-}
-[HPM] WebSocket error: Error: read ECONNRESET
-    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
-  errno: -104,
-  code: 'ECONNRESET',
-  syscall: 'read'
-}
-[HPM] WebSocket error: Error: read ECONNRESET
-    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
-  errno: -104,
-  code: 'ECONNRESET',
-  syscall: 'read'
-}
-[HPM] WebSocket error: Error: read ECONNRESET
-    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
-  errno: -104,
-  code: 'ECONNRESET',
-  syscall: 'read'
-}
-[HPM] WebSocket error: Error: read ECONNRESET
-    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
-  errno: -104,
-  code: 'ECONNRESET',
-  syscall: 'read'
-}
-[HPM] WebSocket error: Error: read ECONNRESET
-    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
-  errno: -104,
-  code: 'ECONNRESET',
-  syscall: 'read'
-}
-[HPM] WebSocket error: Error: read ECONNRESET
-    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
-  errno: -104,
-  code: 'ECONNRESET',
-  syscall: 'read'
-}
-[HPM] WebSocket error: Error: read ECONNRESET
-    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
-  errno: -104,
-  code: 'ECONNRESET',
-  syscall: 'read'
-}
-[HPM] WebSocket error: Error: read ECONNRESET
-    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
-  errno: -104,
-  code: 'ECONNRESET',
-  syscall: 'read'
-}
-[HPM] WebSocket error: Error: read ECONNRESET
-    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
-  errno: -104,
-  code: 'ECONNRESET',
-  syscall: 'read'
-}
-[HPM] WebSocket error: Error: read ECONNRESET
-    at TCP.onStreamRead (node:internal/stream_base_commons:218:20) {
-  errno: -104,
-  code: 'ECONNRESET',
-  syscall: 'read'
-}
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/simulation/list" to "/api/simulation/list"
+[HPM] GET /api/simulation/list -> http://localhost:3001
+[setupProxy] Proxying GET /api/simulation/list -> http://localhost:3001/api/simulation/list
+[HPM] Rewriting path from "/api/vehicles" to "/api/vehicles"
+[HPM] GET /api/vehicles -> http://localhost:3001
+[setupProxy] Proxying GET /api/vehicles -> http://localhost:3001/api/vehicles
+[HPM] Rewriting path from "/api/simulation/list" to "/api/simulation/list"
+[HPM] GET /api/simulation/list -> http://localhost:3001
+[setupProxy] Proxying GET /api/simulation/list -> http://localhost:3001/api/simulation/list
+[HPM] Rewriting path from "/api/vehicles" to "/api/vehicles"
+[HPM] GET /api/vehicles -> http://localhost:3001
+[setupProxy] Proxying GET /api/vehicles -> http://localhost:3001/api/vehicles
+[setupProxy] Response: 200 for /api/vehicles
+[setupProxy] Response: 200 for /api/vehicles
+[setupProxy] Response: 200 for /api/simulation/list
+[setupProxy] Response: 200 for /api/simulation/list
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connect" to "/api/connect"
+[HPM] POST /api/connect -> http://localhost:3001
+[setupProxy] Proxying POST /api/connect -> http://localhost:3001/api/connect
+[setupProxy] Response: 200 for /api/connect
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/connections
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/connections
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/connections
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/connections
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/connections
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[HPM] Rewriting path from "/api/connections" to "/api/connections"
+[HPM] GET /api/connections -> http://localhost:3001
+[setupProxy] Proxying GET /api/connections -> http://localhost:3001/api/connections
+[setupProxy] Response: 200 for /api/connections
+[HPM] Rewriting path from "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b" to "/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b"
+[HPM] GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001
+[setupProxy] Proxying GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b -> http://localhost:3001/api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+[setupProxy] Response: 200 for /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b

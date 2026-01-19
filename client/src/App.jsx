@@ -8,11 +8,17 @@ import TopBar from './components/TopBar';
 import Settings from './pages/Settings';
 import VehicleConnections from './pages/VehicleConnections';
 import TemplatePage from './pages/TemplatePage';
-import MissionPlanning from './pages/MissionPlanning';
+
 import Simulation from './pages/Simulation';
 import FlightDisplay from './pages/FlightDisplay';
 import Parameters from './pages/Parameters';
 import MavlinkSender from './pages/MavlinkSender';
+import FirmwareUpdate from './pages/FirmwareUpdate';
+import SensorCalibration from './pages/SensorCalibration';
+import Analysis from './pages/Analysis';
+
+import TuningPage from './pages/TuningPage';
+
 
 function App() {
   // Initialize Cesium Ion token from localStorage
@@ -40,10 +46,15 @@ function App() {
                 <Route path="/flight-display" element={<FlightDisplay />} />
                 <Route path="/vehicle-connections" element={<VehicleConnections />} />
                 <Route path="/template" element={<TemplatePage />} />
-                <Route path="/mission-planning" element={<MissionPlanning />} />
+
                 <Route path="/simulation" element={<Simulation />} />
                 <Route path="/parameters" element={<Parameters />} />
                 <Route path="/mavlink-sender" element={<MavlinkSender />} />
+                <Route path="/firmware" element={<FirmwareUpdate />} />
+                <Route path="/calibration" element={<SensorCalibration />} />
+                <Route path="/analysis" element={<Analysis />} />
+                <Route path="/tuning" element={<TuningPage />} />
+
               </Routes>
             </div>
           </div>

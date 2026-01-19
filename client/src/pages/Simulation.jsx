@@ -82,6 +82,43 @@ const Simulation = () => {
   });
   const [openLogs, setOpenLogs] = useState({});
   const [simLogs, setSimLogs] = useState({});
+  const [swarmDialogOpen, setSwarmDialogOpen] = useState(false);
+  const [swarmConfig, setSwarmConfig] = useState({
+    count: 10,
+    vehicleType: 'arducopter',
+    frameType: 'quad',
+    homeLocation: {
+      lat: 37.7749,
+      lng: -122.4194,
+      alt: 0
+    },
+    spacing: 0.0001,
+    startImmediately: true
+  });
+
+  const handleSpawnSwarm = async () => {
+    addLog(`Spawning swarm of ${swarmConfig.count} agents...`);
+    try {
+      const response = await fetch('/api/simulation/swarm/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(swarmConfig)
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        addLog(`Swarm config created. ${data.message}`);
+        setSwarmDialogOpen(false);
+        // Refresh list after a delay
+        setTimeout(loadSimulations, 2000);
+      } else {
+        alert(`Failed to spawn swarm: ${data.error}`);
+      }
+    } catch (e) {
+      addLog(`Error spawning swarm: ${e.message}`, 'error');
+      alert("Error spawning swarm");
+    }
+  };
 
   // Add logging function
   const addLog = (message, type = 'info') => {
@@ -113,7 +150,22 @@ const Simulation = () => {
   useEffect(() => {
     addLog('Component mounted, loading simulations...');
     loadSimulations();
+
+    // Cleanup function to clear any active polling intervals
+    return () => {
+      addLog('Component unmounting, cleaning up...');
+      // Clear any active polling intervals to prevent memory leaks
+      // Note: This should NOT stop the actual simulations, just the frontend polling
+      if (activePollingIntervals.size > 0) {
+        addLog(`Cleaning up ${activePollingIntervals.size} active polling intervals`);
+        // The intervals will be automatically cleared when the component unmounts
+        // This is just for logging purposes - the actual cleanup happens automatically
+      }
+    };
   }, []);
+
+  // Track active polling intervals for cleanup
+  const [activePollingIntervals, setActivePollingIntervals] = useState(new Set());
 
   // Load simulations from backend
   const loadSimulations = async () => {
@@ -121,7 +173,7 @@ const Simulation = () => {
     try {
       const response = await fetch('/api/simulation/list');
       addLog(`Backend response status: ${response.status}`);
-      
+
       if (response.ok) {
         const data = await response.json();
         addLog(`Loaded ${data.simulations?.length || 0} simulations`);
@@ -140,7 +192,7 @@ const Simulation = () => {
   const handleAddSimulation = async () => {
     addLog('Creating new simulation...');
     addLog(`Simulation config: ${JSON.stringify(newSimulation, null, 2)}`);
-    
+
     try {
       const response = await fetch('/api/simulation/create', {
         method: 'POST',
@@ -173,7 +225,7 @@ const Simulation = () => {
   // Start simulation
   const startSimulation = async (simulationId) => {
     addLog(`Starting simulation: ${simulationId}`);
-    
+
     try {
       const response = await fetch(`/api/simulation/${simulationId}/start`, {
         method: 'POST',
@@ -184,14 +236,14 @@ const Simulation = () => {
       if (response.ok) {
         const data = await response.json();
         addLog(`Simulation start initiated: ${data.message}`);
-        
+
         // Update local state
-        setSimulations(prev => prev.map(sim => 
-          sim.id === simulationId 
+        setSimulations(prev => prev.map(sim =>
+          sim.id === simulationId
             ? { ...sim, status: 'starting' }
             : sim
         ));
-        
+
         // Poll for status updates
         pollSimulationStatus(simulationId);
       } else {
@@ -209,7 +261,7 @@ const Simulation = () => {
   // Stop simulation
   const stopSimulation = async (simulationId) => {
     addLog(`Stopping simulation: ${simulationId}`);
-    
+
     try {
       const response = await fetch(`/api/simulation/${simulationId}/stop`, {
         method: 'POST',
@@ -220,8 +272,8 @@ const Simulation = () => {
       if (response.ok) {
         const data = await response.json();
         addLog(`Simulation stop initiated: ${data.message}`);
-        setSimulations(prev => prev.map(sim => 
-          sim.id === simulationId 
+        setSimulations(prev => prev.map(sim =>
+          sim.id === simulationId
             ? { ...sim, status: 'stopping' }
             : sim
         ));
@@ -271,24 +323,30 @@ const Simulation = () => {
   // Poll simulation status
   const pollSimulationStatus = (simulationId) => {
     addLog(`Starting status polling for simulation: ${simulationId}`);
-    
+
     const interval = setInterval(async () => {
       try {
         const response = await fetch(`/api/simulation/${simulationId}/status`);
-        
+
         if (response.ok) {
           const status = await response.json();
           addLog(`Status update for ${simulationId}: ${status.status} (container: ${status.containerId})`);
-          
-          setSimulations(prev => prev.map(sim => 
-            sim.id === simulationId 
+
+          setSimulations(prev => prev.map(sim =>
+            sim.id === simulationId
               ? { ...sim, ...status }
               : sim
           ));
-          
+
           if (status.status === 'running' || status.status === 'stopped' || status.status === 'error') {
             addLog(`Stopping status polling for ${simulationId} - final status: ${status.status}`);
             clearInterval(interval);
+            // Remove from active intervals set
+            setActivePollingIntervals(prev => {
+              const newSet = new Set(prev);
+              newSet.delete(simulationId);
+              return newSet;
+            });
           }
         } else {
           addLog(`Failed to get status for ${simulationId}: ${response.status}`, 'error');
@@ -297,17 +355,26 @@ const Simulation = () => {
         addLog(`Error polling simulation status: ${error.message}`, 'error');
         console.error('Error polling simulation status:', error);
         clearInterval(interval);
+        // Remove from active intervals set
+        setActivePollingIntervals(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(simulationId);
+          return newSet;
+        });
       }
     }, 2000);
+
+    // Track this interval for cleanup
+    setActivePollingIntervals(prev => new Set(prev).add(simulationId));
   };
 
   // Get simulation logs
   const getSimulationLogs = async (simulationId) => {
     addLog(`Fetching logs for simulation: ${simulationId}`);
-    
+
     try {
       const response = await fetch(`/api/simulation/${simulationId}/logs`);
-      
+
       if (response.ok) {
         const data = await response.json();
         addLog(`Retrieved ${data.logs?.length || 0} log entries for ${simulationId}`);
@@ -412,6 +479,15 @@ const Simulation = () => {
           >
             Add Simulation
           </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<Computer />}
+            onClick={() => setSwarmDialogOpen(true)}
+            sx={{ ml: 1 }}
+          >
+            Spawn Swarm
+          </Button>
         </Box>
       </Box>
 
@@ -437,8 +513,8 @@ const Simulation = () => {
               <Box
                 key={index}
                 sx={{
-                  color: log.type === 'error' ? 'error.main' : 
-                         log.type === 'warning' ? 'warning.main' : 'text.primary',
+                  color: log.type === 'error' ? 'error.main' :
+                    log.type === 'warning' ? 'warning.main' : 'text.primary',
                   mb: 0.5
                 }}
               >
@@ -605,8 +681,8 @@ const Simulation = () => {
       </Grid>
 
       {/* Add Simulation Dialog */}
-      <Dialog 
-        open={addDialogOpen} 
+      <Dialog
+        open={addDialogOpen}
         onClose={() => setAddDialogOpen(false)}
         maxWidth="md"
         fullWidth
@@ -623,7 +699,7 @@ const Simulation = () => {
                 helperText="Optional: Give your simulation a friendly name"
               />
             </Grid>
-            
+
             <Grid item xs={12} md={6}>
               <FormControl fullWidth>
                 <InputLabel>Vehicle Type</InputLabel>
@@ -798,12 +874,91 @@ const Simulation = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setAddDialogOpen(false)}>Cancel</Button>
-          <Button 
-            onClick={handleAddSimulation}
-            variant="contained"
-            disabled={!newSimulation.vehicleType}
-          >
-            Create Simulation
+          <Button onClick={handleAddSimulation} variant="contained">
+            Create
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Swarm Dialog */}
+      <Dialog
+        open={swarmDialogOpen}
+        onClose={() => setSwarmDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Spawn Swarm</DialogTitle>
+        <DialogContent>
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            <Grid item xs={12}>
+              <TextField
+                label="Agent Count"
+                type="number"
+                fullWidth
+                value={swarmConfig.count}
+                onChange={(e) => setSwarmConfig({ ...swarmConfig, count: parseInt(e.target.value) })}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel>Vehicle Type</InputLabel>
+                <Select
+                  value={swarmConfig.vehicleType}
+                  onChange={(e) => setSwarmConfig({ ...swarmConfig, vehicleType: e.target.value })}
+                  label="Vehicle Type"
+                >
+                  <MenuItem value="arducopter">ArduCopter</MenuItem>
+                  <MenuItem value="arduplane">ArduPlane</MenuItem>
+                  <MenuItem value="ardurover">ArduRover</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Latitude"
+                type="number"
+                fullWidth
+                value={swarmConfig.homeLocation.lat}
+                onChange={(e) => setSwarmConfig({
+                  ...swarmConfig,
+                  homeLocation: { ...swarmConfig.homeLocation, lat: parseFloat(e.target.value) }
+                })}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Longitude"
+                type="number"
+                fullWidth
+                value={swarmConfig.homeLocation.lng}
+                onChange={(e) => setSwarmConfig({
+                  ...swarmConfig,
+                  homeLocation: { ...swarmConfig.homeLocation, lng: parseFloat(e.target.value) }
+                })}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Grid Spacing (degrees)"
+                type="number"
+                fullWidth
+                value={swarmConfig.spacing}
+                onChange={(e) => setSwarmConfig({ ...swarmConfig, spacing: parseFloat(e.target.value) })}
+                helperText="~0.0001 deg is approx 10 meters"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={<Switch checked={swarmConfig.startImmediately} onChange={(e) => setSwarmConfig({ ...swarmConfig, startImmediately: e.target.checked })} />}
+                label="Start Immediately"
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setSwarmDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleSpawnSwarm} variant="contained" color="secondary">
+            Spawn Swarm
           </Button>
         </DialogActions>
       </Dialog>

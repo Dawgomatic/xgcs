@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { 
-  AppBar, 
-  Toolbar, 
-  Typography, 
-  IconButton, 
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
   Box,
   Chip,
   Menu,
@@ -19,10 +19,16 @@ import {
   SignalCellular4Bar,
   GpsFixed,
   Memory,
-  Code
+  Code,
+  SystemUpdateAlt,
+  Explore,
+  Assessment, // Added for Analysis
+  Tune, // Added for Tuning
+  SafetyCheck // Added for Safety
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useVehicles } from '../context/VehicleContext';
+import VehicleSelector from './VehicleSelector';
 
 
 const TopBar = () => {
@@ -30,7 +36,7 @@ const TopBar = () => {
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState(null);
   const { activeVehicle, vehicles } = useVehicles();
-  
+
   // Flight control states
   const [connectionStatus, setConnectionStatus] = useState('disconnected');
 
@@ -54,18 +60,20 @@ const TopBar = () => {
     handleMenuClose();
   };
 
-
-
-
-
   const isFlightPage = location.pathname === '/flight-display' || location.pathname === '/';
 
   const menuItems = [
     { text: 'Flight Display', icon: <Flight />, path: '/' },
     { text: 'Vehicle Connections', icon: <GpsFixed />, path: '/vehicle-connections' },
-    { text: 'Simulation', icon: <Memory />, path: '/simulation' },
+
+    { text: 'Start Simulation', icon: <Memory />, path: '/simulation' }, // Renamed for clarity
+
     { text: 'Parameters', icon: <Settings />, path: '/parameters' },
     { text: 'MAVLink Sender', icon: <Code />, path: '/mavlink-sender' },
+    { text: 'Firmware', icon: <SystemUpdateAlt />, path: '/firmware' },
+    { text: 'Calibration', icon: <Explore />, path: '/calibration' },
+    { text: 'Analysis Tools', icon: <Assessment />, path: '/analysis' },
+    { text: 'PID Tuning', icon: <Tune />, path: '/tuning' }, // Added
     { text: 'Settings', icon: <Settings />, path: '/settings' },
   ];
 
@@ -81,14 +89,17 @@ const TopBar = () => {
         >
           <MenuIcon />
         </IconButton>
-        
+
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           XGCS - Modern Ground Control Station
         </Typography>
 
+        {/* Vehicle Selector */}
+        <VehicleSelector />
+
         {/* Connection Status - Show on all pages */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mr: 2 }}>
-          <Chip 
+          <Chip
             icon={<SignalCellular4Bar />}
             label={connectionStatus}
             color={connectionStatus === 'connected' ? 'success' : 'error'}
@@ -124,7 +135,7 @@ const TopBar = () => {
           }}
         >
           {menuItems.map((item) => (
-            <MenuItem 
+            <MenuItem
               key={item.text}
               onClick={() => handleNavigation(item.path)}
               sx={{

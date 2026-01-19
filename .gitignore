@@ -129,3 +129,23 @@ jspm_packages/
 *.pem
 *.key
 id_rsa*
+
+# Additional log patterns
+proxy-debug.log
+proxy-output.log
+server/server.log
+server/src/server.log
+
+# Build artifacts
+client/build/
+server/build/
+build/
+
+# Development test files
+test_*.js
+mini-proxy.js
+url
+
+# Temporary files
+*.tmp
+*.temp

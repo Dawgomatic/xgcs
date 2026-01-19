@@ -17,26 +17,59 @@ export default function MavlinkInspector({ vehicleId }) {
   const [filter, setFilter] = useState('');
   const [showAll, setShowAll] = useState(false);
 
+  // Buffer for incoming messages to prevent UI flooding
+  const messageBuffer = React.useRef({});
+
   useEffect(() => {
     if (!vehicleId) return;
     const ws = new WebSocket(`ws://${window.location.hostname}:8081/api/mavlink/stream`);
+
     ws.onopen = () => {
       ws.send(vehicleId);
     };
+
     ws.onmessage = (event) => {
       const msg = JSON.parse(event.data);
-      setMessages(prev => ({
-        ...prev,
-        [msg.msgName]: {
-          lastFields: msg.fields,
-          lastTimestamp: msg.timestamp,
-          count: (prev[msg.msgName]?.count || 0) + 1,
-          system_id: msg.system_id,
-          component_id: msg.component_id
-        }
-      }));
+      // Update buffer immediately without triggering re-render
+      messageBuffer.current[msg.msgName] = {
+        lastFields: msg.fields,
+        lastTimestamp: msg.timestamp,
+        count: (messageBuffer.current[msg.msgName]?.count || 0) + 1,
+        system_id: msg.system_id,
+        component_id: msg.component_id
+      };
+
+      // Dispatch global event for ADSB traffic (for FlightMap)
+      if (msg.msgName === 'ADSB_VEHICLE') {
+        const trafficEvent = new CustomEvent('mavlink-adsb-traffic', {
+          detail: msg.fields
+        });
+        window.dispatchEvent(trafficEvent);
+      }
     };
-    return () => ws.close();
+
+    // Flush buffer to state at 10Hz (100ms)
+    const flushInterval = setInterval(() => {
+      setMessages(prev => {
+        // Only update if we have new data in buffer
+        // optimization: check if buffer has changed? 
+        // For simplicity and to ensure counters update, we merge buffer into state.
+        // But to be truly efficient, we should probably check if buffer content is newer.
+        // Actually, since we want to show live data, merging is fine.
+        // We do deep merge to preserve existing messages not in this specific buffer flush?
+        // No, messageBuffer accumulates everything since start? 
+        // Ah, logic issue: messageBuffer needs to persist previous counts if we only get partial updates.
+        // But the current logic `messageBuffer.current[msg.msgName] = ...` replaces the entry.
+        // So messageBuffer ALWAYS has the latest state of everything received so far.
+        // So we can just spread it.
+        return { ...messageBuffer.current };
+      });
+    }, 100);
+
+    return () => {
+      ws.close();
+      clearInterval(flushInterval);
+    };
   }, [vehicleId]);
 
   const filtered = showAll

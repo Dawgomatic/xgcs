@@ -2,50 +2,626 @@ CORS proxy server running on http://localhost:3001
 Proxying simulation requests to Node.js backend at http://localhost:5000
 Proxying other API requests to C++ backend at http://localhost:8081
 GET /health
+GET /api/connections
+GET /api/connections
 GET /api/simulation/list
+GET /api/vehicles
 GET /api/simulation/list
-DELETE /api/simulation/eb8880ca-7d0a-432a-928d-f4d71b0d5fa0
-POST /api/simulation/create
-POST /api/simulation/ec6f91f1-380b-4ddd-b5ef-f775696d40c7/start
-GET /api/simulation/ec6f91f1-380b-4ddd-b5ef-f775696d40c7/status
-GET /api/simulation/ec6f91f1-380b-4ddd-b5ef-f775696d40c7/logs
-GET /api/simulation/list
-GET /api/simulation/list
-GET /api/simulation/list
-GET /api/simulation/list
-GET /api/simulation/list
-GET /api/simulation/list
-GET /api/simulation/list
-GET /api/simulation/list
-GET /simulation
-[UNHANDLED] GET /simulation
-GET /simulation
-[UNHANDLED] GET /simulation
-GET /api/simulation/list
-GET /api/simulation/list
-GET /api/simulation/list
-GET /api/simulation/list
-GET /api/simulation/list
-GET /api/simulation/list
-GET /api/simulation/list
-GET /api/simulation/list
-GET /api/simulation/list
-GET /api/simulation/list
-pi/simulation/list
-2025-08-10T02:49:50.028Z - GET /api/simulation/list
-2025-08-10T02:49:50.029Z - GET /api/simulation/list
-2025-08-10T02:49:50.031Z - GET /api/simulation/list
-2025-08-10T02:49:50.045Z - GET /simulation
-2025-08-10T02:49:50.046Z - [UNHANDLED] GET /simulation
-2025-08-10T02:49:50.971Z - GET /simulation
-2025-08-10T02:49:50.971Z - [UNHANDLED] GET /simulation
-2025-08-10T02:49:53.073Z - GET /api/simulation/list
-2025-08-10T02:49:53.076Z - GET /api/simulation/list
-2025-08-10T02:49:55.590Z - GET /api/simulation/list
-2025-08-10T02:49:55.594Z - GET /api/simulation/list
-2025-08-10T02:50:17.408Z - GET /api/simulation/list
-2025-08-10T02:50:17.412Z - GET /api/simulation/list
-2025-08-10T02:50:19.599Z - GET /api/simulation/list
-2025-08-10T02:50:19.602Z - GET /api/simulation/list
-2025-08-10T02:50:32.007Z - GET /api/simulation/list
-2025-08-10T02:50:32.010Z - GET /api/simulation/list
+GET /api/vehicles
+GET /api/connections
+POST /api/connect
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/connections
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+GET /api/connections
+GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+8-18T03:40:57.231Z - GET /api/connections
+2025-08-18T03:40:57.372Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:40:57.446Z - GET /api/connections
+2025-08-18T03:40:57.583Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:40:57.675Z - GET /api/connections
+2025-08-18T03:40:57.795Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:40:57.884Z - GET /api/connections
+2025-08-18T03:40:57.991Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:40:58.059Z - GET /api/connections
+2025-08-18T03:40:58.202Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:40:58.363Z - GET /api/connections
+2025-08-18T03:40:58.417Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:40:58.643Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:40:58.659Z - GET /api/connections
+2025-08-18T03:40:58.777Z - GET /api/connections
+2025-08-18T03:40:58.837Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:40:58.907Z - GET /api/connections
+2025-08-18T03:40:59.037Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:40:59.113Z - GET /api/connections
+2025-08-18T03:40:59.244Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:40:59.302Z - GET /api/connections
+2025-08-18T03:40:59.468Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:40:59.656Z - GET /api/connections
+2025-08-18T03:40:59.661Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:40:59.765Z - GET /api/connections
+2025-08-18T03:40:59.902Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:40:59.997Z - GET /api/connections
+2025-08-18T03:41:00.091Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:00.169Z - GET /api/connections
+2025-08-18T03:41:00.391Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:00.557Z - GET /api/connections
+2025-08-18T03:41:00.615Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:00.685Z - GET /api/connections
+2025-08-18T03:41:00.837Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:01.007Z - GET /api/connections
+2025-08-18T03:41:01.176Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:01.261Z - GET /api/connections
+2025-08-18T03:41:01.377Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:01.487Z - GET /api/connections
+2025-08-18T03:41:01.643Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:01.828Z - GET /api/connections
+2025-08-18T03:41:01.878Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:01.974Z - GET /api/connections
+2025-08-18T03:41:02.054Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:02.128Z - GET /api/connections
+2025-08-18T03:41:02.309Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:02.429Z - GET /api/connections
+2025-08-18T03:41:02.495Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:02.572Z - GET /api/connections
+2025-08-18T03:41:02.703Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:02.787Z - GET /api/connections
+2025-08-18T03:41:02.918Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:03.033Z - GET /api/connections
+2025-08-18T03:41:03.181Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:03.259Z - GET /api/connections
+2025-08-18T03:41:03.442Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:03.610Z - GET /api/connections
+2025-08-18T03:41:03.630Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:03.890Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:03.900Z - GET /api/connections
+2025-08-18T03:41:04.005Z - GET /api/connections
+2025-08-18T03:41:04.078Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:04.148Z - GET /api/connections
+2025-08-18T03:41:04.301Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:04.414Z - GET /api/connections
+2025-08-18T03:41:04.484Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:04.561Z - GET /api/connections
+2025-08-18T03:41:04.703Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:04.808Z - GET /api/connections
+2025-08-18T03:41:04.924Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:05.107Z - GET /api/connections
+2025-08-18T03:41:05.145Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:05.250Z - GET /api/connections
+2025-08-18T03:41:05.336Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:05.455Z - GET /api/connections
+2025-08-18T03:41:05.608Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:05.729Z - GET /api/connections
+2025-08-18T03:41:05.797Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:05.857Z - GET /api/connections
+2025-08-18T03:41:06.035Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:06.213Z - GET /api/connections
+2025-08-18T03:41:06.247Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:06.398Z - GET /api/connections
+2025-08-18T03:41:06.493Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:06.616Z - GET /api/connections
+2025-08-18T03:41:06.656Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:06.728Z - GET /api/connections
+2025-08-18T03:41:06.900Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:07.066Z - GET /api/connections
+2025-08-18T03:41:07.088Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:07.173Z - GET /api/connections
+2025-08-18T03:41:07.295Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:07.397Z - GET /api/connections
+2025-08-18T03:41:07.567Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:07.693Z - GET /api/connections
+2025-08-18T03:41:07.784Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:07.960Z - GET /api/connections
+2025-08-18T03:41:08.002Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:08.211Z - GET /api/connections
+2025-08-18T03:41:08.242Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:08.465Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:08.478Z - GET /api/connections
+2025-08-18T03:41:08.975Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:08.978Z - GET /api/connections
+2025-08-18T03:41:08.981Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:09.059Z - GET /api/connections
+2025-08-18T03:41:09.183Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:09.275Z - GET /api/connections
+2025-08-18T03:41:09.382Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:09.520Z - GET /api/connections
+2025-08-18T03:41:09.660Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:09.763Z - GET /api/connections
+2025-08-18T03:41:09.965Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:10.169Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:10.180Z - GET /api/connections
+2025-08-18T03:41:10.390Z - GET /api/connections
+2025-08-18T03:41:10.398Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:10.525Z - GET /api/connections
+2025-08-18T03:41:10.620Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:10.875Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:10.930Z - GET /api/connections
+2025-08-18T03:41:11.011Z - GET /api/connections
+2025-08-18T03:41:11.046Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:11.341Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:11.352Z - GET /api/connections
+2025-08-18T03:41:11.411Z - GET /api/connections
+2025-08-18T03:41:11.532Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:11.579Z - GET /api/connections
+2025-08-18T03:41:12.039Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:12.087Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:12.136Z - GET /api/connections
+2025-08-18T03:41:12.177Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:12.179Z - GET /api/connections
+2025-08-18T03:41:12.296Z - GET /api/connections
+2025-08-18T03:41:12.455Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:12.521Z - GET /api/connections
+2025-08-18T03:41:12.697Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:12.822Z - GET /api/connections
+2025-08-18T03:41:12.891Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:12.940Z - GET /api/connections
+2025-08-18T03:41:13.135Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:13.222Z - GET /api/connections
+2025-08-18T03:41:13.380Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:13.488Z - GET /api/connections
+2025-08-18T03:41:13.577Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:13.644Z - GET /api/connections
+2025-08-18T03:41:13.805Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:13.964Z - GET /api/connections
+2025-08-18T03:41:13.993Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:14.062Z - GET /api/connections
+2025-08-18T03:41:14.201Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:14.380Z - GET /api/connections
+2025-08-18T03:41:14.396Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:14.518Z - GET /api/connections
+2025-08-18T03:41:14.703Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:14.786Z - GET /api/connections
+2025-08-18T03:41:14.922Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:15.058Z - GET /api/connections
+2025-08-18T03:41:15.127Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:15.197Z - GET /api/connections
+2025-08-18T03:41:15.319Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:15.411Z - GET /api/connections
+2025-08-18T03:41:15.519Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:15.593Z - GET /api/connections
+2025-08-18T03:41:15.740Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:15.827Z - GET /api/connections
+2025-08-18T03:41:16.012Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:16.167Z - GET /api/connections
+2025-08-18T03:41:16.260Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:16.335Z - GET /api/connections
+2025-08-18T03:41:16.425Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:16.490Z - GET /api/connections
+2025-08-18T03:41:16.808Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:16.948Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:16.960Z - GET /api/connections
+2025-08-18T03:41:17.076Z - GET /api/connections
+2025-08-18T03:41:17.140Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b
+2025-08-18T03:41:17.186Z - GET /api/connections
+2025-08-18T03:41:17.366Z - GET /api/telemetry?vehicleId=SITL%3A%20arduplane%2048928f6b

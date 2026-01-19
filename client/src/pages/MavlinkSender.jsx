@@ -16,10 +16,11 @@ import {
   Chip,
   Divider,
   Accordion,
-  AccordionSummary,
   AccordionDetails,
   IconButton,
-  Tooltip
+  Tooltip,
+  Snackbar,
+  CircularProgress
 } from '@mui/material';
 import {
   Send,
@@ -41,6 +42,13 @@ const MavlinkSender = () => {
   const [savedMessages, setSavedMessages] = useState([]);
   const [messageHistory, setMessageHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'success' });
+
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
+  const showNotification = (message, severity = 'success') => {
+    setNotification({ open: true, message, severity });
+  };
 
   // Common MAVLink messages with their parameter descriptions
   const mavlinkMessages = {
@@ -145,17 +153,17 @@ const MavlinkSender = () => {
   // Save message to localStorage
   const saveMessage = () => {
     if (!selectedMessage) return;
-    
+
     const messageName = prompt('Enter a name for this message:');
     if (!messageName) return;
-    
+
     const newSavedMessage = {
       name: messageName,
       type: selectedMessage,
       params: { ...messageParams },
       timestamp: new Date().toISOString()
     };
-    
+
     const updated = [...savedMessages, newSavedMessage];
     setSavedMessages(updated);
     localStorage.setItem('mavlink_saved_messages', JSON.stringify(updated));
@@ -176,8 +184,28 @@ const MavlinkSender = () => {
 
   // Send MAVLink message
   const sendMessage = async () => {
-    if (!activeVehicle || !selectedMessage) return;
-    
+    if (!activeVehicle) {
+      showNotification('No active vehicle connected', 'error');
+      return;
+    }
+    if (!selectedMessage) {
+      showNotification('Please select a message type', 'warning');
+      return;
+    }
+
+    // Validation: Check if required numeric fields are valid numbers
+    const currentParams = mavlinkMessages[selectedMessage].params;
+    for (const [key, config] of Object.entries(currentParams)) {
+      if (config.type === 'number') {
+        const val = messageParams[key];
+        if (val === '' || isNaN(Number(val))) {
+          showNotification(`Invalid value for ${config.label}`, 'error');
+          return;
+        }
+      }
+    }
+
+    setLoading(true);
     try {
       const response = await fetch('/api/mavlink/send', {
         method: 'POST',
@@ -188,27 +216,28 @@ const MavlinkSender = () => {
           parameters: messageParams
         })
       });
-      
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          // Add to history
-          const historyEntry = {
-            type: selectedMessage,
-            params: { ...messageParams },
-            timestamp: new Date().toISOString(),
-            success: true
-          };
-          setMessageHistory(prev => [historyEntry, ...prev.slice(0, 49)]); // Keep last 50
-          
-          alert('Message sent successfully!');
-        } else {
-          alert('Failed to send message: ' + data.error);
-        }
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Add to history
+        const historyEntry = {
+          type: selectedMessage,
+          params: { ...messageParams },
+          timestamp: new Date().toISOString(),
+          success: true
+        };
+        setMessageHistory(prev => [historyEntry, ...prev.slice(0, 49)]); // Keep last 50
+
+        showNotification('Message sent successfully!', 'success');
+      } else {
+        showNotification('Failed to send: ' + (data.error || 'Unknown error'), 'error');
       }
     } catch (error) {
       console.error('Error sending message:', error);
-      alert('Error sending message: ' + error.message);
+      showNotification('Network error: ' + error.message, 'error');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -256,7 +285,7 @@ const MavlinkSender = () => {
               <Typography variant="h6" gutterBottom>
                 Message Configuration
               </Typography>
-              
+
               <FormControl fullWidth sx={{ mb: 2 }}>
                 <InputLabel>Message Type</InputLabel>
                 <Select
@@ -277,7 +306,7 @@ const MavlinkSender = () => {
                   <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                     {mavlinkMessages[selectedMessage].description}
                   </Typography>
-                  
+
                   <Grid container spacing={2}>
                     {Object.entries(mavlinkMessages[selectedMessage].params).map(([paramName, config]) => (
                       <Grid item xs={12} sm={6} key={paramName}>
@@ -297,16 +326,18 @@ const MavlinkSender = () => {
                   <Box sx={{ mt: 3, display: 'flex', gap: 1 }}>
                     <Button
                       variant="contained"
-                      startIcon={<Send />}
+                      startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <Send />}
                       onClick={sendMessage}
                       color="primary"
+                      disabled={loading}
                     >
-                      Send Message
+                      {loading ? 'Sending...' : 'Send Message'}
                     </Button>
                     <Button
                       variant="outlined"
                       startIcon={<Save />}
                       onClick={saveMessage}
+                      disabled={loading}
                     >
                       Save Message
                     </Button>
@@ -324,7 +355,7 @@ const MavlinkSender = () => {
               <Typography variant="h6" gutterBottom>
                 Saved Messages
               </Typography>
-              
+
               {savedMessages.length === 0 ? (
                 <Typography variant="body2" color="text.secondary">
                   No saved messages. Create and save messages for quick access.
@@ -378,7 +409,7 @@ const MavlinkSender = () => {
                 <Typography variant="h6" gutterBottom>
                   Message History
                 </Typography>
-                
+
                 {messageHistory.length === 0 ? (
                   <Typography variant="body2" color="text.secondary">
                     No message history. Send messages to see them here.
@@ -411,8 +442,19 @@ const MavlinkSender = () => {
           </Grid>
         )}
       </Grid>
+
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={6000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
 
-export default MavlinkSender; 
+export default MavlinkSender;

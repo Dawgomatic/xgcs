@@ -12,6 +12,7 @@ find_package(nlohmann_json REQUIRED)
 find_package(PkgConfig)
 if(PkgConfig_FOUND)
     pkg_check_modules(MAVSDK IMPORTED_TARGET mavsdk)
+    pkg_check_modules(GST REQUIRED gstreamer-1.0 gstreamer-app-1.0)
 endif()
 
 # If pkg-config didn't find it, try the regular way
@@ -23,6 +24,7 @@ endif()
 include_directories(
     ${Boost_INCLUDE_DIRS}
     ${MAVSDK_INCLUDE_DIRS}
+    ${GST_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
@@ -30,6 +32,9 @@ include_directories(
 add_executable(server 
     src/main.cpp
     src/connection_manager.cpp
+    src/video_manager.cpp
+    src/log_file_manager.cpp
+    src/tlog_recorder.cpp
 )
 
 # Link libraries
@@ -37,6 +42,7 @@ if(TARGET PkgConfig::MAVSDK)
     target_link_libraries(server
         ${Boost_LIBRARIES}
         PkgConfig::MAVSDK
+        ${GST_LIBRARIES}
         nlohmann_json::nlohmann_json
         pthread
     )
@@ -44,6 +50,7 @@ else()
     target_link_libraries(server
         ${Boost_LIBRARIES}
         ${MAVSDK_LIBRARIES}
+        ${GST_LIBRARIES}
         nlohmann_json::nlohmann_json
         pthread
     )

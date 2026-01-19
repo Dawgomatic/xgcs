@@ -34,5 +34,28 @@ module.exports = function override(config, env) {
     })
   );
 
+  // SWE100821: Add proxy configuration for API calls
+  if (env === 'development') {
+    config.devServer = {
+      ...config.devServer,
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3001',
+          changeOrigin: true,
+          logLevel: 'debug',
+          onProxyReq: (proxyReq, req, res) => {
+            console.log(`[config-overrides] Proxying ${req.method} ${req.url} -> http://localhost:3001${req.url}`);
+          },
+          onProxyRes: (proxyRes, req, res) => {
+            console.log(`[config-overrides] Response: ${proxyRes.statusCode} for ${req.url}`);
+          },
+          onError: (err, req, res) => {
+            console.error(`[config-overrides] Error proxying ${req.url}:`, err.message);
+          }
+        }
+      }
+    };
+  }
+
   return config;
 }; 
